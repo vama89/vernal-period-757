@@ -52,13 +52,13 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li ng-class="{ active: isActive('/conference/create')}" ng-show="getSignedInState()"><a href="#/conference/create" ng-click="collapseNavbar()">Create Hangout</a></li>
+                <li ng-class="{ active: isActive('/hangout/create')}" ng-show="getSignedInState()"><a href="#/hangout/create" ng-click="collapseNavbar()">Create Hangout</a></li>
                 <li class="nav-divider"></li>
             </ul>
 
 
             <ul class="nav navbar-nav navbar-right">
-                <li ng-class="{ active: isActive('/conference')}" ng-show="getSignedInState()"><a href="#/conference" ng-click=" collapseNavbar()" >My Dashboard</a></li>
+                <li ng-class="{ active: isActive('/myDashboard')}" ng-show="getSignedInState()"><a href="#/myDashboard" ng-click=" collapseNavbar()" >My Dashboard</a></li>
 
                 <li ng-class="{ active: isActive('/profile')}" ng-show="getSignedInState()" ><a href="#/profile" ng-click=" collapseNavbar()">My Profile</a></li>
 

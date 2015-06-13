@@ -1,0 +1,258 @@
+<div ng-controller = "HangoutCreationCtrl"> 
+<h2> Create Event </h2> 
+
+<!-- TEST CODE
+    <div ng-show="test()">
+    <p>This is a Test</p>
+    </div>
+
+    <form name = "blob">
+    <input type="checkbox" ng-model="xyz.name" >Blue</input>
+    <button ng-click = "bloob(blob)">Test</button>
+    </form>
+-->
+
+    <form name = "hangoutForm">
+
+        <table>
+          <tr>
+            <td><b>Event Title:</b></td>
+            <td><input ng-model="checked.eventName"type="string" name="event" placeholder="Event Name" required></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><input ng-model="checked.description" type="textarea" name="description" placeholder="Description" required></td>
+          </tr>
+        </table>
+            <br>
+        <br>
+        <div><h3>Friends Invited</h3></div> 
+     
+        <div id="main">
+            <input type="button" id="btAdd" value="Add Friend" class="bt" />
+            <input type="button" id="btRemove" value="Remove Friend" class="bt" />
+            <input type="button" id="btRemoveAll" value="Remove All Friends" class="bt" /><br />
+        </div>
+
+        <br>
+        <br>
+
+        <h3>What do you want to vote on?</h3>
+        <input type="checkbox" ng-model = "checked.location">Location
+        <input type="checkbox" ng-model = "checked.time" >Time
+        <input type="checkbox" ng-model = "checked.day" >Day   
+        
+        <br>
+        <br>
+    <!-- When all 3 are picked -->
+    <div ng-show="allOptionsChecked()">
+        <div><h3>Hangout 1</h3></div>
+        <table>
+          <tr>
+            <td>Date:</td>
+            <td><input ng-model="checked.date1" type="date" name="date1" placeholder="Date" required></td>
+          </tr>
+          <tr>
+            <td>Time:</td>
+            <td><input ng-model="checked.time1" type="time" name="time1" required></td>
+          </tr>
+          <tr>
+            <td>Location:</td>
+            <td><input ng-model="checked.locationname1" type="string" name="locationname1" placeholder="Enter Location Name" required></td>
+          </tr>   
+          <tr>
+            <td></td>
+            <td><div id="locationField">
+            <input id="autocomplete" ng-model="checked.place1" name="place1" placeholder="Enter your address"
+                     onFocus="geolocate()" type="text" required>
+            </div></td>
+          </tr>
+        </table>
+        
+        <br>
+        <div><h3>Hangout 2</h3></div>
+        <table>
+          <tr>
+            <td>Date:</td>
+            <td><input ng-model="checked.date2" type="date" name="date2" placeholder="Date" required></td>
+          </tr>
+          <tr>
+            <td>Time:</td>
+            <td><input ng-model="checked.time2" type="time" name="time2" required></td>
+          </tr>
+          <tr>
+            <td>Location:</td>
+            <td><input ng-model="checked.locationname2" type="string" name="locationname2" placeholder="Enter Location Name" required></td>
+          </tr>   
+          <tr>
+            <td></td>
+            <td><div id="locationField">
+            <input ng-model="checked.place2" id="autocomplete" name="place2" placeholder="Enter your address"
+                     onFocus="geolocate()" type="text" required>
+            </div></td>
+          </tr> 
+        </table>
+
+        <br>
+        <div><h3>Hangout 3</h3></div>
+        <table>
+          <tr>
+            <td>Date:</td>
+            <td><input ng-model="checked.date3" type="date" name="date3" placeholder="Date" required></td>
+          </tr>
+          <tr>
+            <td>Time:</td>
+            <td><input ng-model="checked.time3"type="time" name="time3" required></td>
+          </tr>
+          <tr>
+            <td>Location:</td>
+            <td><input ng-model="checked.locationname3" type="string" name="locationname3" placeholder="Enter Location Name" required></td>
+          </tr>   
+          <tr>
+            <td></td>
+            <td><div id="locationField">
+            <input ng-model="checked.place3" id="autocomplete" name="place3" placeholder="Enter your address"
+                     onFocus="geolocate()" type="text" required>
+            </div></td>
+          </tr> 
+        </table>
+    </div>
+
+    <!-- END -->
+
+
+    <!-- Location and Time Checked -->
+    <div ng-show="locationTime()">
+        <h3>So when are you going?</h3>
+        <input type="date" placeholder="Date"/>
+
+        <h3>Lets give your friends some options:</h3>
+        <h4>Option1:</h4>
+        <input type="time"/>
+        <input type="string"/>
+
+        <h4>Option2:</h4>
+        <input type="time"/>
+        <input type="string"/>
+
+        <h4>Option3:</h4>
+        <input type="time"/>
+        <input type="string"/>
+
+    </div>
+    <!-- End --> 
+
+    <!-- Location and Day Checked -->
+    <div ng-show="locationDay()">
+        <h3>So what time you plan to go?</h3>
+        <input type="time" placeholder="Date">
+
+        <h3>Lets give your friends some options:</h3>
+        <h4>Option1:</h4>
+        <input type="string">
+        <input type="date">
+
+        <h4>Option2:</h4>
+        <input type="string">
+        <input type="date">
+
+        <h4>Option3:</h4>
+        <input type="string">
+        <input type="date">
+
+    </div>
+    <!-- End --> 
+
+    <!-- Time and Day Checked -->
+    <div ng-show="timeDay()">
+        <h3>So where are you going?</h3>
+        <input type="string" placeholder="Location">
+
+        <h3>Lets give your friends some options:</h3>
+        <h4>Option1:</h4>
+        <input type="time">
+        <input type="date">
+
+        <h4>Option2:</h4>
+        <input type="time">
+        <input type="date">
+
+        <h4>Option3:</h4>
+        <input type="time">
+        <input type="date">
+
+    </div>
+    <!-- End -->
+
+    <!-- Time Checked -->
+    <div ng-show="time()">
+        <h3>So where are you going?</h3>
+        <input type="string" placeholder="Location">
+
+        <h3>And what day?</h3>
+        <input type="date">
+
+        <h3>Lets give your friends some options:</h3>
+        <h4>Option1:</h4>
+        <input type="time" placeholder="time">
+        
+
+        <h4>Option2:</h4>
+        <input type="time" placeholder="time">
+      
+
+        <h4>Option3:</h4>
+        <input type="time" placeholder="time">
+
+    </div>
+    <!-- End -->
+
+    <!-- Day Checked -->
+    <div ng-show="day()">
+        <h3>So where are you going?</h3>
+        <input type="string" placeholder="Location">
+
+        <h3>And what time?</h3>
+        <input type="time">
+
+        <h3>Lets give your friends some options:</h3>
+        <h4>Option1:</h4>
+        <input type="date">
+
+        <h4>Option2:</h4>
+        <input type="date">
+
+        <h4>Option3:</h4>
+        <input type="date">
+
+    </div>
+    <!-- End --> 
+
+    <!-- Date Checked -->
+    <div ng-show="location()">
+        <h3>So what time you going?</h3>
+        <input type="string">
+        <h3>And what day?</h3>
+        <input type="date">
+
+        <h3>Lets give your friends some options:</h3>
+        <h4>Option1:</h4>
+        <input type="string">
+
+        <h4>Option2:</h4>
+        <input type="string">
+
+        <h4>Option3:</h4>
+        <input type="string">
+
+    </div>
+    <!-- End -->
+        
+    <br>
+    <br>
+    
+    <button ng-click="createHangout(hangoutform)">Submit</button>
+
+    </form>
+</div>
+

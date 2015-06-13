@@ -16,17 +16,13 @@ var app = angular.module('conferenceApp',
     config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider.
-                when('/conference', {
-                    templateUrl: '/partials/show_conferences.html',
-                    controller: 'ShowConferenceCtrl'
+                when('/myDashboard', {
+                    templateUrl: '/partials/myDashboard.html',
+                    controller: 'MyDashboardCtrl'
                 }).
-                when('/conference/create', {
-                    templateUrl: '/partials/create_conferences.html',
-                    controller: 'CreateConferenceCtrl'
-                }).
-                when('/conference/detail/:websafeConferenceKey', {
-                    templateUrl: '/partials/conference_detail.html',
-                    controller: 'ConferenceDetailCtrl'
+                when('/hangout/create', {
+                    templateUrl: '/partials/createHangout.html',
+                    controller: 'HangoutCreationCtrl'
                 }).
                 when('/profile', {
                     templateUrl: '/partials/profile.html',

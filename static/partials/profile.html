@@ -12,6 +12,7 @@
     <div class="row">
         <div class="col-md-8">
             <h3>My Profile</h3>
+            <img src="/img/robot-character.jpg" height="300" width="300">
             <form name="profileForm" novalidate role="form">
                 <div class="form-group" ng-class="{'has-warning': profile.displayName != initialProfile.displayName}">
                     <label for="displayName">Display Name </label>
@@ -21,6 +22,44 @@
                            class="form-control"/>
                 </div>
 
+                <p>Contact Information</p>
+                <div>
+                    <label>Phone Number for SMS</label>
+                    <input/>
+                </div>
+
+                <div>
+                    <label>Email</label>
+                    <input/>
+                </div>
+
+                <div>
+                    <label>First Name</label>
+                    <input/>
+                </div>
+
+                <div>
+                    <label>Last Name</label>
+                    <input/>
+                </div>
+
+                <div>
+                    <label>Old Password</label>
+                    <input/>
+                </div>
+
+                <p>Change Password</p>
+                <div>
+                    <label>New Password</label>
+                    <input/>
+                </div>
+
+                <div>
+                    <label>Confirm New Password</label>
+                    <input/>
+                </div>
+
+<!--
                 <div class="form-group" ng-class="{'has-warning': profile.teeShirtSize != initialProfile.teeShirtSize}">
                     <label for="teeShirtSize">Tee shirt size</label>
                     <span class="label label-warning"
@@ -30,6 +69,7 @@ shirt.size as shirt.text for shirt in teeShirtSizes"
                             class="form-control">
                     </select>
                 </div>
+            -->
 
                 <button ng-click="saveProfile(profileForm)" class="btn btn-primary"
                         ng-disabled="loading">Update profile
