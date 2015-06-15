@@ -60,7 +60,7 @@ class ConferenceApi(remote.Service):
         for field in pf.all_fields():
             if hasattr(prof, field.name):
                 setattr(pf, field.name, getattr(prof, field.name))
-                
+
         pf.check_initialized()
         return pf
 
@@ -73,6 +73,7 @@ class ConferenceApi(remote.Service):
             raise endpoints.UnauthorizedException('Authorization required')
 
         # get Profile from datastore
+
         user_id = getUserId(user)
         p_key = ndb.Key(Profile, user_id)
         profile = p_key.get()
@@ -135,5 +136,10 @@ class ConferenceApi(remote.Service):
 
         return request
 
+    #def getMyHangouts():
+    #    pass
+
+    #def getAllHangouts():
+    #   pass
 
 api = endpoints.api_server([ConferenceApi]) # register API

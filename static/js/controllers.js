@@ -291,5 +291,33 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
 });
 
 conferenceApp.controllers.controller('MyDashboardCtrl', function($scope){
-//Place in the Methods For Dashboard Control Here
+    $scope.invited = function () {
+        //Check if in the backend he was invited and didn't vote
+        /*
+        if he was invited return Events
+            Under true, showcase the resp of the gapi
+        else return false
+        */
+
+    };
+
+    $scope.votedWaiting = function () {
+        //Check if he voted and is waiting on the event
+        /*
+        if he was VotedandisWaiting return Events
+            Under true, showcase the resp of the gapi
+        else return false
+        */
+    };
+
+    $scope.done = function () {
+        /*
+        if he was invited return Events
+            Under true, showcase the resp of the gapi
+        else return false
+        */
+
+    };
+
+
 });

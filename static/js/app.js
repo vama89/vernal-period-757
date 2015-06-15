@@ -28,6 +28,15 @@ var app = angular.module('conferenceApp',
                     templateUrl: '/partials/profile.html',
                     controller: 'MyProfileCtrl'
                 }).
+                when('/businessDashboard', {
+                    templateUrl: '/partials/businessDashboard.html'
+                }).
+                when('/businessProfile', {
+                    templateUrl: '/partials/businessProfile.html'
+                }).
+                when('/businessRegistration', {
+                    templateUrl: '/partials/businessRegistration.html'
+                }).
                 when('/', {
                     templateUrl: '/partials/home.html'
                 }).
