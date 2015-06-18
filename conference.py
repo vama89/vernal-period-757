@@ -130,17 +130,20 @@ class ConferenceApi(remote.Service):
             http_method='POST', name='createHangout')
     def createHangout(self, request):
         #initialize key datapoints here
+
+        #getUserInformationHere
+
+        #Save to Hangout Database
         data = {field.name: getattr(request, field.name) for field in request.all_fields()}
         Hangout(**data).put()
+
+        #Use the key to save to the Profile Database of User
+        #Account.User(invited = key)
 
         return request
 
     #def invited():
     #    pass
-    """
-    Profile.Query(current user)
-    then query more to get the list of objects 
-    """
 
     #def votedWaiting():
     #   pass
@@ -149,3 +152,11 @@ class ConferenceApi(remote.Service):
     #   pass
 
 api = endpoints.api_server([ConferenceApi]) # register API
+
+#Sample Code to help me out. Reminder Code
+    #data = Hangout.query()
+    #for p in data:
+    #    print p.key.id()
+    #    print p.key.urlsafe()
+    #Profile.Query(current user)
+    #then query more to get the list of objects 
