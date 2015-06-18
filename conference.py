@@ -131,15 +131,21 @@ class ConferenceApi(remote.Service):
     def createHangout(self, request):
         #initialize key datapoints here
         data = {field.name: getattr(request, field.name) for field in request.all_fields()}
-        data=json.dumps(data)
-        Hangout(eventJsonInfo=data).put()
+        Hangout(**data).put()
 
         return request
 
-    #def getMyHangouts():
+    #def invited():
     #    pass
+    """
+    Profile.Query(current user)
+    then query more to get the list of objects 
+    """
 
-    #def getAllHangouts():
+    #def votedWaiting():
+    #   pass
+
+    #def done():
     #   pass
 
 api = endpoints.api_server([ConferenceApi]) # register API
