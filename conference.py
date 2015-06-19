@@ -132,10 +132,20 @@ class ConferenceApi(remote.Service):
         #initialize key datapoints here
 
         #getUserInformationHere
+        user = endpoints.get_current_user()
+        print user
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+        user_id = getUserId(user)
+
+        p_key = ndb.Key(Profile, user_id)
+        print p_key.get()
 
         #Save to Hangout Database
         data = {field.name: getattr(request, field.name) for field in request.all_fields()}
-        Hangout(**data).put()
+        #ndb.Key(Hangout,us)
+        #Hangout(**data).put()
+        #could allocated the email id that or use the parent association to somehow get the unique ide once it is generated. 
 
         #Use the key to save to the Profile Database of User
         #Account.User(invited = key)

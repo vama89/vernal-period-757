@@ -78,6 +78,8 @@ class Hangout(ndb.Model):
     #administrative items
     eventCreator=ndb.StringProperty()
     friendList=ndb.StringProperty()
+    #do a dictionary of the vote ranks based of the friendList
+    voteRanks=ndb.StringProperty()
     deadlineDate=ndb.StringProperty()
     dateEventCreated=ndb.StringProperty()
 
@@ -99,5 +101,6 @@ class HangoutForm(messages.Message):
     #administrative items
     eventCreator=messages.StringField(15)
     friendList=messages.StringField(16)
-    deadlineDate=messages.StringField(17)
-    dateEventCreated=messages.StringField(18)
+    voteRanks=messages.StringField(17)
+    deadlineDate=messages.StringField(18)
+    dateEventCreated=messages.StringField(19)

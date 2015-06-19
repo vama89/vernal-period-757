@@ -325,3 +325,7 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope){
 conferenceApp.controllers.controller('VoteCtrl', function($scope){
 
 });
+
+conferenceApp.controllers.controller('ResultsCtrl', function($scope){
+
+});

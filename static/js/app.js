@@ -41,6 +41,10 @@ var app = angular.module('conferenceApp',
                     templateUrl: '/partials/vote.html',
                     controller:'VoteCtrl'
                 }).
+                when('/results', {
+                    templateUrl: '/partials/results.html',
+                    controller:'ResultsCtrl'
+                }).
                 when('/', {
                     templateUrl: '/partials/home.html'
                 }).
