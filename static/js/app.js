@@ -45,8 +45,15 @@ var app = angular.module('conferenceApp',
                     templateUrl: '/partials/results.html',
                     controller:'ResultsCtrl'
                 }).
+                when('/login', {
+                    templateUrl: '/partials/login.html'
+                }).
+                when('/registration', {
+                    templateUrl: '/partials/registration.html'
+                }).
                 when('/', {
-                    templateUrl: '/partials/home.html'
+                    templateUrl: '/partials/home.html',
+                    controller:'ShowAllCtrl'
                 }).
                 otherwise({
                     redirectTo: '/'

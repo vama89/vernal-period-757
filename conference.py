@@ -137,18 +137,45 @@ class ConferenceApi(remote.Service):
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
         user_id = getUserId(user)
-
         p_key = ndb.Key(Profile, user_id)
-        print p_key.get()
 
-        #Save to Hangout Database
+        #Save informatoin from html forms to Hangout Database.
         data = {field.name: getattr(request, field.name) for field in request.all_fields()}
-        #ndb.Key(Hangout,us)
-        #Hangout(**data).put()
-        #could allocated the email id that or use the parent association to somehow get the unique ide once it is generated. 
+        print data
 
-        #Use the key to save to the Profile Database of User
-        #Account.User(invited = key)
+        #add in the the current time and date when event is created.
+        data['dateEventCreated'] = datetime.utcnow()
+
+        #convert form dates to DateTimeProperties
+        data['date1'] = datetime.strptime(data['date1'][:10], "%Y-%m-%d").date()
+        data['date2'] = datetime.strptime(data['date2'][:10], "%Y-%m-%d").date()
+        data['date3'] = datetime.strptime(data['date3'][:10], "%Y-%m-%d").date()
+        data['deadlineDate'] = datetime.strptime(data['deadlineDate'][:10], "%Y-%m-%d").date()
+        
+        print data
+        #FriendListHandling
+        #manage creating a dictionary for friendList is appropriate default info. Check the model.        
+        #name, key, voteRank, confirmationiffirstchoicenotpicked
+        #Add the keys of all the users to the friendList dictionary.
+
+        ####NOT MANDATORY, BUT WOULD IMPLEMENT HERE
+        #Don't know how to implement yet, but account for those users not registered.
+
+        #update User's Profiles
+        #add the eventKey to all users associated with the hangout
+
+        #place into the database
+        #Hangout(**data).put()
+
+        return request
+
+    @endpoints.method(message_types.VoidMessage, message_types.VoidMessage, 
+            path='getAllHangouts', 
+            http_method='GET', name='getAllHangouts')
+    def getAllHangouts(self, request):
+        print "here bitch!!!"
+        #Query the database Hangout.get()
+        #put that into the form for showcasing everything, create the model
 
         return request
 
@@ -170,3 +197,6 @@ api = endpoints.api_server([ConferenceApi]) # register API
     #    print p.key.urlsafe()
     #Profile.Query(current user)
     #then query more to get the list of objects 
+    #p = Hangout.query().order(Hangout.date1)
+    #    for x in p:
+    #        print x.date1

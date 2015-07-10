@@ -275,6 +275,8 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
     };
 
     $scope.createHangout = function (hangoutForm) {
+        //Grab all the individual friends and put them into a list
+        //$scope.checked.friendList = ["tom", Michael, Tim, Paul etc.]
         gapi.client.conference.createHangout($scope.checked).
             execute(function(resp){
                 $scope.$apply(function() {
@@ -328,4 +330,24 @@ conferenceApp.controllers.controller('VoteCtrl', function($scope){
 
 conferenceApp.controllers.controller('ResultsCtrl', function($scope){
 
+});
+
+conferenceApp.controllers.controller('ShowAllCtrl', function($scope, $log) {
+ 
+    $scope.getAllHangouts = function() {
+            gapi.client.conference.getAllHangouts().
+                execute(function (resp) {
+                    $scope.$apply(function(){
+                        if(resp.error) {
+                            $scope.message = 'Error Boss';
+                            $log.error($scope.message);
+
+                        } else {
+                            $scope.message = 'Success Boss';
+                            $log.info($scope.message);
+                        }
+                    });
+
+                });
+        };
 });

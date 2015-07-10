@@ -77,11 +77,19 @@ class Hangout(ndb.Model):
     time3 = ndb.StringProperty()
     #administrative items
     eventCreator=ndb.StringProperty()
+    #populate the friendlist as a dictionary of name, key, and voteranks, confirmation if going to event if first choice was not picked.
     friendList=ndb.StringProperty()
-    #do a dictionary of the vote ranks based of the friendList
-    voteRanks=ndb.StringProperty()
     deadlineDate=ndb.StringProperty()
-    dateEventCreated=ndb.StringProperty()
+    dateEventCreated=ndb.DateTimeProperty(auto_now_add=True)
+    #A True or False indicator if the main peopel that casted the vote finished
+    #and the event is underway
+    waitFlag=ndb.IntegerProperty()
+    userTotalCounter=ndb.IntegerProperty()
+    userPartyTotal=ndb.IntegerProperty()
+    #voting ranks will take the for of dictionary. first, second, and expandable
+    #if we are to increase user choices later on.
+    voteChoiceRankings=ndb.StringProperty()
+    votingCompleted=ndb.IntegerProperty()
 
 class HangoutForm(messages.Message):
     eventName = messages.StringField(1)
@@ -100,7 +108,16 @@ class HangoutForm(messages.Message):
     time3 = messages.StringField(14)
     #administrative items
     eventCreator=messages.StringField(15)
+    #populate the friendlist as a dictionary of name, key, and voteranks, confirmation if going to event if first choice was not picked.
     friendList=messages.StringField(16)
-    voteRanks=messages.StringField(17)
-    deadlineDate=messages.StringField(18)
-    dateEventCreated=messages.StringField(19)
+    deadlineDate=messages.StringField(17)
+    dateEventCreated=messages.StringField(18)
+    #A True or False indicator if the main peopel that casted the vote finished
+    #and the event is underway
+    waitFlag=messages.StringField(19)
+    userTotalCounter=messages.StringField(20)
+    userPartyTotal=messages.StringField(21)
+    #voting ranks will take the for of dictionary. first, second, and expandable
+    #if we are to increase user choices later on.
+    voteChoiceRankings=messages.StringField(22)
+    votingCompleted = messages.StringField(23)
