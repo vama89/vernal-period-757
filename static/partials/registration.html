@@ -3,6 +3,22 @@
     <div class="center-form panel">
       <div class="panel-body">
         <h2 class="text-center">Registration</h2>
+
+        <h3>Sign-up with:</h3>
+
+        <ul class="list-inline intro-social-buttons">
+            <li id="signInLink" ng-hide="getSignedInState()" on-click="return false">
+                <a class="btn btn-default btn-lg" ng-click="signIn()">Google+ SignIn</a>
+            </li>
+        </ul>
+
+          <div class="signup-or-separator">
+            <h3>Or Register Via Email Below</h3>
+            <!-- <h6 class="text">or</h6> -->
+            <hr>
+          </div>
+
+
         <form method="post" ng-submit="login()" name="loginForm">
 
             <div class="form-group has-feedback">
@@ -34,20 +50,13 @@
 
           <br/>
 
-          <div class="signup-or-separator">
-            <!-- <h6 class="text">or</h6> -->
-            <hr>
-          </div>
+
         </form>
 
 <!--         <button class="btn btn-block btn-facebook" ng-click="authenticate('facebook')">
           <i class="ion-social-facebook"></i> Sign in with Facebook
         </button> -->
-            <ul class="list-inline intro-social-buttons">
-                <li id="signInLink" ng-hide="getSignedInState()" on-click="return false">
-                    <a class="btn btn-default btn-lg" ng-click="signIn()">Google+ SignIn</a>
-                </li>
-            </ul>
+
       </div>
     </div>
   </div>
