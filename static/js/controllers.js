@@ -344,7 +344,12 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
         $scope.checked.friendList = JSON.stringify(friendList);
         
         var userVote = [$scope.checked.option1, $scope.checked.option2, $scope.checked.option3];
-        $scope.checked.groupVoteRanks = JSON.stringify(userVote)
+        //Convert to integers
+        var i;
+        for(i=0; i<3; i++){
+            userVote[i]=parseInt(userVote[0]);
+        };
+        $scope.checked.groupVoteRanks = JSON.stringify(userVote);
 
         gapi.client.conference.createHangout($scope.checked).
             execute(function(resp){
