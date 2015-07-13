@@ -14,6 +14,7 @@ __author__ = 'wesc+api@google.com (Wesley Chun)'
 
 
 from datetime import datetime
+import time
 
 import endpoints
 from protorpc import messages
@@ -28,6 +29,7 @@ from models import ProfileForm
 
 from models import Hangout
 from models import HangoutForm
+from models import HangoutForms
 
 from settings import WEB_CLIENT_ID
 from settings import ANDROID_CLIENT_ID
@@ -125,6 +127,18 @@ class ConferenceApi(remote.Service):
         return self._doProfile(request)
 
 # - - - Hangout - - - - - - - - - - - - - - - - - - - - - - - 
+    def _copyHangoutToForm(self, hangout):
+        hang = HangoutForm()
+        for field in hang.all_fields():
+            if hasattr(hangout, field.name):
+                if field.name in ('date1', 'date2', 'date3', 'time1', 'time2', 'time3', 'deadlineDate',\
+                 'deadlineTime', 'dateEventCreated', 'totalCounter', 'partyTotal', 'votingCompleted'):
+                    setattr(hang, field.name, str(getattr(hangout, field.name)))
+                else:
+                    setattr(hang, field.name, getattr(hangout, field.name))
+        hang.check_initialized()
+        return hang
+
     @endpoints.method(HangoutForm, HangoutForm, 
             path='createHangout', 
             http_method='POST', name='createHangout')
@@ -133,39 +147,96 @@ class ConferenceApi(remote.Service):
 
         #getUserInformationHere
         user = endpoints.get_current_user()
-        print user
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
         user_id = getUserId(user)
         p_key = ndb.Key(Profile, user_id)
 
-        #Save informatoin from html forms to Hangout Database.
+        #Save information from html forms to Hangout Database.
         data = {field.name: getattr(request, field.name) for field in request.all_fields()}
-        print data
 
         #add in the the current time and date when event is created.
         data['dateEventCreated'] = datetime.utcnow()
 
-        #convert form dates to DateTimeProperties
-        data['date1'] = datetime.strptime(data['date1'][:10], "%Y-%m-%d").date()
-        data['date2'] = datetime.strptime(data['date2'][:10], "%Y-%m-%d").date()
-        data['date3'] = datetime.strptime(data['date3'][:10], "%Y-%m-%d").date()
-        data['deadlineDate'] = datetime.strptime(data['deadlineDate'][:10], "%Y-%m-%d").date()
-        
-        print data
+        #Handle Dates
+        data['date1'] = datetime.strptime(data['date1'], "%Y-%m-%d").date()
+        data['date2'] = datetime.strptime(data['date2'], "%Y-%m-%d").date()
+        data['date3'] = datetime.strptime(data['date3'], "%Y-%m-%d").date()
+
+        #Handle Times
+        data['time1'] = datetime.strptime(data['time1'], "%H:%M").time()
+        data['time2'] = datetime.strptime(data['time2'], "%H:%M").time()
+        data['time3'] = datetime.strptime(data['time3'], "%H:%M").time()
+
+        #Handle deadlineDate
+        data['deadlineDate'] = datetime.strptime(data['deadlineDate'], "%Y-%m-%d").date()
+        #Handle deadlineTime
+        data['deadlineTime'] = datetime.strptime(data['deadlineTime'], "%H:%M").time()
+
         #FriendListHandling
         #manage creating a dictionary for friendList is appropriate default info. Check the model.        
         #name, key, voteRank, confirmationiffirstchoicenotpicked
         #Add the keys of all the users to the friendList dictionary.
+        friendHandler=[]
+        friendsInJson=json.loads(data['friendList'])
+        counter=0
+        
+        #I should really pass the friendID not just the name. Be sure to switch this
+        #later in production
+        for friend in friendsInJson:
+            if friend == None:
+                pass
+            else:
+                #I have to get check the user's profileID here and do a database query of somesort.
+                p ={"profileID" : 0, "voteRank" : [0,0,0], "firstChoie" : 0, "confirmation" :0}
+                z ={friend : p}
+                friendsInJson[counter] = z
+                counter=counter+1
+
+        #Add a count for the event creator        
+        counter = counter + 1
+        data['friendList'] = json.dumps(friendsInJson)
+
+        ###Add Event Creator 
+        data['eventCreator'] = str(user_id)
+
+        #process the user's own voting preferences
+        data['groupVoteRanks'] = json.dumps({user_id : data['groupVoteRanks']})
+
+        ####Add the Total Party Count
+        data['totalCounter'] = 0
+        ####Add the Party Total
+        data['partyTotal'] = counter
+        ###Initialize the Rankings
+        data['finalResults'] = json.dumps([0,0,0])
+        ###Voting Completed
+        data['votingCompleted'] = False
 
         ####NOT MANDATORY, BUT WOULD IMPLEMENT HERE
         #Don't know how to implement yet, but account for those users not registered.
 
-        #update User's Profiles
+        #place into the database
+        Hangout(**data).put()
+        #wait for it to generate the keys
+        time.sleep(.1)
+        #Query the keys for the hangout
+        hangoutQry = Hangout.query(Hangout.eventCreator == str(user_id), Hangout.dateEventCreated == data['dateEventCreated'])
         #add the eventKey to all users associated with the hangout
 
-        #place into the database
-        #Hangout(**data).put()
+        #update User's Profiles
+        creator = p_key.get()
+        #get the list of events that the user is waiting on
+        if creator.eventsWaitingOn == None:
+            eventsWaitingOn = []
+        else:
+            eventsWaitingOn=json.loads(creator.eventsWaitingOn)
+
+        for event in hangoutQry:
+            eventKey = event.key.id()
+            eventsWaitingOn.append(eventKey)
+            creator.eventsWaitingOn = json.dumps(eventsWaitingOn)
+            #generates an L when appended to a list. I don't know why. but just printing it out, it is as advertised
+        creator.put()
 
         return request
 
@@ -182,8 +253,34 @@ class ConferenceApi(remote.Service):
     #def invited():
     #    pass
 
-    #def votedWaiting():
-    #   pass
+    @endpoints.method(message_types.VoidMessage, HangoutForms, 
+            path='votedWaiting', 
+            http_method='GET', name='votedWaiting')
+    def votedWaiting(self, request):
+        print "here bitch!!!"
+        #Query the database Hangout.get()
+        #put that into the form for showcasing everything, create the model
+        # make sure user is authed
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+        user_id = getUserId(user)
+        p_key = ndb.Key(Profile, user_id)
+        userData=p_key.get()
+        
+        
+        #handle the string processing
+        eventsWaitingOn = json.loads(userData.eventsWaitingOn)
+        eventList=[]
+        form = HangoutForm()
+        for eventId in eventsWaitingOn:
+            #get the event from ndb
+            event = ndb.Key(Hangout, eventId).get()
+
+            eventList.append(event) 
+
+        #return request
+        return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList])
 
     #def done():
     #   pass
@@ -195,7 +292,13 @@ api = endpoints.api_server([ConferenceApi]) # register API
     #for p in data:
     #    print p.key.id()
     #    print p.key.urlsafe()
+
+    #to get a key query the objects then:
+    #queryObj.key for ndb
+    #queryObj.key() was the old db
+
     #Profile.Query(current user)
+    #You need the key object then do a urlsafe()
     #then query more to get the list of objects 
     #p = Hangout.query().order(Hangout.date1)
     #    for x in p:

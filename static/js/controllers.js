@@ -238,7 +238,7 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
                 iCnt = iCnt + 1;
                 // ADD TEXTBOX.
                 $(container).prepend('<input type=text class="input" id=tb' + iCnt + ' ' +
-                            'name="friend' + iCnt + '" placeholder="Friend ' + iCnt +'"'+'required/>');
+                            'ng-model="checked.friend' + iCnt + '" placeholder="Friend ' + iCnt +'"'+'required/>');
 
                 if (iCnt == 100) {        // SHOW SUBMIT BUTTON IF ATLEAST "1" ELEMENT HAS BEEN CREATED.
                     var divSubmit = $(document.createElement('div'));
@@ -272,19 +272,19 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
     });
 
     // PICK THE VALUES FROM EACH TEXTBOX WHEN "SUBMIT" BUTTON IS CLICKED.
-    var divValue, values = '';
-    function GetTextValue() {
-        $(divValue).empty(); 
-        $(divValue).remove(); values = '';
-        $('.input').each(function() {
-            divValue = $(document.createElement('div')).css({
-                padding:'5px', width:'200px'
-            });
-            values += this.value + '<br />'
-        });
-        $(divValue).append('<p><b>Your selected values</b></p>' + values);
-        $('body').append(divValue);
-    }
+    //var divValue, values = '';
+    //function GetTextValue() {
+    //    $(divValue).empty(); 
+    //    $(divValue).remove(); values = '';
+    //    $('.input').each(function() {
+    //        divValue = $(document.createElement('div')).css({
+    //            padding:'5px', width:'200px'
+    //        });
+    //        values += this.value + '<br />'
+    //    });
+    //    $(divValue).append('<p><b>Your selected values</b></p>' + values);
+    //    $('body').append(divValue);
+    //}
     };
 
     $scope.allOptionsChecked = function(hangoutForm) {
@@ -339,7 +339,13 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
 
     $scope.createHangout = function (hangoutForm) {
         //Grab all the individual friends and put them into a list
-        //$scope.checked.friendList = ["tom", Michael, Tim, Paul etc.]
+        //Seems I need these entities as strings in order for it to work with the python model
+        var friendList = [$scope.checked.friend1, $scope.checked.friend2, $scope.checked.friend3];
+        $scope.checked.friendList = JSON.stringify(friendList);
+        
+        var userVote = [$scope.checked.option1, $scope.checked.option2, $scope.checked.option3];
+        $scope.checked.groupVoteRanks = JSON.stringify(userVote)
+
         gapi.client.conference.createHangout($scope.checked).
             execute(function(resp){
                 $scope.$apply(function() {
@@ -348,6 +354,8 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
                     }
                     else {
                         $log.info("Success Bitch!");
+                        $log.info(resp);
+                        $log.info(resp.result);
                     }
                 });
             });
@@ -355,7 +363,7 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
 
 });
 
-conferenceApp.controllers.controller('MyDashboardCtrl', function($scope){
+conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log){
     $scope.invited = function () {
         //Check if in the backend he was invited and didn't vote
         /*
@@ -373,6 +381,19 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope){
             Under true, showcase the resp of the gapi
         else return false
         */
+
+        gapi.client.conference.votedWaiting().
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error Yo');
+                    }
+                    else {
+                        $log.info("Success Bitch!");
+                        $log.info(resp);
+                    }
+                });
+            });
     };
 
     $scope.done = function () {

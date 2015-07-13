@@ -26,12 +26,12 @@ class Profile(ndb.Model):
     backupemail = ndb.StringProperty()
     password = ndb.StringProperty()
     cellphone = ndb.StringProperty()
-    listOfContacts = ndb.StringProperty()
-    eventsInvited = ndb.StringProperty()
-    eventsWaitingOn = ndb.StringProperty()
-    eventsVoteDone = ndb.StringProperty()
-    eventsPassedDate = ndb.StringProperty()
-    eventsRegrets = ndb.StringProperty()
+    listOfContacts = ndb.JsonProperty()
+    eventsInvited = ndb.JsonProperty()
+    eventsWaitingOn = ndb.JsonProperty()
+    eventsVoteDone = ndb.JsonProperty()
+    eventsPassedDate = ndb.JsonProperty()
+    eventsRegrets = ndb.JsonProperty()
 
 class ProfileMiniForm(messages.Message):
     """ProfileMiniForm -- update Profile form message"""
@@ -44,52 +44,51 @@ class ProfileForm(messages.Message):
 
 class Business(ndb.Model):
     businessName = ndb.StringProperty()
-    locationname = ndb.StringProperty()
+    locationName = ndb.StringProperty()
     mainEmail = ndb.StringProperty()
     password = ndb.StringProperty()
     phoneNumber = ndb.StringProperty()
     manager = ndb.StringProperty()
-    employeesList = ndb.StringProperty()
+    employeesList = ndb.JsonProperty()
     #list of parties that are voting on your establishment
-    votedOn = ndb.StringProperty()
+    votedOn = ndb.JsonProperty()
     #list of people in the area that are considering your specific place
-    wantingtoHang = ndb.StringProperty()
+    wantingToHang = ndb.JsonProperty()
     #parties that voted to hangout at your establishment
-    firstPick = ndb.StringProperty()
+    firstPick = ndb.JsonProperty()
     #your discount deals
-    discountDeals = ndb.StringProperty()
+    discountDeals = ndb.JsonProperty()
 
 #My Additions The Hangout Code
 class Hangout(ndb.Model):
     eventName = ndb.StringProperty()
     description = ndb.StringProperty()
-    date1 = ndb.StringProperty()
-    date2 = ndb.StringProperty()
-    date3 = ndb.StringProperty()
-    locationname1 = ndb.StringProperty()
-    locationname2 = ndb.StringProperty()
-    locationname3 = ndb.StringProperty()
-    place1 = ndb.StringProperty()
-    place2 = ndb.StringProperty()
-    place3 = ndb.StringProperty()
-    time1 = ndb.StringProperty()
-    time2 = ndb.StringProperty()
-    time3 = ndb.StringProperty()
+    date1 = ndb.DateProperty()
+    date2 = ndb.DateProperty()
+    date3 = ndb.DateProperty()
+    locationName1 = ndb.StringProperty()
+    locationName2 = ndb.StringProperty()
+    locationName3 = ndb.StringProperty()
+    address1 = ndb.StringProperty()
+    address2 = ndb.StringProperty()
+    address3 = ndb.StringProperty()
+    time1 = ndb.TimeProperty()
+    time2 = ndb.TimeProperty()
+    time3 = ndb.TimeProperty()
     #administrative items
     eventCreator=ndb.StringProperty()
     #populate the friendlist as a dictionary of name, key, and voteranks, confirmation if going to event if first choice was not picked.
-    friendList=ndb.StringProperty()
-    deadlineDate=ndb.StringProperty()
-    dateEventCreated=ndb.DateTimeProperty(auto_now_add=True)
-    #A True or False indicator if the main peopel that casted the vote finished
-    #and the event is underway
-    waitFlag=ndb.IntegerProperty()
-    userTotalCounter=ndb.IntegerProperty()
-    userPartyTotal=ndb.IntegerProperty()
+    friendList=ndb.JsonProperty()
+    deadlineDate=ndb.DateProperty()
+    deadlineTime=ndb.TimeProperty()
+    dateEventCreated=ndb.DateTimeProperty()
+    totalCounter=ndb.IntegerProperty()
+    partyTotal=ndb.IntegerProperty()
     #voting ranks will take the for of dictionary. first, second, and expandable
     #if we are to increase user choices later on.
-    voteChoiceRankings=ndb.StringProperty()
-    votingCompleted=ndb.IntegerProperty()
+    finalResults=ndb.JsonProperty()
+    votingCompleted=ndb.BooleanProperty()
+    groupVoteRanks = ndb.JsonProperty()
 
 class HangoutForm(messages.Message):
     eventName = messages.StringField(1)
@@ -97,12 +96,12 @@ class HangoutForm(messages.Message):
     date1 = messages.StringField(3)
     date2 = messages.StringField(4)
     date3 = messages.StringField(5)
-    locationname1 = messages.StringField(6)
-    locationname2 = messages.StringField(7)
-    locationname3 = messages.StringField(8)
-    place1 = messages.StringField(9)
-    place2 = messages.StringField(10)
-    place3 = messages.StringField(11)
+    locationName1 = messages.StringField(6)
+    locationName2 = messages.StringField(7)
+    locationName3 = messages.StringField(8)
+    address1 = messages.StringField(9)
+    address2 = messages.StringField(10)
+    address3 = messages.StringField(11)
     time1 = messages.StringField(12)
     time2 = messages.StringField(13)
     time3 = messages.StringField(14)
@@ -112,12 +111,17 @@ class HangoutForm(messages.Message):
     friendList=messages.StringField(16)
     deadlineDate=messages.StringField(17)
     dateEventCreated=messages.StringField(18)
-    #A True or False indicator if the main peopel that casted the vote finished
-    #and the event is underway
-    waitFlag=messages.StringField(19)
-    userTotalCounter=messages.StringField(20)
-    userPartyTotal=messages.StringField(21)
+    totalCounter=messages.StringField(19)
+    partyTotal=messages.StringField(20)
     #voting ranks will take the for of dictionary. first, second, and expandable
     #if we are to increase user choices later on.
-    voteChoiceRankings=messages.StringField(22)
-    votingCompleted = messages.StringField(23)
+    finalResults=messages.StringField(21)
+    votingCompleted = messages.StringField(22)
+    groupVoteRanks = messages.StringField(23)
+    deadlineTime = messages.StringField(24)
+
+class HangoutForms(messages.Message):
+    items = messages.MessageField(HangoutForm, 1, repeated=True)
+
+#class EventsWaitingForms(messages.Message):
+#    items = messages.MessageField()
