@@ -390,7 +390,11 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log){
                     }
                     else {
                         $log.info("Success Bitch!");
-                        $log.info(resp);
+                        $scope.hangouts = []
+                        $scope.hangout=[]
+                        angular.forEach(resp.items, function(hangout){
+                            $scope.hangouts.push(hangout);
+                        });
                     }
                 });
             });

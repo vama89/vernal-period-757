@@ -4,9 +4,11 @@
 <h3>Events Invited To</h3>
 <div ng-init="votedWaiting()">
 <h3>Events Voted On, but still waiting for deadline/people to Vote</h3>
-<!--
-Show the $scope variable in here of the 
-	-->
+<table>
+<tr ng-repeat="hangout in hangouts">
+	<td>{{hangout.eventName}}</td>
+</tr>
+</table>
 </div>
 <h3>Events where everyone has Voted/scheduled</h3>
 
