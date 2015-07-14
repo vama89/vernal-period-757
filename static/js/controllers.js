@@ -102,8 +102,13 @@ conferenceApp.controllers.controller('MyProfileCtrl',
                     });
                 });
         };
-    })
-;
+
+        $scope.pictureUpload = function(){
+            //Hit the api
+            //go into python
+            //
+        };
+    });
 
 /**
  * @ngdoc controller
@@ -373,7 +378,7 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log){
         //Ping the database to see if vote is true or false
         //return True if they are still voting
 
-        
+
 
     };
 
@@ -422,6 +427,16 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log){
 
     };
 
+
+});
+
+conferenceApp.controllers.controller('RegLogs', function($scope){
+    /*
+    Get the models for registration
+
+    send through the api and see if it has been created. if not send a reply
+    back that user already exists and try another login.
+    */
 
 });
 
