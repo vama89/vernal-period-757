@@ -2,11 +2,20 @@
 <h4>My Dashboard</h4>
 
 <h3>Events Invited To</h3>
+<table>
+	<tr>
+		<td>John's Going Away</td>
+		<td>12/4/15</td>
+		<td><button><a href="#/vote">Vote</a></button></td>
+	</tr>
+</table>
 <div ng-init="votedWaiting()">
 <h3>Events Voted On, but still waiting for deadline/people to Vote</h3>
 <table>
 <tr ng-repeat="hangout in hangouts">
 	<td>{{hangout.eventName}}</td>
+	<td><a href="#/results">Details</a></td>
+	<td><button>2</button></td>
 </tr>
 </table>
 </div>

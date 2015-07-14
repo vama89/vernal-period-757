@@ -51,6 +51,9 @@ var app = angular.module('conferenceApp',
                 when('/registration', {
                     templateUrl: '/partials/registration.html'
                 }).
+                when('/forgotPassword', {
+                    templateUrl: '/partials/forgotPassword.html'
+                }).
                 when('/', {
                     templateUrl: '/partials/home.html',
                     controller:'ShowAllCtrl'

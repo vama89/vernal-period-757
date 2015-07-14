@@ -193,6 +193,8 @@ class ConferenceApi(remote.Service):
                 friendsInJson[counter] = z
                 counter=counter+1
 
+        #Handle in this area, those that are not found within our system
+
         #Add a count for the event creator        
         counter = counter + 1
         data['friendList'] = json.dumps(friendsInJson)
@@ -220,9 +222,13 @@ class ConferenceApi(remote.Service):
         #wait for it to generate the keys
         time.sleep(.1)
         #Query the keys for the hangout
+        #Make sure that the query brings back this unique event. I have to figure out
+        #how to guarantee that this event is unique or that the search query is unique
+        #Maybe this is where the parent ancestors come into play?
         hangoutQry = Hangout.query(Hangout.eventCreator == str(user_id), Hangout.dateEventCreated == data['dateEventCreated'])
         #add the eventKey to all users associated with the hangout
 
+        #UPDATING THE EVENT CREATOR WITH THE APPriate hangout keys
         #update User's Profiles
         creator = p_key.get()
         #get the list of events that the user is waiting on
@@ -237,6 +243,9 @@ class ConferenceApi(remote.Service):
             creator.eventsWaitingOn = json.dumps(eventsWaitingOn)
             #generates an L when appended to a list. I don't know why. but just printing it out, it is as advertised
         creator.put()
+
+        #####Update the friends that were invited with the hangout key as well
+        #update down here
 
         return request
 
