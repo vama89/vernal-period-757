@@ -431,7 +431,7 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log){
 
 });
 
-conferenceApp.controllers.controller('RegLogsCtrl', function($scope,$log){
+conferenceApp.controllers.controller('RegLogsCtrl', function($scope,$log,$location){
     /*
     Get the models for registration
 
@@ -440,11 +440,43 @@ conferenceApp.controllers.controller('RegLogsCtrl', function($scope,$log){
     */
 
     //Set the global variable
+    //Run encryption or do a put here. Security issue.
     $scope.regLogInfo = $scope.regLogInfo || {};
 
     $scope.emailRegistration = function(registrationForm){
 
+        //Api hit to register and save
+
         $log.info($scope.regLogInfo);
+
+        /*
+            If email is able to save then
+                save the data and direct to the dashboard
+                //$location.path('/myDashboard').replace;
+            if not able to save, then redirect back to the registration page.
+                I think release the lock where it shows javascript that you need to change password
+        */
+        
+        gapi.client.conference.votedWaiting().
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error Yo');
+                    }
+                    else {
+                        $log.info("Success Bitch!");
+                        $scope.hangouts = []
+                        $scope.hangout=[]
+                        angular.forEach(resp.items, function(hangout){
+                            $scope.hangouts.push(hangout);
+                        });
+                    }
+                });
+            });
+
+        //if successful then release the lock.
+        //This lock is released to show an error on the page to try again I think
+        //another function in here that calls the email registration function. It loops.
 
     };
 

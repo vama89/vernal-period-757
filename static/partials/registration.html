@@ -19,28 +19,45 @@
 
 
         <form name="registrationForm">
-            
-            <input type="text" ng-model="regLogInfo.firstName" placeholder="First Name" required autofocus>
-            <!-- <span class="ion-at form-control-feedback"></span> -->
- 
-            <input type="text" ng-model="regLogInfo.lastName" placeholder="Last Name" required autofocus>
-            <!-- <span class="ion-at form-control-feedback"></span> -->
-                    
-            <input type="text" ng-model="regLogInfo.email" placeholder="Email" required autofocus>
-            <!-- <span class="ion-at form-control-feedback"></span> -->
-          
-            <input type="password" ng-model="regLogInfopassword" placeholder="Password" required>
-            <!-- <span class="ion-key form-control-feedback"></span> -->
-          
-
-            <input type="password" name="password" ng-model="regLogInfo.confirmPassword" placeholder="Confirm Password" required>
-            <!-- <span class="ion-key form-control-feedback"></span> -->
-
-          <button ng-click="emailRegistration(registrationForm)" ng-disabled="registrationForm.$invalid">Log in</button>
-
-          <br/>
-
-
+            <table>
+              <tr>
+                <td>
+                <input type="text" ng-model="regLogInfo.firstName" placeholder="First Name" required autofocus>
+                <!-- <span class="ion-at form-control-feedback"></span> -->
+                </td>
+              </tr>
+              <tr>
+                <td>
+                <input type="text" ng-model="regLogInfo.lastName" placeholder="Last Name" required autofocus>
+                <!-- <span class="ion-at form-control-feedback"></span> -->
+                </td>
+              </tr> 
+              <tr> 
+                <!--Throw and NG-Show here if there is an email duplicate-->
+                <!--That or some bootstrap protocol-->
+                <td>    
+                <input type="text" ng-model="regLogInfo.email" placeholder="Email" required autofocus>
+                <!-- <span class="ion-at form-control-feedback"></span> -->
+                </td>
+              </tr>
+              <tr>
+                <td>
+                <input type="password" ng-model="regLogInfopassword" placeholder="Password" required>
+                <!-- <span class="ion-key form-control-feedback"></span> -->
+                </td>
+              </tr>
+              <tr>
+                <td>
+                <input type="password" name="password" ng-model="regLogInfo.confirmPassword" placeholder="Confirm Password" required>
+                <!-- <span class="ion-key form-control-feedback"></span> -->
+                </td>
+              </tr>
+              <tr>
+                <td>
+                <button ng-click="emailRegistration(registrationForm)" ng-disabled="registrationForm.$invalid">Log in</button>
+                </td>
+              </tr>   
+          </table>
         </form>
 
 <!--         <button class="btn btn-block btn-facebook" ng-click="authenticate('facebook')">
