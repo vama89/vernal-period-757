@@ -42,6 +42,14 @@ class ProfileForm(messages.Message):
     displayName = messages.StringField(1)
     mainEmail = messages.StringField(2)
 
+class EmailRegFormInput(messages.Message):
+    #This has to be unique - email (use as the id)
+    email=messages.StringField(1)
+    firstName=messages.StringField(2)
+    lastName=messages.StringField(3)
+    password=messages.StringField(4)
+    confirmPassword=messages.StringField(5)
+
 class Business(ndb.Model):
     businessName = ndb.StringProperty()
     locationName = ndb.StringProperty()

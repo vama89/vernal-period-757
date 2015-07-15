@@ -456,8 +456,9 @@ conferenceApp.controllers.controller('RegLogsCtrl', function($scope,$log,$locati
             if not able to save, then redirect back to the registration page.
                 I think release the lock where it shows javascript that you need to change password
         */
-        
-        gapi.client.conference.votedWaiting().
+        $log.info($scope.regLogInfo)
+
+        gapi.client.conference.emailRegistration($scope.regLogInfo).
             execute(function(resp){
                 $scope.$apply(function() {
                     if (resp.error){
@@ -465,19 +466,9 @@ conferenceApp.controllers.controller('RegLogsCtrl', function($scope,$log,$locati
                     }
                     else {
                         $log.info("Success Bitch!");
-                        $scope.hangouts = []
-                        $scope.hangout=[]
-                        angular.forEach(resp.items, function(hangout){
-                            $scope.hangouts.push(hangout);
-                        });
                     }
-                });
             });
-
-        //if successful then release the lock.
-        //This lock is released to show an error on the page to try again I think
-        //another function in here that calls the email registration function. It loops.
-
+        });
     };
 
 });

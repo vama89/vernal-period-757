@@ -30,6 +30,7 @@ from models import ProfileForm
 from models import Hangout
 from models import HangoutForm
 from models import HangoutForms
+from models import EmailRegFormInput
 
 from settings import WEB_CLIENT_ID
 from settings import ANDROID_CLIENT_ID
@@ -125,6 +126,16 @@ class ConferenceApi(remote.Service):
     def saveProfile(self, request):
         """Update & return user profile."""
         return self._doProfile(request)
+
+
+    ####Registration and Login Codes:
+    @endpoints.method(EmailRegFormInput, EmailRegFormInput,
+            path='emailRegistration', http_method='POST', name='emailRegistration')
+    def emailRegistration(self, request):
+        #Get and save the email here.
+        print request
+        return request
+
 
 # - - - Hangout - - - - - - - - - - - - - - - - - - - - - - - 
     def _copyHangoutToForm(self, hangout):
