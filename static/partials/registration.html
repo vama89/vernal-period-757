@@ -1,3 +1,4 @@
+<div ng-controller="RegLogsCtrl">
 <div class="container" ng-show="!getSignedInState()">
   <div class="row">
     <div class="center-form panel">
@@ -19,28 +20,23 @@
 
         <form name="registrationForm">
             
-            <input type="text" name="email" ng-model="firstName" placeholder="First Name" required autofocus>
+            <input type="text" ng-model="regLogInfo.firstName" placeholder="First Name" required autofocus>
             <!-- <span class="ion-at form-control-feedback"></span> -->
-
-            
-            <input type="text" name="email" ng-model="lastName" placeholder="Last Name" required autofocus>
+ 
+            <input type="text" ng-model="regLogInfo.lastName" placeholder="Last Name" required autofocus>
             <!-- <span class="ion-at form-control-feedback"></span> -->
-          
-
-          
-            <input type="text" name="email" ng-model="email" placeholder="Email" required autofocus>
+                    
+            <input type="text" ng-model="regLogInfo.email" placeholder="Email" required autofocus>
             <!-- <span class="ion-at form-control-feedback"></span> -->
           
-
-
-            <input type="password" name="password" ng-model="password" placeholder="Password" required>
+            <input type="password" ng-model="regLogInfopassword" placeholder="Password" required>
             <!-- <span class="ion-key form-control-feedback"></span> -->
           
 
-            <input type="password" name="password" ng-model="confirmPassword" placeholder="Confirm Password" required>
+            <input type="password" name="password" ng-model="regLogInfo.confirmPassword" placeholder="Confirm Password" required>
             <!-- <span class="ion-key form-control-feedback"></span> -->
 
-          <button type="submit" ng-disabled="registrationForm.$invalid">Log in</button>
+          <button ng-click="emailRegistration(registrationForm)" ng-disabled="registrationForm.$invalid">Log in</button>
 
           <br/>
 
@@ -54,6 +50,8 @@
       </div>
     </div>
   </div>
+</div>
+
 </div>
 <!--     <div>
             <ul class="list-inline intro-social-buttons">

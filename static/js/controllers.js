@@ -108,6 +108,7 @@ conferenceApp.controllers.controller('MyProfileCtrl',
             //go into python
             //
         };
+
     });
 
 /**
@@ -430,13 +431,22 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log){
 
 });
 
-conferenceApp.controllers.controller('RegLogs', function($scope){
+conferenceApp.controllers.controller('RegLogsCtrl', function($scope,$log){
     /*
     Get the models for registration
 
     send through the api and see if it has been created. if not send a reply
     back that user already exists and try another login.
     */
+
+    //Set the global variable
+    $scope.regLogInfo = $scope.regLogInfo || {};
+
+    $scope.emailRegistration = function(registrationForm){
+
+        $log.info($scope.regLogInfo);
+
+    };
 
 });
 
