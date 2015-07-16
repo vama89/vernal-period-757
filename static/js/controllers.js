@@ -431,7 +431,7 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log){
 
 });
 
-conferenceApp.controllers.controller('RegLogsCtrl', function($scope,$log,$location){
+conferenceApp.controllers.controller('RegLogsCtrl', function($scope,$log,$location,oauth2Provider){
     /*
     Get the models for registration
 
@@ -452,6 +452,8 @@ conferenceApp.controllers.controller('RegLogsCtrl', function($scope,$log,$locati
         /*
             If email is able to save then
                 save the data and direct to the dashboard
+                Then trigger the signedIn state to true change the navbar
+                oauth2Provider.signedIn = True
                 //$location.path('/myDashboard').replace;
             if not able to save, then redirect back to the registration page.
                 I think release the lock where it shows javascript that you need to change password
@@ -466,6 +468,8 @@ conferenceApp.controllers.controller('RegLogsCtrl', function($scope,$log,$locati
                     }
                     else {
                         $log.info("Success Bitch!");
+                        //oauth2Provider.signedIn = true;
+                        //$location.path('/myDashboard').replace;
                     }
             });
         });

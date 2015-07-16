@@ -133,7 +133,9 @@ class ConferenceApi(remote.Service):
             path='emailRegistration', http_method='POST', name='emailRegistration')
     def emailRegistration(self, request):
         #Get and save the email here.
+        #Add the old code in here.
         print request
+
         return request
 
 
@@ -204,6 +206,12 @@ class ConferenceApi(remote.Service):
                 friendsInJson[counter] = z
                 counter=counter+1
 
+                #then I have to get the friend's id (like I do with my own username
+                #thenquery their profile
+                #then just add them to the list of id's as I need to finish creating this event first
+                #friendID list*******
+                #proceed to after saving to the hangout below
+
         #Handle in this area, those that are not found within our system
 
         #Add a count for the event creator        
@@ -257,6 +265,8 @@ class ConferenceApi(remote.Service):
 
         #####Update the friends that were invited with the hangout key as well
         #update down here
+        #get the friendid list created up above
+        #emulate what I did for the event creator just above but place in eventsInvited
 
         return request
 
@@ -270,8 +280,31 @@ class ConferenceApi(remote.Service):
 
         return request
 
-    #def invited():
-    #    pass
+    @endpoints.method(message_types.VoidMessage, HangoutForms, 
+        path='invited', 
+        http_method='GET', name='invited')
+    def invited(self, request):
+        #How do you know you are invited?
+        #check your invited queue on your profile. Should have been handled during event creation
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+        user_id = getUserId(user)
+        p_key = ndb.Key(Profile, user_id)
+        userData=p_key.get()
+        
+        
+        #handle the string processing
+        eventsInvited = json.loads(userData.eventsInvited)
+        eventList=[]
+        form = HangoutForm()
+        for eventId in eventsInvited:
+            #get the event from ndb
+            event = ndb.Key(Hangout, eventId).get()
+
+            eventList.append(event)
+
+        return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList]
 
     @endpoints.method(message_types.VoidMessage, HangoutForms, 
             path='votedWaiting', 
@@ -302,8 +335,14 @@ class ConferenceApi(remote.Service):
         #return request
         return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList])
 
-    #def done():
-    #   pass
+    @endpoints.method(message_types.VoidMessage, message_types.VoidMessage, 
+        path='done', 
+        http_method='GET', name='done')
+    def done(self, request):
+        #How do you know you event voting is done?
+        #check your done queue. Should have been handled during event creation
+
+        return request
 
 api = endpoints.api_server([ConferenceApi]) # register API
 
