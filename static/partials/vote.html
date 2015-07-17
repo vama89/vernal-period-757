@@ -1,8 +1,9 @@
+<div ng-controller="VoteCtrl">
 <h3>This is the Vote Page</h3>
 
-
+<form name="voteForm">
 <!--Use ngShow and the javascript functions within a div to display
-the appropriate voting information -->
+the appropriate voting information 
 <div>Can you make the event?</div>
 <select name="priority1">
 		<option>Yes</option>
@@ -15,10 +16,11 @@ the appropriate voting information -->
 		<option>Yes</option>
 		<option>No</option>
 	</select>
+	-->
 
 <div>Ok, so what are your preferences? First being the most preferred!</div>
 <label>Vote1
-<select name="priority1">
+<select ng-model="votes.option1">
 		<option>1</option>
 		<option>2</option>
 		<option>3</option>
@@ -28,7 +30,7 @@ the appropriate voting information -->
 <br>
 
 <label>Vote2
-<select name="priority2">
+<select ng-model="votes.option2">
 		<option>1</option>
 		<option>2</option>
 		<option>3</option>
@@ -39,9 +41,13 @@ the appropriate voting information -->
 
 
 	<label>Vote3
-<select name="priority3">
+<select ng-model="votes.option3">
 		<option>1</option>
 		<option>2</option>
 		<option>3</option>
 	</select>
 	</label>
+
+	<button ng-click="vote(voteForm)"></button>
+</form>
+</div>

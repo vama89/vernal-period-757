@@ -492,7 +492,26 @@ conferenceApp.controllers.controller('RegLogsCtrl', function($scope,$log,$locati
 
 });
 
-conferenceApp.controllers.controller('VoteCtrl', function($scope){
+conferenceApp.controllers.controller('VoteCtrl', function($scope,$log){
+
+    $scope.votes = $scope.votes || {};
+
+    $scope.vote = function(voteForm){
+        
+        gapi.client.conference.vote().
+                execute(function(resp){
+                    $scope.$apply(function() {
+                        if (resp.error){
+                            $log.error('There was an Error Yo');
+                        }
+                        else {
+                            $log.info("Success Bitch!");
+                            $log.info($scope.votes);
+                            //send back to the dashboard. Use the location
+                        }
+                    });
+                });
+    };
 
 });
 

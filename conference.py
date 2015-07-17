@@ -376,6 +376,16 @@ class ConferenceApi(remote.Service):
 
         return request
 
+    @endpoints.method(message_types.VoidMessage, message_types.VoidMessage, 
+        path='vote', 
+        http_method='POST', name='vote')
+    def vote(self, request):
+        #How do you know you event voting is done?
+        #check your done queue. Should have been handled during event creation
+        print "here bitch"
+
+        return request
+
 api = endpoints.api_server([ConferenceApi]) # register API
 
 #Sample Code to help me out. Reminder Code
