@@ -1,7 +1,16 @@
 <div ng-controller="MyDashboardCtrl">
 <h4>My Dashboard</h4>
 
-<h3>Events Invited To</h3>
+<div ng-init="invited()">
+<h3>Events Invited</h3>
+<table>
+<tr ng-repeat="invitedHangout in invitedHangouts">
+	<td>{{invitedHangout.eventName}}</td>
+	<td><a href="#/vote">Vote</a></td>
+	<td><button>2</button></td>
+</tr>
+</table>
+</div>
 
 <div ng-init="votedWaiting()">
 <h3>Events Voted On, but still waiting for deadline/people to Vote</h3>
@@ -13,6 +22,7 @@
 </tr>
 </table>
 </div>
+
 <h3>Events where everyone has Voted/scheduled</h3>
 
 <p>Misc. Info.</p>

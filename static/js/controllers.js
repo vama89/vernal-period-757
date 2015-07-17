@@ -391,6 +391,23 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log){
         else return false
         */
 
+        gapi.client.conference.invited().
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error Yo');
+                    }
+                    else {
+                        $log.info("Success Bitch!");
+                        $scope.invitedHangouts = []
+                        $scope.invitedHangout=[]
+                        angular.forEach(resp.items, function(invitedHangout){
+                            $scope.invitedHangouts.push(invitedHangout);
+                        });
+                    }
+                });
+            });
+
     };
 
     $scope.votedWaiting = function () {
