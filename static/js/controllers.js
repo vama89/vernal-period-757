@@ -447,8 +447,6 @@ conferenceApp.controllers.controller('RegLogsCtrl', function($scope,$log,$locati
 
         //Api hit to register and save
 
-        $log.info($scope.regLogInfo);
-
         /*
             If email is able to save then
                 save the data and direct to the dashboard

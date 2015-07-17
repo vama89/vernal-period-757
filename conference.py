@@ -201,6 +201,9 @@ class ConferenceApi(remote.Service):
                 pass
             else:
                 #I have to get check the user's profileID here and do a database query of somesort.
+                #i'll have the user's name - this is the whole search feature
+                #based off the user name....how will I get the right userID/right person...the creator has to pick it for me
+
                 p ={"profileID" : 0, "voteRank" : [0,0,0], "firstChoie" : 0, "confirmation" :0}
                 z ={friend : p}
                 friendsInJson[counter] = z
@@ -281,8 +284,8 @@ class ConferenceApi(remote.Service):
         return request
 
     @endpoints.method(message_types.VoidMessage, HangoutForms, 
-        path='invited', 
-        http_method='GET', name='invited')
+            path='invited', 
+            http_method='GET', name='invited')
     def invited(self, request):
         #How do you know you are invited?
         #check your invited queue on your profile. Should have been handled during event creation
@@ -304,7 +307,7 @@ class ConferenceApi(remote.Service):
 
             eventList.append(event)
 
-        return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList]
+        return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList])
 
     @endpoints.method(message_types.VoidMessage, HangoutForms, 
             path='votedWaiting', 
