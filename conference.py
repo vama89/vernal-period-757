@@ -190,7 +190,7 @@ class ConferenceApi(remote.Service):
         #manage creating a dictionary for friendList is appropriate default info. Check the model.        
         #name, key, voteRank, confirmationiffirstchoicenotpicked
         #Add the keys of all the users to the friendList dictionary.
-        friendHandler=[]
+        friendIDList=[]
         friendsInJson=json.loads(data['friendList'])
         counter=0
         
@@ -204,7 +204,20 @@ class ConferenceApi(remote.Service):
                 #i'll have the user's name - this is the whole search feature
                 #based off the user name....how will I get the right userID/right person...the creator has to pick it for me
 
-                p ={"profileID" : 0, "voteRank" : [0,0,0], "firstChoie" : 0, "confirmation" :0}
+                #Search within the database to find the user. At this time, I must search their userID
+                #I'll have to setup extra structures in order to search by name
+                #1.)search by name
+                #2.)Search by incorrect spelling
+                #3.)Search by email and phone number
+
+                #grab the key
+                #friend_key = ndb.Key(Profile, friend)
+
+                #then place the key within the list of friend keys to carry out processes below
+                #friendKeyList.append(friend_key)
+                friendIDList.append(friend)
+
+                p ={"profileID" : friend, "voteRank" : [0,0,0], "firstChoie" : 0, "confirmation" :0}
                 z ={friend : p}
                 friendsInJson[counter] = z
                 counter=counter+1
@@ -270,6 +283,22 @@ class ConferenceApi(remote.Service):
         #update down here
         #get the friendid list created up above
         #emulate what I did for the event creator just above but place in eventsInvited
+        for friendID in friendIDList:
+            friendObject = ndb.Key(Profile, friendID).get()
+            if friendObject.eventsInvited == None:
+                eventsInvited = []
+                for event in hangoutQry:
+                    eventKey = event.key.id()
+                    eventsInvited.append(eventKey)
+                    friendObject.eventsInvited = json.dumps(eventsInvited)
+                    friendObject.put()
+            else:
+                eventsInvited=json.loads(friendObject.eventsInvited)
+                for event in hangoutQry:
+                    eventKey = event.key.id()
+                    eventsInvited.append(eventKey)
+                    friendObject.eventsInvited = json.dumps(eventsInvited)
+                    friendObject.put()
 
         return request
 
