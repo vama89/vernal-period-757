@@ -131,5 +131,10 @@ class HangoutForm(messages.Message):
 class HangoutForms(messages.Message):
     items = messages.MessageField(HangoutForm, 1, repeated=True)
 
+class VoteForm(messages.Message):
+    option1 = messages.StringField(1)
+    option2 = messages.StringField(2)
+    option3 = messages.StringField(3)
+
 #class EventsWaitingForms(messages.Message):
 #    items = messages.MessageField()

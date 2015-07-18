@@ -31,6 +31,7 @@ from models import Hangout
 from models import HangoutForm
 from models import HangoutForms
 from models import EmailRegFormInput
+from models import VoteForm
 
 from settings import WEB_CLIENT_ID
 from settings import ANDROID_CLIENT_ID
@@ -165,6 +166,8 @@ class ConferenceApi(remote.Service):
         user_id = getUserId(user)
         p_key = ndb.Key(Profile, user_id)
 
+        print request
+
         #Save information from html forms to Hangout Database.
         data = {field.name: getattr(request, field.name) for field in request.all_fields()}
 
@@ -283,6 +286,7 @@ class ConferenceApi(remote.Service):
         #update down here
         #get the friendid list created up above
         #emulate what I did for the event creator just above but place in eventsInvited
+        """
         for friendID in friendIDList:
             friendObject = ndb.Key(Profile, friendID).get()
             if friendObject.eventsInvited == None:
@@ -299,6 +303,7 @@ class ConferenceApi(remote.Service):
                     eventsInvited.append(eventKey)
                     friendObject.eventsInvited = json.dumps(eventsInvited)
                     friendObject.put()
+        """
 
         return request
 
@@ -376,13 +381,35 @@ class ConferenceApi(remote.Service):
 
         return request
 
-    @endpoints.method(message_types.VoidMessage, message_types.VoidMessage, 
+    @endpoints.method(VoteForm, VoteForm, 
         path='vote', 
         http_method='POST', name='vote')
     def vote(self, request):
         #How do you know you event voting is done?
         #check your done queue. Should have been handled during event creation
         print "here bitch"
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+        user_id = getUserId(user)
+        p_key = ndb.Key(Profile, user_id)
+        
+        print request
+        #things to update:
+        #friendlist
+        #totalCounter
+        #partyTotal
+        #group vote Ranks
+        data = {field.name: getattr(request, field.name) for field in request.all_fields()}
+        print data
+
+        #input the votes recieved from the form
+
+        #updated the vote area for the algorithm of voting
+
+        #check to see if voting is completed
+
+        #move this hangout to the voted waiting for this user or completed depending who votes last.
 
         return request
 

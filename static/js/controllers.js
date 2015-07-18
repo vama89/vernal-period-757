@@ -443,6 +443,9 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log){
         else return false
         */
 
+        //Same as invited or voteWaiting
+        //Get the results and just display the information details across the page
+
     };
 
 
@@ -497,8 +500,8 @@ conferenceApp.controllers.controller('VoteCtrl', function($scope,$log){
     $scope.votes = $scope.votes || {};
 
     $scope.vote = function(voteForm){
-        
-        gapi.client.conference.vote().
+
+        gapi.client.conference.vote($scope.votes).
                 execute(function(resp){
                     $scope.$apply(function() {
                         if (resp.error){
