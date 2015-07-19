@@ -379,8 +379,6 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log){
         //Ping the database to see if vote is true or false
         //return True if they are still voting
 
-
-
     };
 
     $scope.invited = function () {
@@ -533,7 +531,24 @@ conferenceApp.controllers.controller('VoteCtrl', function($scope,$log,$routePara
 
 });
 
-conferenceApp.controllers.controller('ResultsCtrl', function($scope){
+conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $routeParams){
+        /*
+        $scope.getResults = function () {
+
+        gapi.client.conference.getResults().
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error Yo');
+                    }
+                    else {
+                        $log.info("Success Bitch!");
+                        
+                    }
+                });
+            });
+    };
+    */
 
 });
 

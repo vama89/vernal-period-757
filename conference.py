@@ -547,6 +547,28 @@ class ConferenceApi(remote.Service):
             """
         return request
 
+    @endpoints.method(message_types.VoidMessage, HangoutForms, 
+        path='getResults', 
+        http_method='GET', name='getResults')
+    def getResults(self, request):
+        #How do you know you event voting is done?
+        #check your done queue. Should have been handled during event creation
+        
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+        user_id = getUserId(user)
+        p_key = ndb.Key(Profile, user_id)
+        userData=p_key.get()
+
+        #get the event from datastore
+
+        #place the event into a form to display the information on the page
+        #people who were invited
+        #results of the vote
+
+        return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList])
+
 api = endpoints.api_server([ConferenceApi]) # register API
 
 #Sample Code to help me out. Reminder Code

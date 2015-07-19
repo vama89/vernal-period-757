@@ -1,8 +1,9 @@
 <div ng-controller="MyDashboardCtrl">
 <h4>My Dashboard</h4>
 
-<div ng-init="invited()">
+<!-- ng-show that shows  the following if they are still voting, else doesn't hit the backend for errors-->
 <h3>Events Invited</h3>
+<div ng-init="invited()">
 <table>
 <tr ng-repeat="invitedHangout in invitedHangouts">
 	<td>{{invitedHangout.eventName}}</td>
@@ -12,25 +13,23 @@
 </table>
 </div>
 
-<div ng-init="votedWaiting()">
 <h3>Events Voted On, but still waiting for deadline/people to Vote</h3>
+<div ng-init="votedWaiting()">
 <table>
 <tr ng-repeat="hangout in hangouts">
 	<td>{{hangout.eventName}}</td>
-	<td><a href="#/results">Details</a></td>
+	<td><a href="#/results/{{hangout.webSafeKey}}">Details</a></td>
 	<td><button>2</button></td>
 </tr>
 </table>
 </div>
 
-
-
-<div ng-init="done()">
 <h3>Events where everyone has Voted/scheduled</h3>
+<div ng-init="done()">
 <table>
 <tr ng-repeat="doneHangout in doneHangouts">
 	<td>{{doneHangout.eventName}}</td>
-	<td><a href="#/results">Details</a></td>
+	<td><a href="#/results/{{doneHangout.webSafeKey}}">Details</a></td>
 	<td><button>2</button></td>
 </tr>
 </table>

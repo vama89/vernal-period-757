@@ -41,7 +41,7 @@ var app = angular.module('conferenceApp',
                     templateUrl: '/partials/vote.html',
                     controller:'VoteCtrl'
                 }).
-                when('/results', {
+                when('/results/:webSafeKey', {
                     templateUrl: '/partials/results.html',
                     controller:'ResultsCtrl'
                 }).
