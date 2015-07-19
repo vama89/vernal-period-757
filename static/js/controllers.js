@@ -495,7 +495,7 @@ conferenceApp.controllers.controller('RegLogsCtrl', function($scope,$log,$locati
 
 });
 
-conferenceApp.controllers.controller('VoteCtrl', function($scope,$log){
+conferenceApp.controllers.controller('VoteCtrl', function($scope,$log,$routeParams){
 
     $scope.votes = $scope.votes || {};
 

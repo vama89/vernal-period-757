@@ -150,6 +150,8 @@ class ConferenceApi(remote.Service):
                     setattr(hang, field.name, str(getattr(hangout, field.name)))
                 else:
                     setattr(hang, field.name, getattr(hangout, field.name))
+            elif field.name == "webSafeKey":
+                setattr(hang, field.name, hangout.key.urlsafe())
         hang.check_initialized()
         return hang
 
@@ -170,6 +172,7 @@ class ConferenceApi(remote.Service):
 
         #Save information from html forms to Hangout Database.
         data = {field.name: getattr(request, field.name) for field in request.all_fields()}
+        del data['webSafeKey']
 
         #add in the the current time and date when event is created.
         data['dateEventCreated'] = datetime.utcnow()
@@ -329,7 +332,9 @@ class ConferenceApi(remote.Service):
         user_id = getUserId(user)
         p_key = ndb.Key(Profile, user_id)
         userData=p_key.get()
-        
+
+        print userData.key.urlsafe()
+        print userData.key.id()
         
         #handle the string processing
         eventsInvited = json.loads(userData.eventsInvited)
@@ -357,7 +362,6 @@ class ConferenceApi(remote.Service):
         user_id = getUserId(user)
         p_key = ndb.Key(Profile, user_id)
         userData=p_key.get()
-        
         
         #handle the string processing
         eventsWaitingOn = json.loads(userData.eventsWaitingOn)
@@ -387,13 +391,12 @@ class ConferenceApi(remote.Service):
     def vote(self, request):
         #How do you know you event voting is done?
         #check your done queue. Should have been handled during event creation
-        print "here bitch"
         user = endpoints.get_current_user()
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
         user_id = getUserId(user)
         p_key = ndb.Key(Profile, user_id)
-        
+
         print request
         #things to update:
         #friendlist

@@ -127,6 +127,7 @@ class HangoutForm(messages.Message):
     votingCompleted = messages.StringField(22)
     groupVoteRanks = messages.StringField(23)
     deadlineTime = messages.StringField(24)
+    webSafeKey = messages.StringField(25)
 
 class HangoutForms(messages.Message):
     items = messages.MessageField(HangoutForm, 1, repeated=True)
@@ -135,6 +136,7 @@ class VoteForm(messages.Message):
     option1 = messages.StringField(1)
     option2 = messages.StringField(2)
     option3 = messages.StringField(3)
+    hangoutKey = messages.StringField(4)
 
 #class EventsWaitingForms(messages.Message):
 #    items = messages.MessageField()

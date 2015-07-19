@@ -6,12 +6,12 @@
 <table>
 <tr ng-repeat="invitedHangout in invitedHangouts">
 	<td>{{invitedHangout.eventName}}</td>
-	<td><a href="#/vote">Vote</a></td>
+	<td><a href="#/vote/{{invitedHangout.webSafeKey}}">Vote</a></td>
 	<td><button>2</button></td>
 </tr>
 </table>
 </div>
-
+<!--
 <div ng-init="votedWaiting()">
 <h3>Events Voted On, but still waiting for deadline/people to Vote</h3>
 <table>
@@ -21,7 +21,7 @@
 	<td><button>2</button></td>
 </tr>
 </table>
-</div>
+</div>-->
 
 <h3>Events where everyone has Voted/scheduled</h3>
 
