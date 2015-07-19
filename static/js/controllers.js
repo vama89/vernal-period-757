@@ -500,6 +500,7 @@ conferenceApp.controllers.controller('VoteCtrl', function($scope,$log,$routePara
     $scope.votes = $scope.votes || {};
 
     $scope.vote = function(voteForm){
+        $scope.votes.webSafeKey = $routeParams.webSafeKey
 
         gapi.client.conference.vote($scope.votes).
                 execute(function(resp){

@@ -136,7 +136,7 @@ class VoteForm(messages.Message):
     option1 = messages.StringField(1)
     option2 = messages.StringField(2)
     option3 = messages.StringField(3)
-    hangoutKey = messages.StringField(4)
+    webSafeKey = messages.StringField(4)
 
 #class EventsWaitingForms(messages.Message):
 #    items = messages.MessageField()
