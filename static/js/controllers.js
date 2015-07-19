@@ -445,9 +445,23 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log){
 
         //Same as invited or voteWaiting
         //Get the results and just display the information details across the page
-
+        gapi.client.conference.done().
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error Yo');
+                    }
+                    else {
+                        $log.info("Success Bitch!");
+                        $scope.doneHangouts = []
+                        $scope.doneHangout=[]
+                        angular.forEach(resp.items, function(doneHangout){
+                            $scope.doneHangouts.push(doneHangout);
+                        });
+                    }
+                });
+            });
     };
-
 
 });
 

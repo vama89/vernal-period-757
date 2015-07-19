@@ -86,6 +86,7 @@ class Hangout(ndb.Model):
     #administrative items
     eventCreator=ndb.StringProperty()
     #populate the friendlist as a dictionary of name, key, and voteranks, confirmation if going to event if first choice was not picked.
+    #friendlist is a list of friends[]. in the list each friend is structured as a dictionary
     friendList=ndb.JsonProperty()
     deadlineDate=ndb.DateProperty()
     deadlineTime=ndb.TimeProperty()
@@ -94,6 +95,8 @@ class Hangout(ndb.Model):
     partyTotal=ndb.IntegerProperty()
     #voting ranks will take the for of dictionary. first, second, and expandable
     #if we are to increase user choices later on.
+    #key to decipher final results is that the numbers inside refer to the options
+    #then in the list[] index 0 is the first place choice
     finalResults=ndb.JsonProperty()
     votingCompleted=ndb.BooleanProperty()
     groupVoteRanks = ndb.JsonProperty()

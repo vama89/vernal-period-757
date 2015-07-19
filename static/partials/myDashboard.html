@@ -11,7 +11,7 @@
 </tr>
 </table>
 </div>
-<!--
+
 <div ng-init="votedWaiting()">
 <h3>Events Voted On, but still waiting for deadline/people to Vote</h3>
 <table>
@@ -21,9 +21,20 @@
 	<td><button>2</button></td>
 </tr>
 </table>
-</div>-->
+</div>
 
+
+
+<div ng-init="done()">
 <h3>Events where everyone has Voted/scheduled</h3>
+<table>
+<tr ng-repeat="doneHangout in doneHangouts">
+	<td>{{doneHangout.eventName}}</td>
+	<td><a href="#/results">Details</a></td>
+	<td><button>2</button></td>
+</tr>
+</table>
+</div>
 
 <p>Misc. Info.</p>
 <h3>Events Created</h3>
