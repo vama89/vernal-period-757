@@ -1,13 +1,6 @@
 <div ng-controller="ResultsCtrl">
 <div ng-init="getResults()">
 
-<h3>Results</h3>
-<table>
-<tr ng-repeat="result in results">
-	<td>{{result.eventName}}</td>
-</tr>
-</table>
-
 <!--angualr check whether it is done or not
 <div>Waiting/Deadline Didn't Pass Yet</div>
 <h3>Those who Voted</h3>
@@ -17,6 +10,14 @@
 <h3>Hangout 2 Tally</h3>
 <h3>Hangout 3 Tally</h3>
 Show this portion if stillVoting -->
+
+<h3>Results</h3>
+<table>
+<tr ng-repeat="result in results">
+	<td>{{result.eventName}}</td>
+	<td>{{result.finalResults}}</td>
+</tr>
+</table>
 
 <!-- If not stillVoting then show below-->
 <h3>Winner</h3>

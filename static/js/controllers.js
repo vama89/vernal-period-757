@@ -552,6 +552,8 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                         angular.forEach(resp.items, function(result){
                             $scope.results.push(result);
                         });
+
+                        //or parse resp.items here and set a new $scope variable
                         
                     }
                 });
