@@ -1,5 +1,12 @@
 <div ng-controller="ResultsCtrl">
+<div ng-init="getResults()">
+
 <h3>Results</h3>
+<table>
+<tr ng-repeat="result in results">
+	<td>{{result.eventName}}</td>
+</tr>
+</table>
 
 <!--angualr check whether it is done or not
 <div>Waiting/Deadline Didn't Pass Yet</div>
@@ -32,4 +39,5 @@ Show this portion if stillVoting -->
 <h3>Potluck for People to Bring things and who is responsible for what</h3>
 <h3>Feature for people to Vote on other things here too just in case/Last minute</h3>
 -->
+</div>
 </div>

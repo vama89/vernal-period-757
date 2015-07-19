@@ -379,7 +379,7 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log){
         //Ping the database to see if vote is true or false
         //return True if they are still voting
 
-        
+
 
     };
 
@@ -534,10 +534,12 @@ conferenceApp.controllers.controller('VoteCtrl', function($scope,$log,$routePara
 });
 
 conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $routeParams){
-        /*
+        
         $scope.getResults = function () {
 
-        gapi.client.conference.getResults().
+        gapi.client.conference.getResults({
+            webSafeKey: $routeParams.webSafeKey
+        }).
             execute(function(resp){
                 $scope.$apply(function() {
                     if (resp.error){
@@ -545,12 +547,17 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                     }
                     else {
                         $log.info("Success Bitch!");
+                        $scope.results = []
+                        $scope.resultt=[]
+                        angular.forEach(resp.items, function(result){
+                            $scope.results.push(result);
+                        });
                         
                     }
                 });
             });
     };
-    */
+    
 
 });
 

@@ -50,6 +50,12 @@ ANNOUNCEMENT_TPL = ('Last chance to attend! The following conferences '
                     'are nearly sold out: %s')
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+HANG_GET_REQUEST = endpoints.ResourceContainer(
+    message_types.VoidMessage,
+    webSafeKey=messages.StringField(1),
+)
+#-------------------------
+
 @endpoints.api(name='conference', version='v1', audiences=[ANDROID_AUDIENCE],
     allowed_client_ids=[WEB_CLIENT_ID, API_EXPLORER_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
     scopes=[EMAIL_SCOPE])
@@ -576,13 +582,10 @@ class ConferenceApi(remote.Service):
 
         return request
 
-    @endpoints.method(message_types.VoidMessage, HangoutForms, 
-        path='getResults', 
+    @endpoints.method(HANG_GET_REQUEST, HangoutForms, 
+        path='getResults/{webSafeKey}', 
         http_method='GET', name='getResults')
-    def getResults(self, request):
-        #How do you know you event voting is done?
-        #check your done queue. Should have been handled during event creation
-        
+    def getResults(self, request):        
         user = endpoints.get_current_user()
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
@@ -590,13 +593,14 @@ class ConferenceApi(remote.Service):
         p_key = ndb.Key(Profile, user_id)
         userData=p_key.get()
 
-        #get the event from datastore
+        #get event and place it in list to copy to the form
+        hangoutObject = ndb.Key(urlsafe=request.webSafeKey).get()
+        eventList=[]
+        eventList.append(hangoutObject)
 
-        #place the event into a form to display the information on the page
-        #people who were invited
-        #results of the vote
-
-        return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList])
+        #t = message_types.VoidMessage()
+        #return t
+        return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList]) 
 
 api = endpoints.api_server([ConferenceApi]) # register API
 
