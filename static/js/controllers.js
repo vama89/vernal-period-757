@@ -379,6 +379,8 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log){
         //Ping the database to see if vote is true or false
         //return True if they are still voting
 
+        
+
     };
 
     $scope.invited = function () {

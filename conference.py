@@ -348,7 +348,7 @@ class ConferenceApi(remote.Service):
             path='votedWaiting', 
             http_method='GET', name='votedWaiting')
     def votedWaiting(self, request):
-        print "here bitch!!!"
+        print "votedWaiting"
         #Query the database Hangout.get()
         #put that into the form for showcasing everything, create the model
         # make sure user is authed
@@ -515,36 +515,65 @@ class ConferenceApi(remote.Service):
             hangoutObject.put()
             
 
-        #delete this object key from the invited bucket
-        #place the object key into the events done bucket
-        #then set votingCompleted to true 
+        #if you still need to wait for peopel to vote
         else:
-            pass
-            #fix this part later. Implement the unicode parsing
-            #make sure logic is correct
-            """
             #if voting will not completed then
             #updated the vote area for the algorithm of voting
             groupVoteRanks = json.loads(hangoutObject.groupVoteRanks)
+            for uni in groupVoteRanks:
+                if type(uni) == unicode:
+                    listType=[]
+                    for p in uni:
+                        for t in p:
+                            if t == '[':
+                                pass    
+                            elif t == ',':
+                                pass
+                            elif t == ']':
+                                pass
+                            #elif t == '':
+                            #    print t
+                            elif t == ' ':
+                                pass
+                            else:
+                                listType.append(int(t))
+                    groupVoteRanks.remove(uni)
+                    groupVoteRanks.append(listType)
+
             groupVoteRanks.append(userVotes)
             hangoutObject.groupVoteRanks = json.dumps(groupVoteRanks)
 
             #update the user's voting preference
             friendList = json.loads(hangoutObject.friendList)
             friendList[user_id]['voteRank'] = userVotes
+
             #move this hangout to the voted waiting for this user
             eventsInvited = json.loads(userObject.eventsInvited)
             for eventKey in eventsInvited:
                 if eventKey == hangoutObject.key.id():
+                    #remove from the invited queue
                     eventsInvited.remove(eventKey)
                     userObject.eventsInvited = json.dumps(eventsInvited)
-                    userObject.puts()
+
+                    #place in the waiting queue
+                    if userObject.eventsWaitingOn == None:
+                        eventsWaitingOn = []
+                        eventsWaitingOn.append(eventKey)
+                        userObject.eventsWaitingOn = json.dumps(eventsWaitingOn)
+                        userObject.put()
+                    else:
+                        eventsWaitingOn = json.loads(userObject.eventsWaitingOn)
+                        eventsWaitingOn.append(eventKey)
+                        userObject.eventsWaitingOn = json.dumps(eventsWaitingOn)
+                        userObject.put()
                 else:
                     pass
 
             #update the counter
             hangoutObject.totalCounter = hangoutObject.totalCounter + 1
-            """
+
+            hangoutObject.put()
+
         return request
 
     @endpoints.method(message_types.VoidMessage, HangoutForms, 
