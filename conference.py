@@ -254,7 +254,11 @@ class ConferenceApi(remote.Service):
         data['eventCreator'] = str(user_id)
 
         #process the user's own voting preferences
+        #note that I put this in a list for proper processing when voting
         data['groupVoteRanks'] = json.dumps([data['groupVoteRanks']])
+
+        #initialize with users first votes
+        data['finalResults'] = json.dumps(data['groupVoteRanks'])
 
         ####Add the Total Party Count
         data['totalCounter'] = 1
@@ -518,6 +522,10 @@ class ConferenceApi(remote.Service):
         #if you still need to wait for peopel to vote
         else:
             #tally-upvotes
+            #run the voting algorithm and get the result
+            results = voting.inViteVote(groupVoteRanks)
+            #the results will come in a list the option that gets the least amount of votes is first pick, then second and so on
+            hangoutObject.finalResults = json.dumps(results)
 
             #update the user's voting preference
             friendList = json.loads(hangoutObject.friendList)
@@ -563,8 +571,6 @@ class ConferenceApi(remote.Service):
         eventList.append(hangoutObject)
 
         print hangoutObject.groupVoteRanks
-        for obj in json.loads(hangoutObject.groupVoteRanks):
-            print type(obj)
 
         #t = message_types.VoidMessage()
         #return t
