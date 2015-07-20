@@ -13,3 +13,15 @@ Not Care - [0,0,0]...I think just move it to the right place
 
 partytotal
 totalcounter
+
+FriendList is actually a dictionary:
+friendName: {dictionary w/ more informaion}
+
+{dictionary} = {
+	profileID: 12312312
+	voterank: --->initialized to 0....so that's how you know they didn't vote yet.
+	firstchoice:
+	confirmation:
+}
+
+Place it in a $scope variable

@@ -45,6 +45,10 @@ var app = angular.module('conferenceApp',
                     templateUrl: '/partials/results.html',
                     controller:'ResultsCtrl'
                 }).
+                when('/waiting/:webSafeKey', {
+                    templateUrl: '/partials/waiting.html',
+                    controller:'ResultsCtrl'
+                }).
                 when('/login', {
                     templateUrl: '/partials/login.html'
                 }).

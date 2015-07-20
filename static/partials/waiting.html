@@ -1,0 +1,19 @@
+<div ng-controller="ResultsCtrl">
+	<h3>Results so far:</h3>
+		<div ng-init="getResults()">
+			<table>
+			<tr ng-repeat="result in results">
+				<td>{{result.finalResults}}</td>
+				<!--
+				<h3>Those who Voted</h3>
+				<h4>Poke the slowploke</h4>
+				<h3>Those we are waiting on to Vote</h3>
+				-->
+			</tr>
+			</table>
+			<div id="chart"></div>
+			<h3>Those who voted:</h3>
+			<h3>Those we are waiting on:</h3>
+			<p>poke the slow-poke</p>
+		</div>
+</div>

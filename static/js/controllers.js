@@ -528,12 +528,12 @@ conferenceApp.controllers.controller('VoteCtrl', function($scope,$log,$routePara
 
 conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $routeParams){
         
-        $scope.truthValue = $scope.truthValue || {};
         $scope.bardata = $scope.bardata || {};
         $scope.names = $scope.names || {};
 
         $scope.d3j = function () {
-            var bardata = [3,2,1];
+            $log.info($scope.bardata);
+            var bardata = [1,2,3];
             var names = ['ba', 'msft', 'goog'];
 
             var height = 200,
@@ -620,6 +620,8 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
 
             };
 
+            /*DEPRECATED NOT NEEDED
+
             $scope.truthy = function () {
                 return $scope.truthValue;
             };
@@ -642,7 +644,8 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                         }
                     });
                 });
-    };
+
+    };*/
 
         $scope.getResults = function () {
 
@@ -657,21 +660,28 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                     else {
                         $log.info("Success Bitch!");
                         $scope.results = []
-                        $scope.resultt=[]
-                        //set the bardata values here
-                        //set the option name values here
+                        $scope.result=[]
                         angular.forEach(resp.items, function(result){
                             $scope.results.push(result);
                         });
-
+                        //$log.info(resp.items[0]['finalResults'][0]);
+                        //set the bardata values here
+                        $scope.bardata = JSON.parse(resp.items[0]['finalResults']);
+                        //$log.info($scope.bardata);
+                        //$scope.bardataLock = true;
+                        //$log.info("First");
+                        //set the option name values here
+                        //$scope.names = friendList.keys()
                         //or parse resp.items here and set a new $scope variable
                         
                     }
                 });
             });
+    
+    $scope.d3j();
+    
     };
     
-
 });
 
 conferenceApp.controllers.controller('ShowAllCtrl', function($scope, $log) {
