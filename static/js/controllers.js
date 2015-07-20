@@ -680,8 +680,8 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
 
 conferenceApp.controllers.controller('ShowAllCtrl', function($scope, $log) {
  
-    $scope.getAllHangouts = function() {
-            gapi.client.conference.getAllHangouts().
+    $scope.getHangoutsMade = function() {
+            gapi.client.conference.getHangoutsMade().
                 execute(function (resp) {
                     $scope.$apply(function(){
                         if(resp.error) {
@@ -691,6 +691,33 @@ conferenceApp.controllers.controller('ShowAllCtrl', function($scope, $log) {
                         } else {
                             $scope.message = 'Success Boss';
                             $log.info($scope.message);
+                            $scope.mades = []
+                            $scope.made=[]
+                        angular.forEach(resp.items, function(made){
+                            $scope.mades.push(made);
+                        });
+                        }
+                    });
+
+                });
+        };
+
+    $scope.getHangoutsInProgress = function() {
+            gapi.client.conference.getHangoutsInProgress().
+                execute(function (resp) {
+                    $scope.$apply(function(){
+                        if(resp.error) {
+                            $scope.message = 'Error Boss';
+                            $log.error($scope.message);
+
+                        } else {
+                            $scope.message = 'Success Boss';
+                            $log.info($scope.message);
+                            $scope.votes = []
+                            $scope.vote=[]
+                        angular.forEach(resp.items, function(vote){
+                            $scope.votes.push(vote);
+                        });
                         }
                     });
 

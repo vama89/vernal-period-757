@@ -323,15 +323,25 @@ class ConferenceApi(remote.Service):
 
         return request
 
-    @endpoints.method(message_types.VoidMessage, message_types.VoidMessage, 
-            path='getAllHangouts', 
-            http_method='GET', name='getAllHangouts')
-    def getAllHangouts(self, request):
-        print "here bitch!!!"
-        #Query the database Hangout.get()
-        #put that into the form for showcasing everything, create the model
+    @endpoints.method(message_types.VoidMessage, HangoutForms, 
+            path='getHangoutsMade', 
+            http_method='GET', name='getHangoutsMade')
+    def getHangoutsMade(self, request):
+        qry = Hangout.query(Hangout.votingCompleted == True)
+        for event in qry:
+            print event.eventName
 
-        return request
+        return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in qry])
+
+    @endpoints.method(message_types.VoidMessage, HangoutForms, 
+            path='getHangoutsInProgress', 
+            http_method='GET', name='getHangoutsInProgress')
+    def getHangoutsInProgress(self, request):
+        qry = Hangout.query(Hangout.votingCompleted == False)
+        for event in qry:
+            print event.eventName
+
+        return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in qry])
 
     @endpoints.method(message_types.VoidMessage, HangoutForms, 
             path='invited', 
