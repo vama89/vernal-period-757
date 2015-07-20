@@ -459,7 +459,9 @@ class ConferenceApi(remote.Service):
                 groupVoteRanks.remove(uni)
                 groupVoteRanks.append(listType)
 
+        #should have placed the user who voted in this collection of all the other users' votes
         groupVoteRanks.append(userVotes)
+        hangoutObject.groupVoteRanks = json.dumps(groupVoteRanks)
         
         #if the totalcounter is 1 less than the partyTotal
         if hangoutObject.totalCounter == (hangoutObject.partyTotal - 1):
@@ -475,15 +477,7 @@ class ConferenceApi(remote.Service):
                     if eventKey == hangoutObject.key.id():
                         eventsInvited.remove(eventKey)
                         friendObject.eventsInvited = json.dumps(eventsInvited)
-                        """
-                        if friendObject.eventsVoteDone == None:
-                            eventsVoteDone = friendObject.eventsVoteDone
-                            eventsVoteDone = []
-                            eventsVoteDone.append(eventKey)
-                            friendObject.eventsVoteDone = json.dumps(eventsVoteDone)
-                            friendObject.put()
-                        else:
-                        """
+
                         eventsVoteDone = json.loads(friendObject.eventsVoteDone)
                         eventsVoteDone.append(eventKey)
                         friendObject.eventsVoteDone = json.dumps(eventsVoteDone)
@@ -500,15 +494,7 @@ class ConferenceApi(remote.Service):
                 if eventKey == hangoutObject.key.id():
                     eventsWaitingOn.remove(eventKey)
                     eventCreator.eventsWaitingOn = json.dumps(eventsWaitingOn)
-                    """
-                    if eventCreator.eventsVoteDone == None:
-                        eventsVoteDone = eventCreator.eventsVoteDone
-                        eventsVoteDone = []
-                        eventsVoteDone.append(eventKey)
-                        eventCreator.eventsVoteDone = json.dumps(eventsVoteDone)
-                        eventCreator.put()
-                    else:
-                    """
+
                     eventsVoteDone = json.loads(eventCreator.eventsVoteDone)
                     eventsVoteDone.append(eventKey)
                     eventCreator.eventsVoteDone = json.dumps(eventsVoteDone)
@@ -531,32 +517,6 @@ class ConferenceApi(remote.Service):
 
         #if you still need to wait for peopel to vote
         else:
-            #if voting will not completed then
-            #updated the vote area for the algorithm of voting
-            groupVoteRanks = json.loads(hangoutObject.groupVoteRanks)
-            for uni in groupVoteRanks:
-                if type(uni) == unicode:
-                    listType=[]
-                    for p in uni:
-                        for t in p:
-                            if t == '[':
-                                pass    
-                            elif t == ',':
-                                pass
-                            elif t == ']':
-                                pass
-                            #elif t == '':
-                            #    print t
-                            elif t == ' ':
-                                pass
-                            else:
-                                listType.append(int(t))
-                    groupVoteRanks.remove(uni)
-                    groupVoteRanks.append(listType)
-
-            groupVoteRanks.append(userVotes)
-            hangoutObject.groupVoteRanks = json.dumps(groupVoteRanks)
-
             #tally-upvotes
 
             #update the user's voting preference
@@ -572,14 +532,6 @@ class ConferenceApi(remote.Service):
                     userObject.eventsInvited = json.dumps(eventsInvited)
 
                     #place in the waiting queue
-                    """
-                    if userObject.eventsWaitingOn == None:
-                        eventsWaitingOn = []
-                        eventsWaitingOn.append(eventKey)
-                        userObject.eventsWaitingOn = json.dumps(eventsWaitingOn)
-                        userObject.put()
-                    else:
-                    """
                     eventsWaitingOn = json.loads(userObject.eventsWaitingOn)
                     eventsWaitingOn.append(eventKey)
                     userObject.eventsWaitingOn = json.dumps(eventsWaitingOn)
@@ -610,6 +562,10 @@ class ConferenceApi(remote.Service):
         eventList=[]
         eventList.append(hangoutObject)
 
+        print hangoutObject.groupVoteRanks
+        for obj in json.loads(hangoutObject.groupVoteRanks):
+            print type(obj)
+
         #t = message_types.VoidMessage()
         #return t
         return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList])
@@ -632,51 +588,7 @@ class ConferenceApi(remote.Service):
         #t = message_types.VoidMessage()
         #return t
         return BooleanMessage(data=truthValue) 
-
-    @endpoints.method(message_types.VoidMessage, BooleanMessage, 
-        path='invitedEmpty', 
-        http_method='GET', name='invitedEmpty')
-    def stillVoting(self, request):        
-        user = endpoints.get_current_user()
-        if not user:
-            raise endpoints.UnauthorizedException('Authorization required')
-        user_id = getUserId(user)
-        p_key = ndb.Key(Profile, user_id)
-        userData=p_key.get()
-
-        if userData.eventsInvited == None:
-            truthValue = False 
-        elif json.loads(userData.eventsInvited) == []:
-            truthValue = False
-        else:
-            truthValue = True
-
-        #t = message_types.VoidMessage()
-        #return t
-        return BooleanMessage(data=truthValue)
-
-    @endpoints.method(message_types.VoidMessage, BooleanMessage, 
-        path='votedWaitingEmpty', 
-        http_method='GET', name='votedWaitingEmpty')
-    def votedWaitingEmpty(self, request):        
-        user = endpoints.get_current_user()
-        if not user:
-            raise endpoints.UnauthorizedException('Authorization required')
-        user_id = getUserId(user)
-        p_key = ndb.Key(Profile, user_id)
-        userData=p_key.get()
-
-        if userData.eventsWaitingOn == None:
-            truthValue = False 
-        elif json.loads(userData.eventsWaitingOn) == []:
-            truthValue = False
-        else:
-            truthValue = True
-
-        #t = message_types.VoidMessage()
-        #return t
-        return BooleanMessage(data=truthValue) 
-
+ 
 api = endpoints.api_server([ConferenceApi]) # register API
 
 #Sample Code to help me out. Reminder Code

@@ -231,6 +231,7 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
     $scope.checked = $scope.checked || {};
 
     $scope.friendButton = function(hangoutForm) {
+        /*
         $(document).ready(function() {
         var iCnt = 0;
         // CREATE A "DIV" ELEMENT AND DESIGN IT USING JQUERY ".css()" CLASS.
@@ -278,19 +279,19 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
     });
 
     // PICK THE VALUES FROM EACH TEXTBOX WHEN "SUBMIT" BUTTON IS CLICKED.
-    //var divValue, values = '';
-    //function GetTextValue() {
-    //    $(divValue).empty(); 
-    //    $(divValue).remove(); values = '';
-    //    $('.input').each(function() {
-    //        divValue = $(document.createElement('div')).css({
-    //            padding:'5px', width:'200px'
-    //        });
-    //        values += this.value + '<br />'
-    //    });
-    //    $(divValue).append('<p><b>Your selected values</b></p>' + values);
-    //    $('body').append(divValue);
-    //}
+    var divValue, values = '';
+    function GetTextValue() {
+        $(divValue).empty(); 
+        $(divValue).remove(); values = '';
+        $('.input').each(function() {
+            divValue = $(document.createElement('div')).css({
+                padding:'5px', width:'200px'
+            });
+            values += this.value + '<br />'
+        });
+        $(divValue).append('<p><b>Your selected values</b></p>' + values);
+        $('body').append(divValue);
+    }*/
     };
 
     $scope.allOptionsChecked = function(hangoutForm) {
@@ -353,7 +354,7 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
         //Convert to integers
         var i;
         for(i=0; i<3; i++){
-            userVote[i]=parseInt(userVote[0]);
+            userVote[i]=parseInt(userVote[i]);
         };
         $scope.checked.groupVoteRanks = JSON.stringify(userVote);
 
