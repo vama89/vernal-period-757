@@ -533,115 +533,115 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
         $scope.names = $scope.names || {};
 
         $scope.d3j = function () {
-        var bardata = [3,2,1];
-        var names = ['ba', 'msft', 'goog'];
+            var bardata = [3,2,1];
+            var names = ['ba', 'msft', 'goog'];
 
-        var height = 200,
-            width = 400,
-            barWidth = 50,
-            barOffset = 5;
+            var height = 200,
+                width = 400,
+                barWidth = 50,
+                barOffset = 5;
 
-        var yScale = d3.scale.linear()
-                .domain([0, d3.max(bardata)])
-                .range([0, height])
+            var yScale = d3.scale.linear()
+                    .domain([0, d3.max(bardata)])
+                    .range([0, height])
 
-        var xScale = d3.scale.ordinal()
-                .domain(d3.range(0, bardata.length))
-                .rangeBands([0,width])
+            var xScale = d3.scale.ordinal()
+                    .domain(d3.range(0, bardata.length))
+                    .rangeBands([0,width])
+            /*
+            var tooltip = d3.select('body').append('div')
+                    .style('position', 'absolute')
+                    .style('padding', '0 10px')
+                    .style('background', 'white')
+                    .style('opacity', .9)
+            */
+            var myChart = d3.select('#chart').append('svg')
+                    .attr('width', width)
+                    .attr('height', height)
+                    .selectAll('rect').data(bardata)
+                    .enter().append('rect')
+                        .style('fill', '#C61C6F')
+                        .attr('width', xScale.rangeBand())
+                        .attr('x', function(d,i) {
+                            return xScale(i);
+                        })
+                        .attr('height', 0)
+                        .attr('y', height)
+                        /*
+                        .on('mouseover', function(d) {
 
-        var tooltip = d3.select('body').append('div')
-                .style('position', 'absolute')
-                .style('padding', '0 10px')
-                .style('background', 'white')
-                .style('opacity', .9)
+                            tooltip.transition()
+                                .style('opacity', .9)
 
-        var myChart = d3.select('#chart').append('svg')
-                .attr('width', width)
-                .attr('height', height)
-                .selectAll('rect').data(bardata)
-                .enter().append('rect')
-                    .style('fill', '#C61C6F')
-                    .attr('width', xScale.rangeBand())
-                    .attr('x', function(d,i) {
-                        return xScale(i);
+                            tooltip.html(d)
+                                .style('left', (d3.event.pageX - 35) + 'px')
+                                .style('top', (d3.event.pageY - 30) + 'px')
+
+                            d3.select(this)
+                                .style('opacity', .5)
+                        })
+                        */
+                        .on('mouseout', function(d) {
+
+                            d3.select(this)
+                                .style('opacity', 1)
+                        })
+
+            myChart.transition()
+                    .attr('height', function(d) {
+                        return yScale(d);
                     })
-                    .attr('height', 0)
-                    .attr('y', height)
-
-                    .on('mouseover', function(d) {
-
-                        tooltip.transition()
-                            .style('opacity', .9)
-
-                        tooltip.html(d)
-                            .style('left', (d3.event.pageX - 35) + 'px')
-                            .style('top', (d3.event.pageY - 30) + 'px')
-
-                        d3.select(this)
-                            .style('opacity', .5)
+                    .attr('y', function(d) {
+                        return height - yScale(d);
+                    })
+                    .delay(function(d, i) {
+                        return i * 80;
                     })
 
-                    .on('mouseout', function(d) {
-
-                        d3.select(this)
-                            .style('opacity', 1)
-                    })
-
-        myChart.transition()
-                .attr('height', function(d) {
-                    return yScale(d);
-                })
+            myChart.select('svg')
+                .data(bardata)
+                .enter().append('text')
+                .style('fill', 'black')
+                .attr('x', function(d,i) {
+                            return xScale(i);
+                        })
                 .attr('y', function(d) {
-                    return height - yScale(d);
-                })
-                .delay(function(d, i) {
-                    return i * 80;
-                })
-
-        myChart.select('svg')
-            .data(bardata)
-            .enter().append('text')
-            .style('fill', 'black')
-            .attr('x', function(d,i) {
-                        return xScale(i);
+                        return height - yScale(d) + 9;
                     })
-            .attr('y', function(d) {
-                    return height - yScale(d) + 9;
-                })
-            .attr('height', function(d) {
-                    return yScale(d);
-                })
-            .attr('dy', '.35em')
-            .attr('dx', '1.5em')
-            .attr('font-size', '10px')
-            .attr('font-family', 'sans-serif')
-            .data(names)
-            .text(function(d) { return d; });
+                .attr('height', function(d) {
+                        return yScale(d);
+                    })
+                .attr('dy', '.35em')
+                .attr('dx', '1.5em')
+                .attr('font-size', '10px')
+                .attr('font-family', 'sans-serif')
+                .data(names)
+                .text(function(d) { return d; });
 
-        };
+            };
 
-        $scope.truthy = function () {
-            return $scope.truthValue;
-        };
-    
-        $scope.stillVoting = function () {
+            $scope.truthy = function () {
+                return $scope.truthValue;
+            };
         
-        gapi.client.conference.stillVoting({
-            webSafeKey: $routeParams.webSafeKey
-        }).
-            execute(function(resp){
-                $scope.$apply(function() {
-                    if (resp.error){
-                        $log.error('There was an Error Yo');
-                    }
-                    else {
-                        $log.info("Success Bitch!");
-                        $log.info(resp.data);
-                        $scope.truthValue = resp.data
-                        //or parse resp.items here and set a new $scope variable    
-                    }
+            $scope.stillVoting = function () {
+            
+            gapi.client.conference.stillVoting({
+                webSafeKey: $routeParams.webSafeKey
+            }).
+                execute(function(resp){
+                    $scope.$apply(function() {
+                        if (resp.error){
+                            $log.error('There was an Error Yo');
+                        }
+                        else {
+                            $log.info("Success Bitch!");
+                            $log.info(resp.data);
+                            $scope.truthValue = resp.data
+                            //or parse resp.items here and set a new $scope variable    
+                        }
+                    });
                 });
-            });
     };
 
         $scope.getResults = function () {
