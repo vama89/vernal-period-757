@@ -532,7 +532,6 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
         $scope.names = $scope.names || {};
 
         $scope.d3j = function () {
-            $log.info($scope.bardata);
             var bardata = [1,2,3];
             var names = ['ba', 'msft', 'goog'];
 
@@ -664,16 +663,11 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                         angular.forEach(resp.items, function(result){
                             $scope.results.push(result);
                         });
-                        //$log.info(resp.items[0]['finalResults'][0]);
-                        //set the bardata values here
-                        $scope.bardata = JSON.parse(resp.items[0]['finalResults']);
-                        //$log.info($scope.bardata);
-                        //$scope.bardataLock = true;
-                        //$log.info("First");
-                        //set the option name values here
-                        //$scope.names = friendList.keys()
+
+                        //$scope.bardata = JSON.parse(resp.items[0]['finalResults']);
                         //or parse resp.items here and set a new $scope variable
-                        
+                        //post process items (correct Date Structure)
+                        //post process itesm (correct Time (am or pm))
                     }
                 });
             });
