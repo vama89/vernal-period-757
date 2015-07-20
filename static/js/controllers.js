@@ -374,15 +374,7 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
 
 });
 
-conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log){
-    $scope.stillVoting = function(){
-        //Ping the database to see if vote is true or false
-        //return True if they are still voting
-
-
-
-    };
-
+conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $routeParams){
     $scope.invited = function () {
         //Check if in the backend he was invited and didn't vote
         /*

@@ -1,19 +1,28 @@
 <div ng-controller="ResultsCtrl">
 <div ng-init="stillVoting()">
 	<div ng-hide="truthy()">
+	<!-- if truthy false, then it'll show this stuff-->	
 		<h3>Results so far:</h3>
-		<!--angualr check whether it is done or not
-		<div>Waiting/Deadline Didn't Pass Yet</div>
-		<h3>Those who Voted</h3>
-		<h4>Poke the slowploke</h4>
-		<h3>Those we are waiting on to Vote</h3>
-		<h3>Hangout 1 Tally</h3>
-		<h3>Hangout 2 Tally</h3>
-		<h3>Hangout 3 Tally</h3>
-		Show this portion if stillVoting -->
+		<div ng-init="getResults()">
+			<table>
+			<tr ng-repeat="result in results">
+				<!--
+				<div>Waiting/Deadline Didn't Pass Yet</div>
+				<h3>Those who Voted</h3>
+				<h4>Poke the slowploke</h4>
+				<h3>Those we are waiting on to Vote</h3>
+				<h3>Hangout 1 Tally</h3>
+				<h3>Hangout 2 Tally</h3>
+				<h3>Hangout 3 Tally</h3>
+				-->
+			</tr>
+			</table>
+		</div>
+		
 	</div>
 
 	<div ng-show="truthy()">
+	<!-- if truthy is true, then it'll show this stuff-->
 		<div ng-init="getResults()">
 		<h3>Results</h3>
 		<table>

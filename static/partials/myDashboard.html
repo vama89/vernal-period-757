@@ -1,7 +1,6 @@
 <div ng-controller="MyDashboardCtrl">
 <h4>My Dashboard</h4>
 
-<!-- ng-show that shows  the following if they are still voting, else doesn't hit the backend for errors-->
 <h3>Events Invited</h3>
 <div ng-init="invited()">
 <table>
@@ -18,6 +17,7 @@
 <table>
 <tr ng-repeat="hangout in hangouts">
 	<td>{{hangout.eventName}}</td>
+	<td>{{hangout.friendList}}</td>
 	<td><a href="#/results/{{hangout.webSafeKey}}">Details</a></td>
 	<td><button>2</button></td>
 </tr>

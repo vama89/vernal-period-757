@@ -94,7 +94,12 @@ class ConferenceApi(remote.Service):
             profile = Profile(
                 key = p_key,
                 displayName = user.nickname(),
-                mainEmail= user.email()
+                mainEmail= user.email(),
+                eventsInvited=json.dumps([]),
+                eventsWaitingOn=json.dumps([]),
+                eventsVoteDone=json.dumps([]),
+                eventsPassedDate=json.dumps([]),
+                eventsRegrets=json.dumps([])
             )
             profile.put()
 
@@ -175,8 +180,6 @@ class ConferenceApi(remote.Service):
             raise endpoints.UnauthorizedException('Authorization required')
         user_id = getUserId(user)
         p_key = ndb.Key(Profile, user_id)
-
-        print request
 
         #Save information from html forms to Hangout Database.
         data = {field.name: getattr(request, field.name) for field in request.all_fields()}
@@ -472,6 +475,7 @@ class ConferenceApi(remote.Service):
                     if eventKey == hangoutObject.key.id():
                         eventsInvited.remove(eventKey)
                         friendObject.eventsInvited = json.dumps(eventsInvited)
+                        """
                         if friendObject.eventsVoteDone == None:
                             eventsVoteDone = friendObject.eventsVoteDone
                             eventsVoteDone = []
@@ -479,10 +483,11 @@ class ConferenceApi(remote.Service):
                             friendObject.eventsVoteDone = json.dumps(eventsVoteDone)
                             friendObject.put()
                         else:
-                            eventsVoteDone = json.loads(friendObject.eventsVoteDone)
-                            eventsVoteDone.append(eventKey)
-                            friendObject.eventsVoteDone = json.dumps(eventsVoteDone)
-                            friendObject.put()
+                        """
+                        eventsVoteDone = json.loads(friendObject.eventsVoteDone)
+                        eventsVoteDone.append(eventKey)
+                        friendObject.eventsVoteDone = json.dumps(eventsVoteDone)
+                        friendObject.put()
                     else:
                         pass
 
@@ -495,6 +500,7 @@ class ConferenceApi(remote.Service):
                 if eventKey == hangoutObject.key.id():
                     eventsWaitingOn.remove(eventKey)
                     eventCreator.eventsWaitingOn = json.dumps(eventsWaitingOn)
+                    """
                     if eventCreator.eventsVoteDone == None:
                         eventsVoteDone = eventCreator.eventsVoteDone
                         eventsVoteDone = []
@@ -502,10 +508,11 @@ class ConferenceApi(remote.Service):
                         eventCreator.eventsVoteDone = json.dumps(eventsVoteDone)
                         eventCreator.put()
                     else:
-                        eventsVoteDone = json.loads(eventCreator.eventsVoteDone)
-                        eventsVoteDone.append(eventKey)
-                        eventCreator.eventsVoteDone = json.dumps(eventsVoteDone)
-                        eventCreator.put()
+                    """
+                    eventsVoteDone = json.loads(eventCreator.eventsVoteDone)
+                    eventsVoteDone.append(eventKey)
+                    eventCreator.eventsVoteDone = json.dumps(eventsVoteDone)
+                    eventCreator.put()
                 else:
                     pass
 
@@ -550,6 +557,8 @@ class ConferenceApi(remote.Service):
             groupVoteRanks.append(userVotes)
             hangoutObject.groupVoteRanks = json.dumps(groupVoteRanks)
 
+            #tally-upvotes
+
             #update the user's voting preference
             friendList = json.loads(hangoutObject.friendList)
             friendList[user_id]['voteRank'] = userVotes
@@ -563,16 +572,18 @@ class ConferenceApi(remote.Service):
                     userObject.eventsInvited = json.dumps(eventsInvited)
 
                     #place in the waiting queue
+                    """
                     if userObject.eventsWaitingOn == None:
                         eventsWaitingOn = []
                         eventsWaitingOn.append(eventKey)
                         userObject.eventsWaitingOn = json.dumps(eventsWaitingOn)
                         userObject.put()
                     else:
-                        eventsWaitingOn = json.loads(userObject.eventsWaitingOn)
-                        eventsWaitingOn.append(eventKey)
-                        userObject.eventsWaitingOn = json.dumps(eventsWaitingOn)
-                        userObject.put()
+                    """
+                    eventsWaitingOn = json.loads(userObject.eventsWaitingOn)
+                    eventsWaitingOn.append(eventKey)
+                    userObject.eventsWaitingOn = json.dumps(eventsWaitingOn)
+                    userObject.put()
                 else:
                     pass
 
@@ -617,6 +628,50 @@ class ConferenceApi(remote.Service):
         #get event and place it in list to copy to the form
         hangoutObject = ndb.Key(urlsafe=request.webSafeKey).get()
         truthValue = hangoutObject.votingCompleted
+
+        #t = message_types.VoidMessage()
+        #return t
+        return BooleanMessage(data=truthValue) 
+
+    @endpoints.method(message_types.VoidMessage, BooleanMessage, 
+        path='invitedEmpty', 
+        http_method='GET', name='invitedEmpty')
+    def stillVoting(self, request):        
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+        user_id = getUserId(user)
+        p_key = ndb.Key(Profile, user_id)
+        userData=p_key.get()
+
+        if userData.eventsInvited == None:
+            truthValue = False 
+        elif json.loads(userData.eventsInvited) == []:
+            truthValue = False
+        else:
+            truthValue = True
+
+        #t = message_types.VoidMessage()
+        #return t
+        return BooleanMessage(data=truthValue)
+
+    @endpoints.method(message_types.VoidMessage, BooleanMessage, 
+        path='votedWaitingEmpty', 
+        http_method='GET', name='votedWaitingEmpty')
+    def votedWaitingEmpty(self, request):        
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+        user_id = getUserId(user)
+        p_key = ndb.Key(Profile, user_id)
+        userData=p_key.get()
+
+        if userData.eventsWaitingOn == None:
+            truthValue = False 
+        elif json.loads(userData.eventsWaitingOn) == []:
+            truthValue = False
+        else:
+            truthValue = True
 
         #t = message_types.VoidMessage()
         #return t
