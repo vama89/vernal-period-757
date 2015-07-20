@@ -141,5 +141,8 @@ class VoteForm(messages.Message):
     option3 = messages.StringField(3)
     webSafeKey = messages.StringField(4)
 
+class BooleanMessage(messages.Message):
+    data = messages.BooleanField(1)
+
 #class EventsWaitingForms(messages.Message):
 #    items = messages.MessageField()

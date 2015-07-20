@@ -32,6 +32,7 @@ from models import HangoutForm
 from models import HangoutForms
 from models import EmailRegFormInput
 from models import VoteForm
+from models import BooleanMessage
 
 from settings import WEB_CLIENT_ID
 from settings import ANDROID_CLIENT_ID
@@ -600,7 +601,26 @@ class ConferenceApi(remote.Service):
 
         #t = message_types.VoidMessage()
         #return t
-        return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList]) 
+        return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList])
+
+    @endpoints.method(HANG_GET_REQUEST, BooleanMessage, 
+        path='stillVoting/{webSafeKey}', 
+        http_method='GET', name='stillVoting')
+    def stillVoting(self, request):        
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+        user_id = getUserId(user)
+        p_key = ndb.Key(Profile, user_id)
+        userData=p_key.get()
+
+        #get event and place it in list to copy to the form
+        hangoutObject = ndb.Key(urlsafe=request.webSafeKey).get()
+        truthValue = hangoutObject.votingCompleted
+
+        #t = message_types.VoidMessage()
+        #return t
+        return BooleanMessage(data=truthValue) 
 
 api = endpoints.api_server([ConferenceApi]) # register API
 

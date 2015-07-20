@@ -535,6 +535,33 @@ conferenceApp.controllers.controller('VoteCtrl', function($scope,$log,$routePara
 
 conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $routeParams){
         
+        $scope.truthValue = $scope.truthValue || {};
+
+        $scope.truthy = function () {
+            return $scope.truthValue;
+        };
+    
+        $scope.stillVoting = function () {
+        
+        gapi.client.conference.stillVoting({
+            webSafeKey: $routeParams.webSafeKey
+        }).
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error Yo');
+                    }
+                    else {
+                        $log.info("Success Bitch!");
+                        $log.info(resp.data);
+
+                        $scope.truthValue = resp.data
+                        //or parse resp.items here and set a new $scope variable    
+                    }
+                });
+            });
+    };
+
         $scope.getResults = function () {
 
         gapi.client.conference.getResults({

@@ -1,44 +1,49 @@
 <div ng-controller="ResultsCtrl">
-<div ng-init="getResults()">
+<div ng-init="stillVoting()">
+	<div ng-hide="truthy()">
+		<h3>Results so far:</h3>
+		<!--angualr check whether it is done or not
+		<div>Waiting/Deadline Didn't Pass Yet</div>
+		<h3>Those who Voted</h3>
+		<h4>Poke the slowploke</h4>
+		<h3>Those we are waiting on to Vote</h3>
+		<h3>Hangout 1 Tally</h3>
+		<h3>Hangout 2 Tally</h3>
+		<h3>Hangout 3 Tally</h3>
+		Show this portion if stillVoting -->
+	</div>
 
-<!--angualr check whether it is done or not
-<div>Waiting/Deadline Didn't Pass Yet</div>
-<h3>Those who Voted</h3>
-<h4>Poke the slowploke</h4>
-<h3>Those we are waiting on to Vote</h3>
-<h3>Hangout 1 Tally</h3>
-<h3>Hangout 2 Tally</h3>
-<h3>Hangout 3 Tally</h3>
-Show this portion if stillVoting -->
+	<div ng-show="truthy()">
+		<div ng-init="getResults()">
+		<h3>Results</h3>
+		<table>
+		<tr ng-repeat="result in results">
+			<td>{{result.eventName}}</td>
+			<td>{{result.finalResults}}</td>
+		</tr>
+		</table>
 
-<h3>Results</h3>
-<table>
-<tr ng-repeat="result in results">
-	<td>{{result.eventName}}</td>
-	<td>{{result.finalResults}}</td>
-</tr>
-</table>
+		<!-- If not stillVoting then show below-->
+		<h3>Winner</h3>
 
-<!-- If not stillVoting then show below-->
-<h3>Winner</h3>
+		<!--
+		<h4>Second and Third Place</h4>
+		-->
 
-<!--
-<h4>Second and Third Place</h4>
--->
-
-<!--
-<h3>Going</h3>
-<h3>Not Going</h3>
-<h3>Maybe Going</h3>
--->
+		<!--
+		<h3>Going</h3>
+		<h3>Not Going</h3>
+		<h3>Maybe Going</h3>
+		-->
 
 
-<h3>Discussion</h3>
-<!--
-<h3>Business Deals Accepted</h3>
-<h3>Pitch in! Venmo Payments For one guy to buy everything or order</h3>
-<h3>Potluck for People to Bring things and who is responsible for what</h3>
-<h3>Feature for people to Vote on other things here too just in case/Last minute</h3>
--->
-</div>
+		<h3>Discussion</h3>
+		<!--
+		<h3>Business Deals Accepted</h3>
+		<h3>Pitch in! Venmo Payments For one guy to buy everything or order</h3>
+		<h3>Potluck for People to Bring things and who is responsible for what</h3>
+		<h3>Feature for people to Vote on other things here too just in case/Last minute</h3>
+		-->
+		</div>
+	</div>
 </div>
