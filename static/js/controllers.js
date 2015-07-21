@@ -460,7 +460,7 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $r
 
 });
 
-conferenceApp.controllers.controller('RegLogsCtrl', function($scope,$log,$location,oauth2Provider){
+conferenceApp.controllers.controller('RegLogsCtrl', function($scope,$log,$location){
     /*
     Get the models for registration
 
@@ -499,7 +499,6 @@ conferenceApp.controllers.controller('RegLogsCtrl', function($scope,$log,$locati
             });
         });
     };
-
 });
 
 conferenceApp.controllers.controller('VoteCtrl', function($scope,$log,$routeParams){

@@ -34,6 +34,8 @@ from models import EmailRegFormInput
 from models import VoteForm
 from models import BooleanMessage
 
+from models import User
+
 from settings import WEB_CLIENT_ID
 from settings import ANDROID_CLIENT_ID
 from settings import IOS_CLIENT_ID
@@ -80,6 +82,10 @@ class ConferenceApi(remote.Service):
     def _getProfileFromUser(self):
         """Return user Profile from datastore, creating new one if non-existent."""
         # make sure user is authed
+        #if email:
+            #do this
+        #else:
+
         user = endpoints.get_current_user()
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
@@ -141,14 +147,14 @@ class ConferenceApi(remote.Service):
         """Update & return user profile."""
         return self._doProfile(request)
 
-
     ####Registration and Login Codes:
     @endpoints.method(EmailRegFormInput, EmailRegFormInput,
             path='emailRegistration', http_method='POST', name='emailRegistration')
     def emailRegistration(self, request):
-        #Get and save the email here.
-        #Add the old code in here.
-        print request
+        data = {field.name: getattr(request, field.name) for field in request.all_fields()}
+
+        u = User.register(data['firstName'], data['password'], data['email'])
+        u.put()
 
         return request
 

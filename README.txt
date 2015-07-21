@@ -49,3 +49,24 @@ Then in the function below. Place the $location.path function
         });
         $location.path('/myDashboard').replace;
     };
+
+In regards to the loading errors about being logged in. It is located in the RootCtrl
+$scope.signIn and within that function it switches the signedIn state to either true or false. That seems to switch on abilities to work the backend with endpoints.
+
+Note: In the logs 
+TypeError: Cannot read property 'getHangoutsInProgress' of undefined
+
+I got it in 2 areas.
+1. refreshing the homepage and launching everything from the server
+2. refereshing the mydashboard page
+
+Both have ng-init
+
+I'm moving on, but I think it has something to do with loading and calling the backend before the backend or some credentials are finished loading itself. I'll leave it at this and move on. Fix this later.
+
+Even on the Conference. There is this bug. I have to look at the sequence of when things are fired during a refresh. Diagnosed it to loading bar. When I reload the page, it keeps reloading. the reloading bar should disappear but it can't get to the falsehood. And same things with gapi.client execution. It gets stuck there and never finishes executing the whole way through...there is even no response error.
+
+However this must mean there is no pinging of the backend at all. I at least pinged it with mispellings or for mcontrol mistakes. I get a response back. It doesn't even get to hit the back end.
+
+POSSIBLE ANSWER:
+When the page for the profile is reloaded. even before hitting anything, it brings up the modal. No that wouldn't work because I think it still loads everything. I need a way to pause everything from loading. until to launch the inits.
