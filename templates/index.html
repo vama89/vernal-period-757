@@ -34,10 +34,15 @@
         };
     </script>
     <script src="//apis.google.com/js/client:plusone.js?onload=init"></script>
+    <style type="text/css">
+      [ng\:cloak], [ng-cloak], .ng-cloak {
+        display: none !important;
+        }
+    </style>
 </head>
 
 <!-- Restore the credential from cookie if stored by calling initSignInButton() -->
-<body ng-controller="RootCtrl" ng-init="initSignInButton()">
+<body ng-controller="RootCtrl" ng-init="initSignInButton()" class="ng-cloak">
 
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
