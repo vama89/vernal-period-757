@@ -1,10 +1,9 @@
 <div ng-controller="RegLogsCtrl">
-<div class="container" ng-show="!getSignedInState()">
   <div class="row">
     <div class="center-form panel">
       <div class="panel-body">
         <ul class="text-center list-inline intro-social-buttons">
-            <li id="signInLink" ng-hide="getSignedInState()" on-click="return false">
+            <li id="signInLink">
                 <a class="btn btn-default btn-lg" ng-click="signIn()">Sign Up with Google+</a>
             </li>
         </ul>
@@ -67,8 +66,6 @@
       </div>
     </div>
   </div>
-</div>
-
 </div>
 <!--     <div>
             <ul class="list-inline intro-social-buttons">

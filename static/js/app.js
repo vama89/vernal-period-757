@@ -50,10 +50,12 @@ var app = angular.module('conferenceApp',
                     controller:'ResultsCtrl'
                 }).
                 when('/login', {
-                    templateUrl: '/partials/login.html'
+                    templateUrl: '/partials/login.html',
+                    controller: 'RegLogsCtrl'
                 }).
                 when('/registration', {
-                    templateUrl: '/partials/registration.html'
+                    templateUrl: '/partials/registration.html',
+                    controller: 'RegLogsCtrl'
                 }).
                 when('/forgotPassword', {
                     templateUrl: '/partials/forgotPassword.html'

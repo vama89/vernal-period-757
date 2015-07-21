@@ -56,8 +56,8 @@
           <tr>
             <td></td>
             <td><div id="locationField">
-            <input id="autocomplete" ng-model="checked.address1" name="address1" placeholder="Enter your address"
-                     onFocus="geolocate()" type="text" required>
+            <input  ng-model="checked.address1" name="address1" placeholder="Enter your address"
+                      type="text" required>
             </div></td>
           </tr>
         </table>
@@ -80,8 +80,8 @@
           <tr>
             <td></td>
             <td><div id="locationField">
-            <input ng-model="checked.address2" id="autocomplete" name="address2" placeholder="Enter your address"
-                     onFocus="geolocate()" type="text" required>
+            <input ng-model="checked.address2"  name="address2" placeholder="Enter your address"
+                      type="text" required>
             </div></td>
           </tr> 
         </table>
@@ -104,11 +104,13 @@
           <tr>
             <td></td>
             <td><div id="locationField">
-            <input ng-model="checked.address3" id="autocomplete" name="address3" placeholder="Enter your address"
-                     onFocus="geolocate()" type="text" required>
+            <input ng-model="checked.address3"  name="address3" placeholder="Enter your address"
+                      type="text" required>
             </div></td>
           </tr> 
         </table>
+
+        <br>
 
         <div>Do you prefer one over the other?</div>
         <select>
@@ -119,7 +121,7 @@
         <div><h3>So what is your vote?</h3></div>
         <table>
             <tr>
-                <td><label>Option 1
+                <td><label>Hangout 1
                     <select ng-model="checked.option1">
                     <option>1</option>
                     <option>2</option>
@@ -129,7 +131,7 @@
                 </td>
             </tr>
             <tr>
-                <td><label>Option 2
+                <td><label>Hangout 2
                     <select ng-model="checked.option2">
                     <option>1</option>
                     <option>2</option>
@@ -139,7 +141,7 @@
                 </td>
             </tr>
             <tr>
-                <td><label>Option 3
+                <td><label>Hangout 3
                     <select ng-model="checked.option3">
                     <option>1</option>
                     <option>2</option>
@@ -153,8 +155,13 @@
         <div><h3>Deadline to Cast Votes?</h3></div>
         <table>
             <tr>
+                <td>Date:</td>
                 <td><input ng-model="checked.deadlineDate" type="date" name="deadlineDate"required>
                 </td>
+
+            </tr>
+            <tr>
+                <td>Time:</td>
                 <td><input ng-model="checked.deadlineTime" type="time" name="deadlineTime"required>
                 </td>
             </tr>
@@ -165,23 +172,43 @@
 
     <!-- Location and Time Checked -->
     <div ng-show="locationTime()">
-        <h3>So when are you going?</h3>
+        <h3>So what day are you going?</h3>
         <input type="date" placeholder="Date"/>
 
         <h3>Lets give your friends some options:</h3>
         <h4>Option1:</h4>
-        <input type="time"/>
-        <input type="string"/>
+        <table>
+        <tr>
+        <td>Time:</td>
+        <td><input type="time"/></td>
+        </tr>
+        <td>Location</td>
+        <td><input type="string"/></td>
+        </table>
 
         <h4>Option2:</h4>
-        <input type="time"/>
-        <input type="string"/>
+        <table>
+        <tr>
+        <td>Time:</td>
+        <td><input type="time"/></td>
+        </tr>
+        <td>Location</td>
+        <td><input type="string"/></td>
+        </table>
 
         <h4>Option3:</h4>
-        <input type="time"/>
-        <input type="string"/>
+        <table>
+        <tr>
+        <td>Time:</td>
+        <td><input type="time"/></td>
+        </tr>
+        <td>Location</td>
+        <td><input type="string"/></td>
+        </table>
 
-                <div>Do you prefer one over the other?</div>
+        <br>
+
+        <div>Do you prefer one over the other?</div>
         <select>
                 <option>Yes</option>
                 <option>No</option>
@@ -190,7 +217,7 @@
         <div><h3>So what is your vote?</h3></div>
         <table>
             <tr>
-                <td><label>Option 1
+                <td><label>Hangout 1
                     <select>
                     <option>1</option>
                     <option>2</option>
@@ -200,7 +227,7 @@
                 </td>
             </tr>
             <tr>
-                <td><label>Option 2
+                <td><label>Hangout 2
                     <select>
                     <option>1</option>
                     <option>2</option>
@@ -210,7 +237,7 @@
                 </td>
             </tr>
             <tr>
-                <td><label>Option 3
+                <td><label>Hangout 3
                     <select>
                     <option>1</option>
                     <option>2</option>
@@ -224,8 +251,12 @@
         <div><h3>Deadline to Cast Votes?</h3></div>
         <table>
             <tr>
+                <td>Date:</td>
                 <td><input ng-model="checked.deadlineDate" type="date" name="deadlineDate" placeholder="Date" required>
                 </td>
+            </tr>
+            <tr>
+                <td>Time:</td>
                 <td><input ng-model="checked.deadlineTime" type="time" name="deadlineTime"required>
                 </td>
             </tr>
@@ -252,7 +283,9 @@
         <input type="string">
         <input type="date">
 
-                <div>Do you prefer one over the other?</div>
+        <br>
+
+        <div>Do you prefer one over the other?</div>
         <select>
                 <option>Yes</option>
                 <option>No</option>
@@ -261,7 +294,7 @@
         <div><h3>So what is your vote?</h3></div>
         <table>
             <tr>
-                <td><label>Option 1
+                <td><label>Hangout 1
                     <select>
                     <option>1</option>
                     <option>2</option>
@@ -271,7 +304,7 @@
                 </td>
             </tr>
             <tr>
-                <td><label>Option 2
+                <td><label>Hangout 2
                     <select>
                     <option>1</option>
                     <option>2</option>
@@ -281,7 +314,7 @@
                 </td>
             </tr>
             <tr>
-                <td><label>Option 3
+                <td><label>Hangout 3
                     <select>
                     <option>1</option>
                     <option>2</option>
@@ -297,6 +330,8 @@
             <tr>
                 <td><input ng-model="checked.deadlineDate" type="date" name="deadlineDate" placeholder="Date" required>
                 </td>
+            </tr>
+            <tr>
                 <td><input ng-model="checked.deadlineTime" type="time" name="deadlineTime"required>
                 </td>
             </tr>
@@ -323,7 +358,9 @@
         <input type="time">
         <input type="date">
 
-                <div>Do you prefer one over the other?</div>
+        <br>
+
+        <div>Do you prefer one over the other?</div>
         <select>
                 <option>Yes</option>
                 <option>No</option>
@@ -332,7 +369,7 @@
         <div><h3>So what is your vote?</h3></div>
         <table>
             <tr>
-                <td><label>Option 1
+                <td><label>Hangout 1
                     <select>
                     <option>1</option>
                     <option>2</option>
@@ -342,7 +379,7 @@
                 </td>
             </tr>
             <tr>
-                <td><label>Option 2
+                <td><label>Hangout 2
                     <select>
                     <option>1</option>
                     <option>2</option>
@@ -352,7 +389,7 @@
                 </td>
             </tr>
             <tr>
-                <td><label>Option 3
+                <td><label>Hangout 3
                     <select>
                     <option>1</option>
                     <option>2</option>
@@ -366,8 +403,13 @@
                 <div><h3>Deadline to Cast Votes?</h3></div>
         <table>
             <tr>
+                <td>Date:</td>
                 <td><input ng-model="checked.deadlineDate" type="date" name="deadlineDate" placeholder="Date" required>
                 </td>
+                
+            </tr>
+            <tr>
+                <td>Time:</td>
                 <td><input ng-model="checked.deadlineTime" type="time" name="deadlineTime"required>
                 </td>
             </tr>
@@ -395,8 +437,10 @@
 
         <h4>Option3:</h4>
         <input type="time" placeholder="time">
+        <br>
 
-                        <div>Do you prefer one over the other?</div>
+        <div>Do you prefer one over the other?</div>
+        
         <select>
                 <option>Yes</option>
                 <option>No</option>
@@ -406,7 +450,7 @@
 
                 <table>
             <tr>
-                <td><label>Option 1
+                <td><label>Hangout 1
                     <select>
                     <option>1</option>
                     <option>2</option>
@@ -416,7 +460,7 @@
                 </td>
             </tr>
             <tr>
-                <td><label>Option 2
+                <td><label>Hangout 2
                     <select>
                     <option>1</option>
                     <option>2</option>
@@ -426,7 +470,7 @@
                 </td>
             </tr>
             <tr>
-                <td><label>Option 3
+                <td><label>Hangout 3
                     <select>
                     <option>1</option>
                     <option>2</option>
@@ -443,8 +487,10 @@
                 <td><input ng-model="checked.deadlineDate" type="date" name="deadlineDate" placeholder="Date" required>
                 </td>
             </tr>
+            <tr>
                 <td><input ng-model="checked.deadlineTime" type="time" name="deadlineTime"required>
                 </td>
+            </tr>
         </table>
 
     </div>
@@ -468,6 +514,8 @@
         <h4>Option3:</h4>
         <input type="date">
 
+        <br>
+
         <div>Do you prefer one over the other?</div>
         <select>
                 <option>Yes</option>
@@ -478,7 +526,7 @@
 
                 <table>
             <tr>
-                <td><label>Option 1
+                <td><label>Hangout 1
                     <select>
                     <option>1</option>
                     <option>2</option>
@@ -488,7 +536,7 @@
                 </td>
             </tr>
             <tr>
-                <td><label>Option 2
+                <td><label>Hangout 2
                     <select>
                     <option>1</option>
                     <option>2</option>
@@ -498,7 +546,7 @@
                 </td>
             </tr>
             <tr>
-                <td><label>Option 3
+                <td><label>Hangout 3
                     <select>
                     <option>1</option>
                     <option>2</option>
@@ -512,8 +560,13 @@
         <div><h3>Deadline to Cast Votes?</h3></div>
         <table>
             <tr>
+                <td>Date:</td>
                 <td><input ng-model="checked.deadlineDate" type="date" name="deadlineDate" placeholder="Date" required>
                 </td>
+                
+            </tr>
+            <tr>
+                <td>Time:</td>
                 <td><input ng-model="checked.deadlineTime" type="time" name="deadlineTime"required>
                 </td>
             </tr>
@@ -538,6 +591,7 @@
 
         <h4>Option3:</h4>
         <input type="string">
+        <br>
 
         <div>Do you prefer one over the other?</div>
         <select>
@@ -549,7 +603,7 @@
 
                 <table>
             <tr>
-                <td><label>Option 1
+                <td><label>Hangout 1
                     <select>
                     <option>1</option>
                     <option>2</option>
@@ -559,7 +613,7 @@
                 </td>
             </tr>
             <tr>
-                <td><label>Option 2
+                <td><label>Hangout 2
                     <select>
                     <option>1</option>
                     <option>2</option>
@@ -569,7 +623,7 @@
                 </td>
             </tr>
             <tr>
-                <td><label>Option 3
+                <td><label>Hangout 3
                     <select>
                     <option>1</option>
                     <option>2</option>
@@ -583,8 +637,13 @@
         <div><h3>Deadline to Cast Votes?</h3></div>
         <table>
             <tr>
+                <td>Date:</td>
                 <td><input ng-model="checked.deadlineDate" type="date" name="deadlineDate" placeholder="Date" required>
                 </td>
+                
+            </tr>
+            <tr>
+                <td>Time:</td>
                 <td><input ng-model="checked.deadlineTime" type="time" name="deadlineTime"required>
                 </td>
             </tr>

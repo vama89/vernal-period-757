@@ -25,3 +25,27 @@ friendName: {dictionary w/ more informaion}
 }
 
 Place it in a $scope variable
+
+Notes to using $location service to route page correctly:
+Place $location in the function below:
+app.factory('oauth2Provider', function ($modal,$location) {
+    var oauth2Provider = {
+        CLIENT_ID: '1056255259427-h8spnd6q8ovv8cn6fdmqk6kc259mb6k6.apps.googleusercontent.com',
+        SCOPES: 'email profile',
+        signedIn: false
+    }
+Then in the function below. Place the $location.path function
+    /**
+     * Calls the OAuth2 authentication method.
+     */
+    oauth2Provider.signIn = function (callback) {
+        gapi.auth.signIn({
+            'clientid': oauth2Provider.CLIENT_ID,
+            'cookiepolicy': 'single_host_origin',
+            'accesstype': 'online',
+            'approveprompt': 'auto',
+            'scope': oauth2Provider.SCOPES,
+            'callback': callback
+        });
+        $location.path('/myDashboard').replace;
+    };

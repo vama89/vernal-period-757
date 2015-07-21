@@ -152,6 +152,8 @@ conferenceApp.controllers.controller('RootCtrl', function ($scope, $location, oa
                         oauth2Provider.signedIn = true;
                         $scope.alertStatus = 'success';
                         $scope.rootMessages = 'Logged in with ' + resp.email;
+                        //My addition to get to the dashboard and load items properly
+                        $location.path('/myDashboard').replace;
                     }
                 });
             });
@@ -493,8 +495,6 @@ conferenceApp.controllers.controller('RegLogsCtrl', function($scope,$log,$locati
                     }
                     else {
                         $log.info("Success Bitch!");
-                        //oauth2Provider.signedIn = true;
-                        //$location.path('/myDashboard').replace;
                     }
             });
         });
