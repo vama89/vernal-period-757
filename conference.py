@@ -289,9 +289,15 @@ class ConferenceApi(remote.Service):
         #must be a list of the list NOTICE BRACKETS!!!!!!
         data['groupVoteRanks'] = json.dumps([listType])
 
+
         #just the list
         #initialize with users first votes
-        data['finalResults'] = json.dumps(listType)
+        adjustList=[]
+        for p in listType:
+            adjustNum=4-p
+            adjustList.append(adjustNum)
+
+        data['finalResults'] = json.dumps(adjustList)
 
         ####Add the Total Party Count
         data['totalCounter'] = 1
@@ -478,9 +484,10 @@ class ConferenceApi(remote.Service):
         userVotes.append(int(data['option2']))
         userVotes.append(int(data['option3']))
 
-        #add the last users' vote to the friend list, in his or her name
+        #add the users vote to the friend list, in his or her name
         friendList = json.loads(hangoutObject.friendList)
         friendList[user_id]['voteRank'] = userVotes
+        hangoutObject.friendList = json.dumps(friendList)
 
         #add the last user's vote to the hangout object groupVoteRanks
         groupVoteRanks = json.loads(hangoutObject.groupVoteRanks)
@@ -569,8 +576,9 @@ class ConferenceApi(remote.Service):
             hangoutObject.finalResults = json.dumps(results)
 
             #update the user's voting preference
-            friendList = json.loads(hangoutObject.friendList)
-            friendList[user_id]['voteRank'] = userVotes
+            #friendList = json.loads(hangoutObject.friendList)
+            #friendList[user_id]['voteRank'] = userVotes
+            #hangoutObject.friendList = json.dumps(friendList)
 
             #move this hangout to the voted waiting for this user
             eventsInvited = json.loads(userObject.eventsInvited)

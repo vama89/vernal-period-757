@@ -697,19 +697,40 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                         //or parse resp.items here and set a new $scope variable
                         //friends
                         //Need Logic to get friends who's ranks are added.
-                        var friends = JSON.parse(resp.items[0]['friendList']);
+                        var notVotedFriends=[];
+                        var votedFriends=[];
+                        votedFriends.push(resp.items[0]['eventCreator'])
+
+                        var s, friends = JSON.parse(resp.items[0]['friendList']);
+                        var iterFriends = Object.keys(friends)
+
+                        console.log(resp.items[0]);
+
+                        for(s of iterFriends){
+                        if (friends[s]['voteRank'][0]==0){
+                            console.log(s);
+                            console.log(friends[s]['voteRank'][0]);
+                            console.log(typeof friends[s]['voteRank'][0]);
+                            notVotedFriends.push(s);
+                        }
+                        else{
+                            votedFriends.push(s);
+                        }
+                        };
+
+                        //THOSE THAT DID NOT VOTE
                         $scope.friends = []
                         $scope.friend=[]
-                        angular.forEach(Object.keys(friends), function(friend){
+                        angular.forEach(notVotedFriends, function(friend){
                             $scope.friends.push(friend);
                         });
-                        /*
-                        var s, tally = JSON.parse(resp.items[0]['groupVoteRanks'])
-                        for(s of tally){
-                            console.log(s);
-                        };*/
-
-                        //Get peopel who's vote rank is all 0.
+                        
+                        //THOSE THAT DID VOTE
+                        $scope.vFriends = []
+                        $scope.vFriend=[]
+                        angular.forEach(votedFriends, function(vFriend){
+                            $scope.vFriends.push(vFriend);
+                        });
 
                         //post process items (correct Date Structure)
                         //post process itesm (correct Time (am or pm))

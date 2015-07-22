@@ -32,12 +32,16 @@
 
 			<h3>Those who voted:</h3>
 			<table>
-			<tr ng-repeat="friend in friends">
-					<td>{{friend}}</td>
+			<tr ng-repeat="vFriend in vFriends">
+					<td>{{vFriend}}</td>
 			</tr>
 			</table>
+
 			<h3>Those we are waiting on:</h3>
-			<table></table>
-			<p>poke the slow-poke</p>
+			<table>
+			<tr ng-repeat="friend in friends">
+					<td>{{friend}}<a href="">Poke</a></td>
+			</tr>
+			</table>
 		</div>
 </div>
