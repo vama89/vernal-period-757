@@ -34,8 +34,6 @@ from models import EmailRegFormInput
 from models import VoteForm
 from models import BooleanMessage
 
-from models import User
-
 from settings import WEB_CLIENT_ID
 from settings import ANDROID_CLIENT_ID
 from settings import IOS_CLIENT_ID
@@ -154,9 +152,10 @@ class ConferenceApi(remote.Service):
     def emailRegistration(self, request):
         data = {field.name: getattr(request, field.name) for field in request.all_fields()}
 
+        #check if email name is available
         u = Profile.register(data['firstName'], data['lastName'], data['password'], data['email'])
         u.put()
-        
+
         return request
 
     @endpoints.method(EmailRegFormInput, EmailRegFormInput,
@@ -164,11 +163,9 @@ class ConferenceApi(remote.Service):
     def emailLogin(self, request):
         data = {field.name: getattr(request, field.name) for field in request.all_fields()}
 
-        u = Profile.login(data['firstName'], data['lastName'], data['password'], data['email'])
-        u.put()
+        u = Profile.login(data['email'], data['password'])
 
         return request
-
 
 # - - - Hangout - - - - - - - - - - - - - - - - - - - - - - - 
     def _copyHangoutToForm(self, hangout):

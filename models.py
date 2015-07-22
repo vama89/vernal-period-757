@@ -84,7 +84,7 @@ class Profile(ndb.Model):
 
     @classmethod
     def register(cls, firstName, lastName, password, email = None):
-        pw_hash = make_pw_hash(firstName, password)
+        pw_hash = make_pw_hash(email, password)
         return Profile(
                     key = ndb.Key(Profile, email),
                     firstName = firstName,

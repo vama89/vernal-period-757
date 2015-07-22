@@ -526,6 +526,8 @@ conferenceApp.controllers.controller('RegLogsCtrl', function($scope,$log,$locati
             });
         });
     };
+
+
 });
 
 conferenceApp.controllers.controller('VoteCtrl', function($scope,$log,$routeParams){
@@ -558,7 +560,7 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
         $scope.names = $scope.names || {};
 
         $scope.d3j = function () {
-            var bardata = [1,2,3];
+            var bardata = $scope.bardata;
             var names = ['ba', 'msft', 'goog'];
 
             var height = 200,
@@ -690,16 +692,14 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                             $scope.results.push(result);
                         });
 
-                        //$scope.bardata = JSON.parse(resp.items[0]['finalResults']);
+                        $scope.bardata = JSON.parse(resp.items[0]['finalResults']);
+                        $scope.d3j();
                         //or parse resp.items here and set a new $scope variable
                         //post process items (correct Date Structure)
                         //post process itesm (correct Time (am or pm))
                     }
                 });
             });
-    
-    $scope.d3j();
-    
     };
     
 });
