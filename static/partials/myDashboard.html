@@ -6,10 +6,7 @@
 <table id="conference-table" class="table table-striped table-hover">
 <tr ng-repeat="invitedHangout in invitedHangouts">
 	<td>{{invitedHangout.eventName}}</td>
-	<td>{{invitedHangout.date1}}</td>
-	<td>{{invitedHangout.time1}}</td>
-	<td>{{invitedHangout.locationName1}}</td>
-	<td>{{invitedHangout.address1}}</td>
+	<td>{{invitedHangout.description}}</td>
 	<td><a href="#/vote/{{invitedHangout.webSafeKey}}">Vote</a></td>
 </tr>
 </table>
@@ -20,10 +17,7 @@
 <table id="conference-table" class="table table-striped table-hover">
 <tr ng-repeat="hangout in hangouts">
 	<td>{{hangout.eventName}}</td>
-	<td>{{hangout.date1}}</td>
-	<td>{{hangout.time1}}</td>
-	<td>{{hangout.locationName1}}</td>
-	<td>{{hangout.address1}}</td>
+	<td>{{hangout.description}}</td>
 	<td><a href="#/waiting/{{hangout.webSafeKey}}">Details</a></td>
 </tr>
 </table>
@@ -34,10 +28,7 @@
 <table id="conference-table" class="table table-striped table-hover">
 <tr ng-repeat="doneHangout in doneHangouts">
 	<td>{{doneHangout.eventName}}</td>
-	<td>{{doneHangout.date1}}</td>
-	<td>{{doneHangout.time1}}</td>
-	<td>{{doneHangout.locationName1}}</td>
-	<td>{{doneHangout.address1}}</td>
+	<td>{{doneHangout.description}}</td>
 	<td><a href="#/results/{{doneHangout.webSafeKey}}">Details</a></td>
 </tr>
 </table>
