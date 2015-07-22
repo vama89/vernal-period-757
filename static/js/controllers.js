@@ -693,6 +693,8 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                         });
 
                         $scope.bardata = JSON.parse(resp.items[0]['finalResults']);
+                        $log.info($scope.bardata);
+                        $log.info(resp);
                         $scope.d3j();
                         //or parse resp.items here and set a new $scope variable
                         //post process items (correct Date Structure)

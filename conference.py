@@ -269,23 +269,41 @@ class ConferenceApi(remote.Service):
 
         #process the user's own voting preferences
         #note that I put this in a list for proper processing when voting
-        data['groupVoteRanks'] = json.dumps([data['groupVoteRanks']])
+        listType=[]
+        for uni in data['groupVoteRanks']:
+            if type(uni) == unicode:
+                for p in uni:
+                    for t in p:
+                        if t == '[':
+                            pass    
+                        elif t == ',':
+                            pass
+                        elif t == ']':
+                            pass
+                        #elif t == '':
+                        #    print t
+                        elif t == ' ':
+                            pass
+                        else:
+                            listType.append(int(t))
+        #must be a list of the list NOTICE BRACKETS!!!!!!
+        data['groupVoteRanks'] = json.dumps([listType])
 
+        #just the list
         #initialize with users first votes
-        data['finalResults'] = json.dumps(data['groupVoteRanks'])
+        data['finalResults'] = json.dumps(listType)
 
         ####Add the Total Party Count
         data['totalCounter'] = 1
         ####Add the Party Total
         data['partyTotal'] = counter
-        ###Initialize the Rankings
-        data['finalResults'] = json.dumps([0,0,0])
+
         ###Voting Completed
         data['votingCompleted'] = False
 
         ####NOT MANDATORY, BUT WOULD IMPLEMENT HERE
         #Don't know how to implement yet, but account for those users not registered.
-
+        
         #place into the database
         Hangout(**data).put()
         #wait for it to generate the keys
@@ -334,7 +352,6 @@ class ConferenceApi(remote.Service):
                     eventsInvited.append(eventKey)
                     friendObject.eventsInvited = json.dumps(eventsInvited)
                     friendObject.put()
-
         return request
 
     @endpoints.method(message_types.VoidMessage, HangoutForms, 
