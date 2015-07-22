@@ -156,6 +156,16 @@ class ConferenceApi(remote.Service):
 
         u = Profile.register(data['firstName'], data['lastName'], data['password'], data['email'])
         u.put()
+        
+        return request
+
+    @endpoints.method(EmailRegFormInput, EmailRegFormInput,
+            path='emailLogin', http_method='GET', name='emailLogin')
+    def emailLogin(self, request):
+        data = {field.name: getattr(request, field.name) for field in request.all_fields()}
+
+        u = Profile.login(data['firstName'], data['lastName'], data['password'], data['email'])
+        u.put()
 
         return request
 
