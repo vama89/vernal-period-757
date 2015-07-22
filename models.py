@@ -24,9 +24,13 @@ import hashlib
 import hmac
 from string import letters
 
+import json
+
 class Profile(ndb.Model):
     """Profile -- User profile object"""
     displayName = ndb.StringProperty()
+    firstName = ndb.StringProperty()
+    lastName = ndb.StringProperty()
     mainEmail = ndb.StringProperty()
     #can be either a link, blobprop or blobkeyprop. not sure yet.
     profilePictureID = ndb.StringProperty()
@@ -39,6 +43,35 @@ class Profile(ndb.Model):
     eventsVoteDone = ndb.JsonProperty()
     eventsPassedDate = ndb.JsonProperty()
     eventsRegrets = ndb.JsonProperty()
+
+    @classmethod
+    def by_id(cls, uid):
+        return Profile.get_by_id(uid)
+
+    @classmethod
+    def by_name(cls, name):
+        u = User.query().filter(User.name == name).get()
+        return u
+
+    @classmethod
+    def register(cls, firstName, lastName, password, email = None):
+        return Profile(
+                    key = ndb.Key(Profile, email),
+                    firstName = firstName,
+                    lastName = lastName,
+                    password = password,
+                    mainEmail = email,
+                    eventsInvited = json.dumps([]),
+                    eventsWaitingOn = json.dumps([]),
+                    eventsVoteDone = json.dumps([]),
+                    eventsPassedDate = json.dumps([]),
+                    eventsRegrets = json.dumps([])
+                    )
+    @classmethod
+    def login(cls, name, pw):
+        u = cls.by_name(name)
+        if u and valid_pw(name, pw, u.pw_hash):
+            return u
 
 class ProfileMiniForm(messages.Message):
     """ProfileMiniForm -- update Profile form message"""

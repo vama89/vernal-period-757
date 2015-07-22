@@ -154,11 +154,8 @@ class ConferenceApi(remote.Service):
     def emailRegistration(self, request):
         data = {field.name: getattr(request, field.name) for field in request.all_fields()}
 
-        #u = User.register(data['firstName'], data['password'], data['email'])
-        #u.put()
-
-        u = Profile.get_by_id('varrogancia@gmail.com')
-        print u
+        u = Profile.register(data['firstName'], data['lastName'], data['password'], data['email'])
+        u.put()
 
         return request
 
