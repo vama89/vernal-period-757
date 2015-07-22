@@ -561,7 +561,7 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
 
         $scope.d3j = function () {
             var bardata = $scope.bardata;
-            var names = ['ba', 'msft', 'goog'];
+            var names = ['Hangout1', 'Hangout2', 'Hangout3'];
 
             var height = 200,
                 width = 400,
@@ -692,8 +692,25 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                             $scope.results.push(result);
                         });
                         $scope.bardata = JSON.parse(resp.items[0]['finalResults']);
+                        $log.info($scope.bardata);
                         $scope.d3j();
                         //or parse resp.items here and set a new $scope variable
+                        //friends
+                        //Need Logic to get friends who's ranks are added.
+                        var friends = JSON.parse(resp.items[0]['friendList']);
+                        $scope.friends = []
+                        $scope.friend=[]
+                        angular.forEach(Object.keys(friends), function(friend){
+                            $scope.friends.push(friend);
+                        });
+                        /*
+                        var s, tally = JSON.parse(resp.items[0]['groupVoteRanks'])
+                        for(s of tally){
+                            console.log(s);
+                        };*/
+
+                        //Get peopel who's vote rank is all 0.
+
                         //post process items (correct Date Structure)
                         //post process itesm (correct Time (am or pm))
                     }

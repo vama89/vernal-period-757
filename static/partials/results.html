@@ -1,16 +1,28 @@
 <div ng-controller="ResultsCtrl">
 	<div ng-init="getResults()">
-	<h3>Winner!</h3>
+	<h3>Final Results for:</h3>
 	<table id="conference-table" class="table table-striped table-hover">
 	<tr>
 		<td>Event</td>
+		<td>Description</td>
+	</tr>
+	<tr ng-repeat="result in results">
+		<td>{{result.eventName}}</td>
+		<td>{{result.description}}</td>
+	</tr>
+	</table>
+
+	<br>
+	
+	<h3>Winner!</h3>
+	<table id="conference-table" class="table table-striped table-hover">
+	<tr>
 		<td>Date</td>
 		<td>Time</td>
 		<td>Place</td>
 		<td>Location</td>
 	</tr>
 	<tr ng-repeat="result in results">
-		<td>{{result.eventName}}</td>
 		<td>{{result.date1}}</td>
 		<td>{{result.time1}}</td>
 		<td>{{result.locationName1}}</td>
@@ -21,11 +33,11 @@
 	<h3>Results:</h3>
 	<div id="chart"></div>
 
-	<!--
+
 	<h3>Going</h3>
 	<h3>Not Going</h3>
 	<h3>Maybe Going</h3>
-	-->
+
 	<h3>Discussion</h3>
 	<!--
 	<h3>Business Deals Accepted</h3>
