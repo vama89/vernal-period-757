@@ -89,6 +89,7 @@ class ConferenceApi(remote.Service):
         user = endpoints.get_current_user()
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
+        print user
 
         # get Profile from datastore
 
@@ -153,8 +154,11 @@ class ConferenceApi(remote.Service):
     def emailRegistration(self, request):
         data = {field.name: getattr(request, field.name) for field in request.all_fields()}
 
-        u = User.register(data['firstName'], data['password'], data['email'])
-        u.put()
+        #u = User.register(data['firstName'], data['password'], data['email'])
+        #u.put()
+
+        u = Profile.get_by_id('varrogancia@gmail.com')
+        print u
 
         return request
 

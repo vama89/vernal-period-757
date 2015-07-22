@@ -120,8 +120,7 @@ conferenceApp.controllers.controller('MyProfileCtrl',
  * such as user authentications.
  *
  */
-conferenceApp.controllers.controller('RootCtrl', function ($scope, $location, oauth2Provider) {
-
+conferenceApp.controllers.controller('RootCtrl', function ($scope, $location,$log, oauth2Provider) {
     /**
      * Returns if the viewLocation is the currently viewed page.
      *
@@ -153,11 +152,39 @@ conferenceApp.controllers.controller('RootCtrl', function ($scope, $location, oa
                         $scope.alertStatus = 'success';
                         $scope.rootMessages = 'Logged in with ' + resp.email;
                         //My addition to get to the dashboard and load items properly
+                        $scope.makeProfile();
                         $location.path('/myDashboard').replace;
                     }
                 });
             });
         });
+    };
+
+    $scope.makeProfile = function () {
+        var retrieveProfileCallback = function () {
+            $scope.profile = {};
+            $scope.loading = true;
+            gapi.client.conference.getProfile().
+                execute(function (resp) {
+                    $scope.$apply(function () {
+                        $scope.loading = false;
+                        if (resp.error) {
+                            // Failed to get a user profile.
+                        } else {
+                            // Succeeded to get the user profile.
+                            $scope.profile.displayName = resp.result.displayName;
+                            $scope.initialProfile = resp.result;
+                        }
+                    });
+                }
+            );
+        };
+        if (!oauth2Provider.signedIn) {
+            var modalInstance = oauth2Provider.showLoginModal();
+            modalInstance.result.then(retrieveProfileCallback);
+        } else {
+            retrieveProfileCallback();
+        }
     };
 
     /**
