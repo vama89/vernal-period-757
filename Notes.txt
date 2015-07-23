@@ -1,0 +1,72 @@
+Just Notes for me as I develop
+
+user = varrogancia (first part before the @gmail.com)
+userID = varrogancia@gmail.com
+key = ndb.Key(Profile, Varrogancia@gmail.com)
+
+Endpoints is a whole class of library functions one of which seems to have some oauth capabilities via google when you sign in. It comes preloaded when you sign in with user information.
+
+What does the Database look like:
+groupVoteRanks - vote tallying algorithm
+friendlist (only indicator is if they vote...but need to account for preferences of them not caring of the vote)
+Not Care - [0,0,0]...I think just move it to the right place
+
+partytotal
+totalcounter
+
+FriendList is actually a dictionary:
+friendName: {dictionary w/ more informaion}
+
+{dictionary} = {
+	profileID: 12312312
+	voterank: --->initialized to 0....so that's how you know they didn't vote yet.
+	firstchoice:
+	confirmation:
+}
+
+Place it in a $scope variable
+
+Notes to using $location service to route page correctly:
+Place $location in the function below:
+app.factory('oauth2Provider', function ($modal,$location) {
+    var oauth2Provider = {
+        CLIENT_ID: '1056255259427-h8spnd6q8ovv8cn6fdmqk6kc259mb6k6.apps.googleusercontent.com',
+        SCOPES: 'email profile',
+        signedIn: false
+    }
+Then in the function below. Place the $location.path function
+    /**
+     * Calls the OAuth2 authentication method.
+     */
+    oauth2Provider.signIn = function (callback) {
+        gapi.auth.signIn({
+            'clientid': oauth2Provider.CLIENT_ID,
+            'cookiepolicy': 'single_host_origin',
+            'accesstype': 'online',
+            'approveprompt': 'auto',
+            'scope': oauth2Provider.SCOPES,
+            'callback': callback
+        });
+        $location.path('/myDashboard').replace;
+    };
+
+In regards to the loading errors about being logged in. It is located in the RootCtrl
+$scope.signIn and within that function it switches the signedIn state to either true or false. That seems to switch on abilities to work the backend with endpoints.
+
+Note: In the logs 
+TypeError: Cannot read property 'getHangoutsInProgress' of undefined
+
+I got it in 2 areas.
+1. refreshing the homepage and launching everything from the server
+2. refereshing the mydashboard page
+
+Both have ng-init
+
+I'm moving on, but I think it has something to do with loading and calling the backend before the backend or some credentials are finished loading itself. I'll leave it at this and move on. Fix this later.
+
+Even on the Conference. There is this bug. I have to look at the sequence of when things are fired during a refresh. Diagnosed it to loading bar. When I reload the page, it keeps reloading. the reloading bar should disappear but it can't get to the falsehood. And same things with gapi.client execution. It gets stuck there and never finishes executing the whole way through...there is even no response error.
+
+However this must mean there is no pinging of the backend at all. I at least pinged it with mispellings or for mcontrol mistakes. I get a response back. It doesn't even get to hit the back end.
+
+POSSIBLE ANSWER:
+When the page for the profile is reloaded. even before hitting anything, it brings up the modal. No that wouldn't work because I think it still loads everything. I need a way to pause everything from loading. until to launch the inits.
