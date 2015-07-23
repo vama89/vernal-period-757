@@ -224,7 +224,8 @@ class ConferenceApi(remote.Service):
         friendIDList=[]
         friendsDict={}
         friendsInJson=json.loads(data['friendList'])
-        counter=1
+        friendsInJson.append(user_id)
+        counter=0
         
         #I should really pass the friendID not just the name. Be sure to switch this
         #later in production
@@ -265,7 +266,7 @@ class ConferenceApi(remote.Service):
         data['friendList'] = json.dumps(friendsDict)
 
         ###Add Event Creator 
-        data['eventCreator'] = str(user_id)
+        data['eventCreator'] = str(user_id) 
 
         #process the user's own voting preferences
         #note that I put this in a list for proper processing when voting
@@ -299,6 +300,11 @@ class ConferenceApi(remote.Service):
 
         data['finalResults'] = json.dumps(adjustList)
 
+        #adding the creator's vote preferences to the friendList
+        friendList = json.loads(data['friendList'])
+        friendList[user_id]['voteRank'] = adjustList
+        data['friendList'] = json.dumps(friendList)
+
         ####Add the Total Party Count
         data['totalCounter'] = 1
         ####Add the Party Total
@@ -323,6 +329,7 @@ class ConferenceApi(remote.Service):
 
         #UPDATING THE EVENT CREATOR WITH THE APPriate hangout keys
         #update User's Profiles
+
         creator = p_key.get()
         #get the list of events that the user is waiting on
         if creator.eventsWaitingOn == None:
@@ -344,7 +351,9 @@ class ConferenceApi(remote.Service):
         
         for friendID in friendIDList:
             friendObject = ndb.Key(Profile, friendID).get()
-            if friendObject.eventsInvited == None:
+            if friendObject == creator:
+                pass
+            elif friendObject.eventsInvited == None:
                 eventsInvited = []
                 for event in hangoutQry:
                     eventKey = event.key.id()
@@ -358,6 +367,7 @@ class ConferenceApi(remote.Service):
                     eventsInvited.append(eventKey)
                     friendObject.eventsInvited = json.dumps(eventsInvited)
                     friendObject.put()
+
         return request
 
     @endpoints.method(message_types.VoidMessage, HangoutForms, 
@@ -485,6 +495,7 @@ class ConferenceApi(remote.Service):
         userVotes.append(int(data['option3']))
 
         #account for people that cannot attend at all. just null out their votes
+        #check the creator
 
         #add the users vote to the friend list, in his or her name
         friendList = json.loads(hangoutObject.friendList)
@@ -612,7 +623,7 @@ class ConferenceApi(remote.Service):
     @endpoints.method(HANG_GET_REQUEST, HangoutForms, 
         path='getResultsWaiting/{webSafeKey}', 
         http_method='GET', name='getResultsWaiting')
-    def getResultsFinal(self, request):        
+    def getResultsWaiting(self, request):        
         user = endpoints.get_current_user()
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
@@ -624,8 +635,6 @@ class ConferenceApi(remote.Service):
         hangoutObject = ndb.Key(urlsafe=request.webSafeKey).get()
         eventList=[]
         eventList.append(hangoutObject)
-
-        print hangoutObject.groupVoteRanks
 
         #t = message_types.VoidMessage()
         #return t
