@@ -21,10 +21,27 @@
             <input type="button" id="btRemoveAll" value="Remove All Friends" class="bt" /><br />
         </div>
         -->
-
+        <!--
+        <div ng-controller="HangoutCreationCtrl as todoList">
+        <span>{{todoList.remaining()}} of {{todoList.todos.length}} remaining</span>
+        [ <a href="" ng-click="todoList.archive()">Delete</a> ]
+        <ul class="unstyled">
+          <li ng-repeat="todo in todoList.todos">
+            <input type="checkbox" ng-model="todo.done">
+            <span class="done-{{todo.done}}">{{todo.text}}</span>
+          </li>
+        </ul>
+        <form name="friend">
+          <input type="text" ng-model="todoList.todoText"  size="30"
+                 placeholder="add new todo here">
+          <button ng-click="todoList.addTodo(friend)" class="btn-primary"value="add"></button>
+        </form>
+      </div>
+            -->
+        
         <input type="text" ng-model = "checked.friend1">
         <input type="text" ng-model = "checked.friend2">
-        
+
         <br>
         <br>
 

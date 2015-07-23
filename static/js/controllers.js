@@ -103,11 +103,12 @@ conferenceApp.controllers.controller('MyProfileCtrl',
                 });
         };
 
-        $scope.pictureUpload = function(){
+        $scope.file = $scope.file || {};
+        $scope.pictureUpload = function(picture){
             //Hit the api
             //go into python
-            //
-        };
+            $log.info($scope.file);
+      };
 
     });
 
@@ -259,6 +260,7 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
 
     $scope.checked = $scope.checked || {};
 
+    /*
     $scope.test = function(testy) {
         //$log.info($scope.checked.friend1);
         $log.info($scope.checked);
@@ -271,7 +273,7 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
 
     todoList.addTodo = function() {
       todoList.todos.push({text:todoList.todoText, done:false});
-      $scope.checked = todoList.todos;
+      $scope.checked.friends = todoList.todos;
       todoList.todoText = '';
     };
 
@@ -289,7 +291,7 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
       angular.forEach(oldTodos, function(todo) {
         if (!todo.done) todoList.todos.push(todo);
       });
-    };
+    };*/
 
     $scope.friendButton = function(hangoutForm) {
         /*

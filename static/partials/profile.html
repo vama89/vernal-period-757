@@ -21,9 +21,9 @@
             <img src="/img/robot-character.jpg" height="300" width="300">
             
             <!--Use some ng controller here to make an api call -->
-            <form name="pictureUpload" enctype="multipart/form-data> enctype=">
+            <form ng-submit="pictureUpload(picture)" name="picture" enctype="multipart/form-data">
             <label>Upload:
-            <input type="file" name="file">
+            <input type="file" ng-model="file" name="file">
             </label>
             <br> 
             <input type="submit" name="submit" value="Submit">
