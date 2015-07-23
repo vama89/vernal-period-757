@@ -35,8 +35,21 @@
 
 
 	<h3>Going</h3>
-	<h3>Not Going</h3>
+	<table>
+	<tr ng-repeat="prefer in prefereds">
+		<td>{{prefer}}</td>
+	</tr>
+	</table>
+
 	<h3>Maybe Going</h3>
+	<table>
+	<tr ng-repeat="may in mays">
+		<td>{{may}}</td>
+	</tr>
+	</table>
+
+	<h3>Not Going</h3>
+
 
 	<h3>Discussion</h3>
 	<!--

@@ -817,13 +817,31 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                         var friends = JSON.parse(resp.items[0]['friendList']);
                         var s, friendList = Object.keys(friends);
                         var going=[];
-                        var maybeGogin=[];
+                        var maybeGoing=[];
                         var notGoing=[];
 
                         //display Those going (first choice)
                         for(s of friendList){
-                            console.log(friends[s]['confirmation']);
+                            if (friends[s]['confirmation'] == 1){
+                                going.push(s);
+                            }
+                            else{
+                                maybeGoing.push(s);
+                            }
                         }
+
+                        $scope.prefereds = []
+                        $scope.prefer=[]
+                        angular.forEach(going, function(prefer){
+                            $scope.prefereds.push(prefer);
+                        });
+
+                        $scope.mays = []
+                        $scope.may=[]
+                        angular.forEach(maybeGoing, function(may){
+                            $scope.mays.push(may);
+                        });
+
 
                         //display Maybe
 
