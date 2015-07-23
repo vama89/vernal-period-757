@@ -692,7 +692,7 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                             $scope.results.push(result);
                         });
                         $scope.bardata = JSON.parse(resp.items[0]['finalResults']);
-                        $log.info($scope.bardata);
+                        $log.info(resp.items[0]);
                         $scope.d3j();
                         //or parse resp.items here and set a new $scope variable
                         //friends
@@ -814,7 +814,16 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
 
                         }
 
+                        var friends = JSON.parse(resp.items[0]['friendList']);
+                        var s, friendList = Object.keys(friends);
+                        var going=[];
+                        var maybeGogin=[];
+                        var notGoing=[];
+
                         //display Those going (first choice)
+                        for(s of friendList){
+                            console.log(friends[s]['confirmation']);
+                        }
 
                         //display Maybe
 

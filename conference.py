@@ -173,7 +173,7 @@ class ConferenceApi(remote.Service):
         for field in hang.all_fields():
             if hasattr(hangout, field.name):
                 if field.name in ('date1', 'date2', 'date3', 'time1', 'time2', 'time3', 'deadlineDate',\
-                 'deadlineTime', 'dateEventCreated', 'totalCounter', 'partyTotal', 'votingCompleted'):
+                 'deadlineTime', 'dateEventCreated', 'totalCounter', 'partyTotal', 'votingCompleted', 'finalResults'):
                     setattr(hang, field.name, str(getattr(hangout, field.name)))
                 else:
                     setattr(hang, field.name, getattr(hangout, field.name))
@@ -297,12 +297,12 @@ class ConferenceApi(remote.Service):
         for p in listType:
             adjustNum=4-p
             adjustList.append(adjustNum)
-
+        #THIS IS THE BARGRAHP ADJUSTED VOTE RANKS
         data['finalResults'] = json.dumps(adjustList)
 
-        #adding the creator's vote preferences to the friendList
+        #adding the creator's vote preferences to the friendList REGULAR VOTERANK
         friendList = json.loads(data['friendList'])
-        friendList[user_id]['voteRank'] = adjustList
+        friendList[user_id]['voteRank'] = listType
         data['friendList'] = json.dumps(friendList)
 
         ####Add the Total Party Count
@@ -581,6 +581,24 @@ class ConferenceApi(remote.Service):
             #based off of the winner check if people's preferences match the result.
             #if not then adjust their confirmation number accordinginly then parse it in javascript.
 
+            maxOfResults = max(results)
+            optionNumber = results.index(maxOfResults)
+
+            friendList = json.loads(hangoutObject.friendList)
+            #check people's first preference
+            friends = friendList.keys()
+            for friend in friends:
+                voteRank = friendList[friend]['voteRank']
+                minOf = min(friendList[friend]['voteRank'])
+                firstChoice = voteRank.index(minOf)
+
+                if firstChoice == optionNumber:
+                    friendList[friend]['confirmation'] = 1
+                else:
+                    pass
+
+            hangoutObject.friendList = json.dumps(friendList)
+
             hangoutObject.put()
             
 
@@ -656,7 +674,8 @@ class ConferenceApi(remote.Service):
         eventList=[]
         eventList.append(hangoutObject)
 
-        print hangoutObject.groupVoteRanks
+        friendList =  json.loads(hangoutObject.friendList)
+        print friendList
 
         #t = message_types.VoidMessage()
         #return t
