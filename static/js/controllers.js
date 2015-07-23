@@ -259,6 +259,38 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
 
     $scope.checked = $scope.checked || {};
 
+    $scope.test = function(testy) {
+        //$log.info($scope.checked.friend1);
+        $log.info($scope.checked);
+    };
+
+    var todoList = this;
+    todoList.todos = [
+      {text:'learn angular', done:true},
+      {text:'build an angular app', done:false}];
+
+    todoList.addTodo = function() {
+      todoList.todos.push({text:todoList.todoText, done:false});
+      $scope.checked = todoList.todos;
+      todoList.todoText = '';
+    };
+
+    todoList.remaining = function() {
+      var count = 0;
+      angular.forEach(todoList.todos, function(todo) {
+        count += todo.done ? 0 : 1;
+      });
+      return count;
+    };
+
+    todoList.archive = function() {
+      var oldTodos = todoList.todos;
+      todoList.todos = [];
+      angular.forEach(oldTodos, function(todo) {
+        if (!todo.done) todoList.todos.push(todo);
+      });
+    };
+
     $scope.friendButton = function(hangoutForm) {
         /*
         $(document).ready(function() {
@@ -450,6 +482,7 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $r
                         $log.info("Success Bitch!");
                         $scope.hangouts = []
                         $scope.hangout=[]
+                        $log.info(resp.items);
                         angular.forEach(resp.items, function(hangout){
                             $scope.hangouts.push(hangout);
                         });
@@ -826,26 +859,49 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                                 going.push(s);
                             }
                             else{
-                                maybeGoing.push(s);
+
                             }
                         }
 
+                        for(s of friendList){
+                            if (friends[s]['confirmation'] == 0){
+                                maybeGoing.push(s);
+                            }
+                            else{
+                                
+                            }
+                        }
+
+                        for(s of friendList){
+                            if (friends[s]['confirmation'] == 4){
+                                notGoing.push(s);
+                            }
+                            else{
+                                
+                            }
+                        }
+
+                        //Those That got their first pick
                         $scope.prefereds = []
                         $scope.prefer=[]
                         angular.forEach(going, function(prefer){
                             $scope.prefereds.push(prefer);
                         });
 
+                        //display Maybe
                         $scope.mays = []
                         $scope.may=[]
                         angular.forEach(maybeGoing, function(may){
                             $scope.mays.push(may);
                         });
 
-
-                        //display Maybe
-
                         //display those definitely not
+                        $scope.nots = []
+                        $scope.not=[]
+                        angular.forEach(notGoing, function(not){
+                            $scope.nots.push(not);
+                        });
+
                     }
                 });
             });

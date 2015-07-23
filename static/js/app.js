@@ -57,6 +57,10 @@ var app = angular.module('conferenceApp',
                     templateUrl: '/partials/registration.html',
                     controller: 'RegLogsCtrl'
                 }).
+                when('/test', {
+                    templateUrl: '/partials/test.html',
+                    controller: 'HangoutCreationCtrl'
+                }).
                 when('/forgotPassword', {
                     templateUrl: '/partials/forgotPassword.html'
                 }).

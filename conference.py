@@ -674,9 +674,6 @@ class ConferenceApi(remote.Service):
         eventList=[]
         eventList.append(hangoutObject)
 
-        friendList =  json.loads(hangoutObject.friendList)
-        print friendList
-
         #t = message_types.VoidMessage()
         #return t
         return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList])
