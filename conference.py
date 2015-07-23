@@ -153,8 +153,14 @@ class ConferenceApi(remote.Service):
         data = {field.name: getattr(request, field.name) for field in request.all_fields()}
 
         #check if email name is available
-        u = Profile.register(data['firstName'], data['lastName'], data['password'], data['email'])
-        u.put()
+        u = Profile.by_id(data['email'])
+        if u:
+            print "already exists"
+        else:
+            print "no user exists"
+
+        #u = Profile.register(data['firstName'], data['lastName'], data['password'], data['email'])
+        #u.put()
 
         return request
 

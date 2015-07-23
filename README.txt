@@ -1,5 +1,9 @@
 This is the official open-source project for VoteVite.
 
+The original vision of this was taking wayyyy longer to develop than anticipated. In the meantime, I thought it'd be cool to just make it an "open source" project. Whatever that means...I've been throwing this up here on github for a while now, but without this official Readme. So until I'm able to make this more professional, here it is! P.S. Actually, just throwing this up here just so I can sound cool by saying I've made this "open-source."
+
+GNU License insertion here <---- Too lazy to look this up. Feel free to use it.
+
 Current contributors:
 Me(Vince Arrogancia) - varrogancia@gmail.com
 Christopher Ha

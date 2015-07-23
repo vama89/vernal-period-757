@@ -67,11 +67,12 @@
                 <li ng-class="{ active: isActive('/myDashboard')}" ng-show="getSignedInState()"><a href="#/myDashboard" ng-click=" collapseNavbar()" >My Dashboard</a></li>
 
                 <li ng-class="{ active: isActive('/profile')}" ng-show="getSignedInState()" ><a href="#/profile" ng-click=" collapseNavbar()">My Profile</a></li>
-
+                <!--
                 <li id="signInLink" ng-class="{ active: isActive('/registration')}" ng-hide="getSignedInState()"><a href="#/registration" ng-click="collapseNavbar()">Register</a></li>
 
                 <li id="signInLink" ng-class="{ active: isActive('/login')}" ng-hide="getSignedInState()"><a href="#/login" ng-click="collapseNavbar()">Sign-In</a></li>
-
+                -->
+                <li id="signInLink" ng-hide="getSignedInState()"><a ng-click="signIn(); collapseNavbar()">Google+ SignIn</a></li>
                 <li id="signOutLink" ng-show="getSignedInState()"><a ng-click="signOut(); collapseNavbar()">Log out</a></li>
             </ul>
 
