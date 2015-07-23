@@ -484,6 +484,8 @@ class ConferenceApi(remote.Service):
         userVotes.append(int(data['option2']))
         userVotes.append(int(data['option3']))
 
+        #account for people that cannot attend at all. just null out their votes
+
         #add the users vote to the friend list, in his or her name
         friendList = json.loads(hangoutObject.friendList)
         friendList[user_id]['voteRank'] = userVotes
@@ -564,6 +566,10 @@ class ConferenceApi(remote.Service):
             hangoutObject.totalCounter = hangoutObject.totalCounter + 1
             hangoutObject.votingCompleted = True
 
+            #Here add people's confirmation of whether they can go or not or maybe
+            #based off of the winner check if people's preferences match the result.
+            #if not then adjust their confirmation number accordinginly then parse it in javascript.
+
             hangoutObject.put()
             
 
@@ -604,9 +610,31 @@ class ConferenceApi(remote.Service):
         return request
 
     @endpoints.method(HANG_GET_REQUEST, HangoutForms, 
-        path='getResults/{webSafeKey}', 
-        http_method='GET', name='getResults')
-    def getResults(self, request):        
+        path='getResultsWaiting/{webSafeKey}', 
+        http_method='GET', name='getResultsWaiting')
+    def getResultsFinal(self, request):        
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+        user_id = getUserId(user)
+        p_key = ndb.Key(Profile, user_id)
+        userData=p_key.get()
+
+        #get event and place it in list to copy to the form
+        hangoutObject = ndb.Key(urlsafe=request.webSafeKey).get()
+        eventList=[]
+        eventList.append(hangoutObject)
+
+        print hangoutObject.groupVoteRanks
+
+        #t = message_types.VoidMessage()
+        #return t
+        return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList])
+
+    @endpoints.method(HANG_GET_REQUEST, HangoutForms, 
+        path='getResultsFinal/{webSafeKey}', 
+        http_method='GET', name='getResultsFinal')
+    def getResultsFinal(self, request):        
         user = endpoints.get_current_user()
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')

@@ -674,9 +674,9 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
 
     };*/
 
-        $scope.getResults = function () {
+        $scope.getResultsWaiting = function () {
 
-        gapi.client.conference.getResults({
+        gapi.client.conference.getResultsWaiting({
             webSafeKey: $routeParams.webSafeKey
         }).
             execute(function(resp){
@@ -700,17 +700,11 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                         var notVotedFriends=[];
                         var votedFriends=[];
                         votedFriends.push(resp.items[0]['eventCreator'])
-
                         var s, friends = JSON.parse(resp.items[0]['friendList']);
                         var iterFriends = Object.keys(friends)
 
-                        console.log(resp.items[0]);
-
                         for(s of iterFriends){
                         if (friends[s]['voteRank'][0]==0){
-                            console.log(s);
-                            console.log(friends[s]['voteRank'][0]);
-                            console.log(typeof friends[s]['voteRank'][0]);
                             notVotedFriends.push(s);
                         }
                         else{
@@ -738,6 +732,31 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                 });
             });
     };
+
+        $scope.getResultsFinal = function () {
+        gapi.client.conference.getResultsFinal({
+            webSafeKey: $routeParams.webSafeKey
+        }).
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error Yo');
+                    }
+                    else {
+                        $log.info("Success Bitch!");
+                        $scope.results = []
+                        $scope.result=[]
+                        angular.forEach(resp.items, function(result){
+                            $scope.results.push(result);
+                        });
+
+                        //post process items (correct Date Structure)
+                        //post process itesm (correct Time (am or pm))
+                    }
+                });
+            });
+
+        };
     
 });
 
