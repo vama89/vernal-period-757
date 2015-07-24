@@ -685,12 +685,13 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
 
 conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routeParams){
 
-    $scope.testVar;
+    $scope.testVar = $scope.testVar || {};
 
-    $scope.test = function(testy) {
+    $scope.test = function() {
         //$log.info($scope.checked.friend1);
-        $log.info($scope.testVar);
+    $log.info($scope.testVar.friends);
 
+        /*
          gapi.client.conference.test().
             execute(function(resp){
                 $scope.$apply(function() {
@@ -702,6 +703,32 @@ conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routePara
                     }
                 });
             });
+        */
+    };
+
+    var todoList = this;
+    todoList.todos = [];
+
+    todoList.addTodo = function() {
+      todoList.todos.push({text:todoList.todoText, done:false});
+      $scope.testVar.friends = todoList.todos;
+      todoList.todoText = '';
+    };
+
+    todoList.remaining = function() {
+      var count = 0;
+      angular.forEach(todoList.todos, function(todo) {
+        count += todo.done ? 0 : 1;
+      });
+      return count;
+    };
+
+    todoList.archive = function() {
+      var oldTodos = todoList.todos;
+      todoList.todos = [];
+      angular.forEach(oldTodos, function(todo) {
+        if (!todo.done) todoList.todos.push(todo);
+      });
     };
 
 });
