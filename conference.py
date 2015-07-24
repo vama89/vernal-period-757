@@ -702,7 +702,17 @@ class ConferenceApi(remote.Service):
         #t = message_types.VoidMessage()
         #return t
         return BooleanMessage(data=truthValue) 
- 
+    
+    @endpoints.method(message_types.VoidMessage, message_types.VoidMessage, 
+        path='test', 
+        http_method='GET', name='test')
+    def test(self, request):        
+        print "here"
+
+        qry = Profile.query(Profile.mainEmail == 'varrogancia@gmail.com')
+        print qry
+
+        return request
 api = endpoints.api_server([ConferenceApi]) # register API
 
 #Sample Code to help me out. Reminder Code

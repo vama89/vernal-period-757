@@ -216,6 +216,7 @@ conferenceApp.controllers.controller('RootCtrl', function ($scope, $location,$lo
         oauth2Provider.signOut();
         $scope.alertStatus = 'success';
         $scope.rootMessages = 'Logged out';
+        $location.path('/').replace;
     };
 
     /**
@@ -260,11 +261,23 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
 
     $scope.checked = $scope.checked || {};
 
-    /*
+    
     $scope.test = function(testy) {
         //$log.info($scope.checked.friend1);
         $log.info($scope.checked);
-    };
+
+         gapi.client.conference.test().
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error Yo');
+                    }
+                    else {
+                        $log.info("Success Bitch!");
+                    }
+                });
+            });
+    };/*
 
     var todoList = this;
     todoList.todos = [
