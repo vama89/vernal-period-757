@@ -70,3 +70,7 @@ However this must mean there is no pinging of the backend at all. I at least pin
 
 POSSIBLE ANSWER:
 When the page for the profile is reloaded. even before hitting anything, it brings up the modal. No that wouldn't work because I think it still loads everything. I need a way to pause everything from loading. until to launch the inits.
+
+In regards to routing and making sure things load propery. 
+The isActive function in the Root controler is the one that makes sure to keep on pinging things until they are done. I took it out of the homepage. I'll get around to it later.
+Make sure to emluate this in the final product. For now shelve it.

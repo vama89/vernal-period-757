@@ -258,6 +258,7 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
     $scope.createHangout = function (hangoutForm) {
         //Grab all the individual friends and put them into a list
         //Seems I need these entities as strings in order for it to work with the python model
+        
         var friendList = [$scope.checked.friend1, $scope.checked.friend2, $scope.checked.friend3];
         $scope.checked.friendList = JSON.stringify(friendList);
         
@@ -374,6 +375,7 @@ conferenceApp.controllers.controller('VoteCtrl', function($scope,$log,$location,
     $scope.votes = $scope.votes || {};
 
     $scope.vote = function(voteForm){
+        
         $scope.votes.webSafeKey = $routeParams.webSafeKey
 
         gapi.client.conference.vote($scope.votes).

@@ -1,9 +1,14 @@
+<div ng-show="getSignedInState()">
+	<h3>You're Already Signed In Via Google. Go on and inViteVote!</h3>
+</div>
 
+<div ng-hide="getSignedInState()">
 <h3>Quit haggling over when to hangout, just get to it already! inVOTEVITE!</h3>
 <p>inVite then Vote. inViteVote!</p>
 
 <ul class="text-center list-inline intro-social-buttons">
-      <li id="signInLink">
+	<li id="signInLink">
           <a class="btn btn-default btn-lg" ng-click="signIn()">Google+ SignIn</a>
       </li>
 </ul>
+</div>
