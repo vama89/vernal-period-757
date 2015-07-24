@@ -54,7 +54,12 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
+            <div ng-show="getSignedInState()">
+            <a class="navbar-brand" href="#/myDashboard">VoteVite</a>
+            </div>
+            <div ng-hide="getSignedInState()">
             <a class="navbar-brand" href="/">VoteVite</a>
+            </div>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">

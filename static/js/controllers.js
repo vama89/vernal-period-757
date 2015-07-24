@@ -251,7 +251,7 @@ conferenceApp.controllers.controller('OAuth2LoginModalCtrl',
  * Method to show certain hangouts
  *
  */
-conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $log){
+conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $log, $location){
 
     $scope.checked = $scope.checked || {};
 
@@ -295,6 +295,7 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
                     }
                     else {
                         $log.info("Success!");
+                        $location.path('myDashboard').replace;
                     }
                 });
             });
