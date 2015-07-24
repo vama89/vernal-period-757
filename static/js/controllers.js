@@ -114,7 +114,7 @@ conferenceApp.controllers.controller('MyProfileCtrl',
  * such as user authentications.
  *
  */
-conferenceApp.controllers.controller('RootCtrl', function ($scope, $location,$log, oauth2Provider) {
+conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $log, oauth2Provider) {
     /**
      * Returns if the viewLocation is the currently viewed page.
      *
@@ -251,7 +251,7 @@ conferenceApp.controllers.controller('OAuth2LoginModalCtrl',
  * Method to show certain hangouts
  *
  */
-conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $log, $location){
+conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $log, $location){
 
     $scope.checked = $scope.checked || {};
 
@@ -286,6 +286,7 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
 });
 
 conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $routeParams){
+
     $scope.invited = function () {
         //Check if in the backend he was invited and didn't vote
         /*
@@ -368,7 +369,7 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $r
 
 });
 
-conferenceApp.controllers.controller('VoteCtrl', function($scope,$log,$routeParams){
+conferenceApp.controllers.controller('VoteCtrl', function($scope,$log,$location,$routeParams){
 
     $scope.votes = $scope.votes || {};
 
@@ -383,7 +384,7 @@ conferenceApp.controllers.controller('VoteCtrl', function($scope,$log,$routePara
                         }
                         else {
                             $log.info("Success");
-                            //send back to the dashboard. Use the location
+                            $location.path('/myDashboard').replace;
                         }
                     });
                 });
@@ -516,7 +517,7 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                         else{
                             votedFriends.push(s);
                         }
-                        };
+                        }
 
                         //THOSE THAT DID NOT VOTE
                         $scope.friends = []
@@ -673,7 +674,6 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                         angular.forEach(notGoing, function(not){
                             $scope.nots.push(not);
                         });
-
                     }
                 });
             });

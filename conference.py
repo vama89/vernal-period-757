@@ -30,9 +30,7 @@ from models import ProfileForm
 from models import Hangout
 from models import HangoutForm
 from models import HangoutForms
-from models import EmailRegFormInput
 from models import VoteForm
-from models import BooleanMessage
 
 from settings import WEB_CLIENT_ID
 from settings import ANDROID_CLIENT_ID
@@ -100,11 +98,11 @@ class ConferenceApi(remote.Service):
                 key = p_key,
                 displayName = user.nickname(),
                 mainEmail= user.email(),
-                eventsInvited=json.dumps([]),
-                eventsWaitingOn=json.dumps([]),
-                eventsVoteDone=json.dumps([]),
-                eventsPassedDate=json.dumps([]),
-                eventsRegrets=json.dumps([])
+                eventsInvited=[],
+                eventsWaitingOn=[],
+                eventsVoteDone=[],
+                eventsPassedDate=[],
+                eventsRegrets=[]
             )
             profile.put()
 
@@ -272,43 +270,33 @@ class ConferenceApi(remote.Service):
         #wait for it to generate the keys
         time.sleep(.1)
 
-        #Query the hangout.
+        #Query the hangout. This must be unique. Note to self. Find if there is a way to get the key before it is created.
         hangoutQry = Hangout.query(Hangout.eventCreator == str(user_id), Hangout.dateEventCreated == data['dateEventCreated'])
 
         #Placing event key  in Creator's Waiting Queue
-        creator = p_key.get()
-        if creator.eventsWaitingOn == None:
-            eventsWaitingOn = []
-        else:
-            eventsWaitingOn=json.loads(creator.eventsWaitingOn)
+        creatorObj = p_key.get()
+        
+        eventsWaitingOn=creatorObj.eventsWaitingOn
 
         for event in hangoutQry:
-            eventKey = event.key.id()
-            eventsWaitingOn.append(eventKey)
-            creator.eventsWaitingOn = json.dumps(eventsWaitingOn)
-        creator.put()
+            eventKeyId = event.key.id()
+            eventsWaitingOn.append(eventKeyId)
+            creatorObj.eventsWaitingOn = eventsWaitingOn
+        creatorObj.put()
 
         #Placing event key to all friends except the creator.        
         for friendID in friendIDList:
             friendObject = ndb.Key(Profile, friendID).get()
-            if friendObject == creator:
+            if friendObject == creatorObj:
+                print "Test that friendObj equals creatorObj"
                 pass
-            elif friendObject.eventsInvited == None:
-                eventsInvited = []
-                for event in hangoutQry:
-                    eventKey = event.key.id()
-                    eventsInvited.append(eventKey)
-                    friendObject.eventsInvited = json.dumps(eventsInvited)
-                    friendObject.put()
             else:
-                eventsInvited=json.loads(friendObject.eventsInvited)
+                eventsInvited=friendObject.eventsInvited
                 for event in hangoutQry:
-                    eventKey = event.key.id()
-                    eventsInvited.append(eventKey)
-                    friendObject.eventsInvited = json.dumps(eventsInvited)
+                    eventKeyId = event.key.id()
+                    eventsInvited.append(eventKeyId)
+                    friendObject.eventsInvited = eventsInvited
                     friendObject.put()
-
-        #If the business is mentioned. Update them here.
 
         return request
 
@@ -326,7 +314,7 @@ class ConferenceApi(remote.Service):
         userData=p_key.get()
         
         #handle the string processing
-        eventsInvited = json.loads(userData.eventsInvited)
+        eventsInvited = userData.eventsInvited
         eventList=[]
         form = HangoutForm()
         for eventId in eventsInvited:
@@ -353,7 +341,7 @@ class ConferenceApi(remote.Service):
         userData=p_key.get()
         
         #handle the string processing
-        eventsWaitingOn = json.loads(userData.eventsWaitingOn)
+        eventsWaitingOn = userData.eventsWaitingOn
         eventList=[]
         form = HangoutForm()
         for eventId in eventsWaitingOn:
@@ -381,7 +369,7 @@ class ConferenceApi(remote.Service):
         userData=p_key.get()
 
         #handle the string processing
-        eventsVoteDone = json.loads(userData.eventsVoteDone)
+        eventsVoteDone = userData.eventsVoteDone
         eventList=[]
         form = HangoutForm()
         for eventId in eventsVoteDone:
@@ -459,15 +447,15 @@ class ConferenceApi(remote.Service):
             friendListKeys=friendList.keys()
             for friendKey in friendListKeys:
                 friendObject = ndb.Key(Profile, friendKey).get()
-                eventsInvited = json.loads(friendObject.eventsInvited)
+                eventsInvited = friendObject.eventsInvited
                 for eventKey in eventsInvited:
                     if eventKey == hangoutObject.key.id():
                         eventsInvited.remove(eventKey)
-                        friendObject.eventsInvited = json.dumps(eventsInvited)
+                        friendObject.eventsInvited = eventsInvited
 
-                        eventsVoteDone = json.loads(friendObject.eventsVoteDone)
+                        eventsVoteDone = friendObject.eventsVoteDone
                         eventsVoteDone.append(eventKey)
-                        friendObject.eventsVoteDone = json.dumps(eventsVoteDone)
+                        friendObject.eventsVoteDone = eventsVoteDone
                         friendObject.put()
                     else:
                         pass
@@ -476,15 +464,15 @@ class ConferenceApi(remote.Service):
         #delete hangout key from the waiting list
         #add it to the events done list
             eventCreator = ndb.Key(Profile, hangoutObject.eventCreator).get()
-            eventsWaitingOn = json.loads(eventCreator.eventsWaitingOn)
+            eventsWaitingOn = eventCreator.eventsWaitingOn
             for eventKey in eventsWaitingOn:
                 if eventKey == hangoutObject.key.id():
                     eventsWaitingOn.remove(eventKey)
-                    eventCreator.eventsWaitingOn = json.dumps(eventsWaitingOn)
+                    eventCreator.eventsWaitingOn = eventsWaitingOn
 
-                    eventsVoteDone = json.loads(eventCreator.eventsVoteDone)
+                    eventsVoteDone = eventCreator.eventsVoteDone
                     eventsVoteDone.append(eventKey)
-                    eventCreator.eventsVoteDone = json.dumps(eventsVoteDone)
+                    eventCreator.eventsVoteDone = eventsVoteDone
                     eventCreator.put()
                 else:
                     pass
@@ -538,17 +526,17 @@ class ConferenceApi(remote.Service):
             #hangoutObject.friendList = json.dumps(friendList)
 
             #move this hangout to the voted waiting for this user
-            eventsInvited = json.loads(userObject.eventsInvited)
+            eventsInvited = userObject.eventsInvited
             for eventKey in eventsInvited:
                 if eventKey == hangoutObject.key.id():
                     #remove from the invited queue
                     eventsInvited.remove(eventKey)
-                    userObject.eventsInvited = json.dumps(eventsInvited)
+                    userObject.eventsInvited = eventsInvited
 
                     #place in the waiting queue
-                    eventsWaitingOn = json.loads(userObject.eventsWaitingOn)
+                    eventsWaitingOn = userObject.eventsWaitingOn
                     eventsWaitingOn.append(eventKey)
-                    userObject.eventsWaitingOn = json.dumps(eventsWaitingOn)
+                    userObject.eventsWaitingOn = eventsWaitingOn
                     userObject.put()
                 else:
                     pass
@@ -606,7 +594,16 @@ class ConferenceApi(remote.Service):
     def test(self, request):        
         print "Test Function"
 
+        #Get list of objects
+        hangoutObjects = Hangout.query()
+        for hangoutObject in hangoutObjects:
+            print hangoutObject.eventName
+
+        #Get one individual object:
+        #singleObject = ndb.Key(Hangout, 5663034638860288)
+
         return request
+
 api = endpoints.api_server([ConferenceApi]) # register API
 
 #Sample Code to help me out. Reminder Code

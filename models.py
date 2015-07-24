@@ -22,20 +22,13 @@ import json
 class Profile(ndb.Model):
     """Profile -- User profile object"""
     displayName = ndb.StringProperty()
-    firstName = ndb.StringProperty()
-    lastName = ndb.StringProperty()
     mainEmail = ndb.StringProperty()
-    #can be either a link, blobprop or blobkeyprop. not sure yet.
-    profilePictureID = ndb.StringProperty()
-    backupemail = ndb.StringProperty()
-    pw_hash = ndb.StringProperty()
-    cellphone = ndb.StringProperty()
-    listOfContacts = ndb.JsonProperty()
-    eventsInvited = ndb.JsonProperty()
-    eventsWaitingOn = ndb.JsonProperty()
-    eventsVoteDone = ndb.JsonProperty()
-    eventsPassedDate = ndb.JsonProperty()
-    eventsRegrets = ndb.JsonProperty()
+    listOfContacts = ndb.StringProperty(repeated=True)
+    eventsInvited = ndb.IntegerProperty(repeated=True)
+    eventsWaitingOn = ndb.IntegerProperty(repeated=True)
+    eventsVoteDone = ndb.IntegerProperty(repeated=True)
+    eventsPassedDate = ndb.IntegerProperty(repeated=True)
+    eventsRegrets = ndb.IntegerProperty(repeated=True)
 
 class ProfileMiniForm(messages.Message):
     """ProfileMiniForm -- update Profile form message"""
@@ -45,30 +38,6 @@ class ProfileForm(messages.Message):
     """ProfileForm -- Profile outbound form message"""
     displayName = messages.StringField(1)
     mainEmail = messages.StringField(2)
-
-class EmailRegFormInput(messages.Message):
-    #This has to be unique - email (use as the id)
-    email=messages.StringField(1)
-    firstName=messages.StringField(2)
-    lastName=messages.StringField(3)
-    password=messages.StringField(4)
-
-class Business(ndb.Model):
-    businessName = ndb.StringProperty()
-    locationName = ndb.StringProperty()
-    mainEmail = ndb.StringProperty()
-    password = ndb.StringProperty()
-    phoneNumber = ndb.StringProperty()
-    manager = ndb.StringProperty()
-    employeesList = ndb.JsonProperty()
-    #list of parties that are voting on your establishment
-    votedOn = ndb.JsonProperty()
-    #list of people in the area that are considering your specific place
-    wantingToHang = ndb.JsonProperty()
-    #parties that voted to hangout at your establishment
-    firstPick = ndb.JsonProperty()
-    #your discount deals
-    discountDeals = ndb.JsonProperty()
 
 #My Additions The Hangout Code
 class Hangout(ndb.Model):
