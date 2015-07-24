@@ -42,7 +42,7 @@ var app = angular.module('conferenceApp',
                 }).
                 when('/test', {
                     templateUrl: '/partials/test.html',
-                    controller: 'HangoutCreationCtrl'
+                    controller: 'TestCtrl'
                 }).
                 when('/', {
                     templateUrl: '/partials/home.html',

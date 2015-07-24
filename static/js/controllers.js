@@ -255,24 +255,6 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
 
     $scope.checked = $scope.checked || {};
 
-    
-    $scope.test = function(testy) {
-        //$log.info($scope.checked.friend1);
-        $log.info($scope.checked);
-
-         gapi.client.conference.test().
-            execute(function(resp){
-                $scope.$apply(function() {
-                    if (resp.error){
-                        $log.error('There was an Error');
-                    }
-                    else {
-                        $log.info("Success!");
-                    }
-                });
-            });
-    };
-
     $scope.createHangout = function (hangoutForm) {
         //Grab all the individual friends and put them into a list
         //Seems I need these entities as strings in order for it to work with the python model
@@ -295,7 +277,7 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
                     }
                     else {
                         $log.info("Success!");
-                        $location.path('myDashboard').replace;
+                        $location.path('myDashboard');
                     }
                 });
             });
@@ -696,6 +678,28 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                 });
             });
 
-        };
-    
+        }; 
+});
+
+conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routeParams){
+
+    $scope.testVar;
+
+    $scope.test = function(testy) {
+        //$log.info($scope.checked.friend1);
+        $log.info($scope.testVar);
+
+         gapi.client.conference.test().
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error');
+                    }
+                    else {
+                        $log.info("Success!");
+                    }
+                });
+            });
+    };
+
 });

@@ -197,58 +197,31 @@ class ConferenceApi(remote.Service):
         data['deadlineTime'] = datetime.strptime(data['deadlineTime'], "%H:%M").time()
 
         #FriendListHandling
-        #manage creating a dictionary for friendList is appropriate default info. Check the model.        
-        #name, key, voteRank, confirmationiffirstchoicenotpicked
-        #Add the keys of all the users to the friendList dictionary.
         friendIDList=[]
         friendsDict={}
         friendsInJson=json.loads(data['friendList'])
         friendsInJson.append(user_id)
         counter=0
         
-        #I should really pass the friendID not just the name. Be sure to switch this
-        #later in production
+        #Passing in emails
         for friend in friendsInJson:
             if friend == None:
                 pass
             elif friend == "":
                 pass
             else:
-                #I have to get check the user's profileID here and do a database query of somesort.
-                #i'll have the user's name - this is the whole search feature
-                #based off the user name....how will I get the right userID/right person...the creator has to pick it for me
-
-                #Search within the database to find the user. At this time, I must search their userID
-                #I'll have to setup extra structures in order to search by name
-                #1.)search by name
-                #2.)Search by incorrect spelling
-                #3.)Search by email and phone number
-
-                #grab the key
-                #friend_key = ndb.Key(Profile, friend)
-
-                #then place the key within the list of friend keys to carry out processes below
-                #friendKeyList.append(friend_key)
                 friendIDList.append(friend)
 
                 p ={"profileID" : friend, "voteRank" : [0,0,0], "firstChoie" : 0, "confirmation" :0}
                 friendsDict[friend] = p
                 counter=counter+1
 
-                #then I have to get the friend's id (like I do with my own username
-                #thenquery their profile
-                #then just add them to the list of id's as I need to finish creating this event first
-                #friendID list*******
-                #proceed to after saving to the hangout below
-
-        #Handle in this area, those that are not found within our system
         data['friendList'] = json.dumps(friendsDict)
 
         ###Add Event Creator 
         data['eventCreator'] = str(user_id) 
 
-        #process the user's own voting preferences
-        #note that I put this in a list for proper processing when voting
+        #User's Voting Preferences. Translating unicode to an integer of strings.
         listType=[]
         for uni in data['groupVoteRanks']:
             if type(uni) == unicode:
@@ -268,7 +241,6 @@ class ConferenceApi(remote.Service):
                             listType.append(int(t))
         #must be a list of the list NOTICE BRACKETS!!!!!!
         data['groupVoteRanks'] = json.dumps([listType])
-
 
         #just the list
         #initialize with users first votes
@@ -299,18 +271,12 @@ class ConferenceApi(remote.Service):
         Hangout(**data).put()
         #wait for it to generate the keys
         time.sleep(.1)
-        #Query the keys for the hangout
-        #Make sure that the query brings back this unique event. I have to figure out
-        #how to guarantee that this event is unique or that the search query is unique
-        #Maybe this is where the parent ancestors come into play?
+
+        #Query the hangout.
         hangoutQry = Hangout.query(Hangout.eventCreator == str(user_id), Hangout.dateEventCreated == data['dateEventCreated'])
-        #add the eventKey to all users associated with the hangout
 
-        #UPDATING THE EVENT CREATOR WITH THE APPriate hangout keys
-        #update User's Profiles
-
+        #Placing event key  in Creator's Waiting Queue
         creator = p_key.get()
-        #get the list of events that the user is waiting on
         if creator.eventsWaitingOn == None:
             eventsWaitingOn = []
         else:
@@ -320,14 +286,9 @@ class ConferenceApi(remote.Service):
             eventKey = event.key.id()
             eventsWaitingOn.append(eventKey)
             creator.eventsWaitingOn = json.dumps(eventsWaitingOn)
-            #generates an L when appended to a list. I don't know why. but just printing it out, it is as advertised
         creator.put()
 
-        #####Update the friends that were invited with the hangout key as well
-        #update down here
-        #get the friendid list created up above
-        #emulate what I did for the event creator just above but place in eventsInvited
-        
+        #Placing event key to all friends except the creator.        
         for friendID in friendIDList:
             friendObject = ndb.Key(Profile, friendID).get()
             if friendObject == creator:
@@ -346,6 +307,8 @@ class ConferenceApi(remote.Service):
                     eventsInvited.append(eventKey)
                     friendObject.eventsInvited = json.dumps(eventsInvited)
                     friendObject.put()
+
+        #If the business is mentioned. Update them here.
 
         return request
 
@@ -641,10 +604,7 @@ class ConferenceApi(remote.Service):
         path='test', 
         http_method='GET', name='test')
     def test(self, request):        
-        print "here"
-
-        qry = Profile.query(Profile.mainEmail == 'varrogancia@gmail.com')
-        print qry
+        print "Test Function"
 
         return request
 api = endpoints.api_server([ConferenceApi]) # register API
