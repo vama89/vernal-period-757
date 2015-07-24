@@ -146,33 +146,6 @@ class ConferenceApi(remote.Service):
         """Update & return user profile."""
         return self._doProfile(request)
 
-    ####Registration and Login Codes:
-    @endpoints.method(EmailRegFormInput, EmailRegFormInput,
-            path='emailRegistration', http_method='POST', name='emailRegistration')
-    def emailRegistration(self, request):
-        data = {field.name: getattr(request, field.name) for field in request.all_fields()}
-
-        #check if email name is available
-        u = Profile.by_id(data['email'])
-        if u:
-            print "already exists"
-        else:
-            print "no user exists"
-
-        #u = Profile.register(data['firstName'], data['lastName'], data['password'], data['email'])
-        #u.put()
-
-        return request
-
-    @endpoints.method(EmailRegFormInput, EmailRegFormInput,
-            path='emailLogin', http_method='GET', name='emailLogin')
-    def emailLogin(self, request):
-        data = {field.name: getattr(request, field.name) for field in request.all_fields()}
-
-        u = Profile.login(data['email'], data['password'])
-
-        return request
-
 # - - - Hangout - - - - - - - - - - - - - - - - - - - - - - - 
     def _copyHangoutToForm(self, hangout):
         hang = HangoutForm()
@@ -375,26 +348,6 @@ class ConferenceApi(remote.Service):
                     friendObject.put()
 
         return request
-
-    @endpoints.method(message_types.VoidMessage, HangoutForms, 
-            path='getHangoutsMade', 
-            http_method='GET', name='getHangoutsMade')
-    def getHangoutsMade(self, request):
-        qry = Hangout.query(Hangout.votingCompleted == True)
-        for event in qry:
-            print event.eventName
-
-        return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in qry])
-
-    @endpoints.method(message_types.VoidMessage, HangoutForms, 
-            path='getHangoutsInProgress', 
-            http_method='GET', name='getHangoutsInProgress')
-    def getHangoutsInProgress(self, request):
-        qry = Hangout.query(Hangout.votingCompleted == False)
-        for event in qry:
-            print event.eventName
-
-        return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in qry])
 
     @endpoints.method(message_types.VoidMessage, HangoutForms, 
             path='invited', 
@@ -683,25 +636,6 @@ class ConferenceApi(remote.Service):
         #t = message_types.VoidMessage()
         #return t
         return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList])
-
-    @endpoints.method(HANG_GET_REQUEST, BooleanMessage, 
-        path='stillVoting/{webSafeKey}', 
-        http_method='GET', name='stillVoting')
-    def stillVoting(self, request):        
-        user = endpoints.get_current_user()
-        if not user:
-            raise endpoints.UnauthorizedException('Authorization required')
-        user_id = getUserId(user)
-        p_key = ndb.Key(Profile, user_id)
-        userData=p_key.get()
-
-        #get event and place it in list to copy to the form
-        hangoutObject = ndb.Key(urlsafe=request.webSafeKey).get()
-        truthValue = hangoutObject.votingCompleted
-
-        #t = message_types.VoidMessage()
-        #return t
-        return BooleanMessage(data=truthValue) 
     
     @endpoints.method(message_types.VoidMessage, message_types.VoidMessage, 
         path='test', 

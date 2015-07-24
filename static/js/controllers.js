@@ -103,13 +103,6 @@ conferenceApp.controllers.controller('MyProfileCtrl',
                 });
         };
 
-        $scope.file = $scope.file || {};
-        $scope.pictureUpload = function(picture){
-            //Hit the api
-            //go into python
-            $log.info($scope.file);
-      };
-
     });
 
 /**
@@ -161,6 +154,7 @@ conferenceApp.controllers.controller('RootCtrl', function ($scope, $location,$lo
         });
     };
 
+    //This is used to make a profile as soon as you google Sign in. Used in SignIn above.
     $scope.makeProfile = function () {
         var retrieveProfileCallback = function () {
             $scope.profile = {};
@@ -270,154 +264,13 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
             execute(function(resp){
                 $scope.$apply(function() {
                     if (resp.error){
-                        $log.error('There was an Error Yo');
+                        $log.error('There was an Error');
                     }
                     else {
-                        $log.info("Success Bitch!");
+                        $log.info("Success!");
                     }
                 });
             });
-    };/*
-
-    var todoList = this;
-    todoList.todos = [
-      {text:'learn angular', done:true},
-      {text:'build an angular app', done:false}];
-
-    todoList.addTodo = function() {
-      todoList.todos.push({text:todoList.todoText, done:false});
-      $scope.checked.friends = todoList.todos;
-      todoList.todoText = '';
-    };
-
-    todoList.remaining = function() {
-      var count = 0;
-      angular.forEach(todoList.todos, function(todo) {
-        count += todo.done ? 0 : 1;
-      });
-      return count;
-    };
-
-    todoList.archive = function() {
-      var oldTodos = todoList.todos;
-      todoList.todos = [];
-      angular.forEach(oldTodos, function(todo) {
-        if (!todo.done) todoList.todos.push(todo);
-      });
-    };*/
-
-    $scope.friendButton = function(hangoutForm) {
-        /*
-        $(document).ready(function() {
-        var iCnt = 0;
-        // CREATE A "DIV" ELEMENT AND DESIGN IT USING JQUERY ".css()" CLASS.
-        var container = $(document.createElement('div')).css({
-            padding: '5px', margin: '20px', width: '170px',
-            borderTopColor: '#999', borderBottomColor: '#999',
-            borderLeftColor: '#999', borderRightColor: '#999'
-        });
-        $('#btAdd').click(function() {
-            if (iCnt <= 50) {
-                iCnt = iCnt + 1;
-                // ADD TEXTBOX.
-                $(container).prepend('<input type=text class="input" id=tb' + iCnt + ' ' +
-                            'ng-model="checked.friend' + iCnt + '" placeholder="Friend ' + iCnt +'"'+'required/>');
-
-                if (iCnt == 100) {        // SHOW SUBMIT BUTTON IF ATLEAST "1" ELEMENT HAS BEEN CREATED.
-                    var divSubmit = $(document.createElement('div'));
-                    $(divSubmit).append('<input type=button class="bt" onclick="GetTextValue()"' + 
-                            'id=btSubmit value=Submit />');   
-                }
-                $('#main').after(container, divSubmit);   // ADD BOTH THE DIV ELEMENTS TO THE "main" CONTAINER.
-            }
-            else {      // AFTER REACHING THE SPECIFIED LIMIT, DISABLE THE "ADD" BUTTON. (20 IS THE LIMIT WE HAVE SET)
-                $(container).append('<label>Reached the limit</label>'); 
-                $('#btAdd').attr('class', 'bt-disable'); 
-                $('#btAdd').attr('disabled', 'disabled');
-            }
-        });
-        $('#btRemove').click(function() {   // REMOVE ELEMENTS ONE PER CLICK.
-            if (iCnt != 0) { $('#tb' + iCnt).remove(); iCnt = iCnt - 1; }
-            if (iCnt == 0) { $(container).empty(); 
-                $(container).remove(); 
-                $('#btSubmit').remove(); 
-                $('#btAdd').removeAttr('disabled'); 
-                $('#btAdd').attr('class', 'bt') 
-            }
-        });
-        $('#btRemoveAll').click(function() {    // REMOVE ALL THE ELEMENTS IN THE CONTAINER.
-            $(container).empty(); 
-            $(container).remove(); 
-            $('#btSubmit').remove(); iCnt = 0; 
-            $('#btAdd').removeAttr('disabled'); 
-            $('#btAdd').attr('class', 'bt');
-        });
-    });
-
-    // PICK THE VALUES FROM EACH TEXTBOX WHEN "SUBMIT" BUTTON IS CLICKED.
-    var divValue, values = '';
-    function GetTextValue() {
-        $(divValue).empty(); 
-        $(divValue).remove(); values = '';
-        $('.input').each(function() {
-            divValue = $(document.createElement('div')).css({
-                padding:'5px', width:'200px'
-            });
-            values += this.value + '<br />'
-        });
-        $(divValue).append('<p><b>Your selected values</b></p>' + values);
-        $('body').append(divValue);
-    }*/
-    };
-
-    $scope.allOptionsChecked = function(hangoutForm) {
-        if ($scope.checked.location && $scope.checked.time && $scope.checked.day) {
-            return true;
-        }
-        return false;
-    };
-
-    $scope.locationTime = function(hangoutForm) {
-        if ($scope.checked.location && $scope.checked.time && !$scope.checked.day) {
-            return true;
-        }
-        return false;
-    };
-
-    $scope.locationDay = function(hangoutForm) {
-        if ($scope.checked.location && $scope.checked.day && !$scope.checked.time) {
-            return true;
-        }
-        return false;
-
-    };
-
-    $scope.timeDay = function(hangoutForm) {
-        if ($scope.checked.time && $scope.checked.day && !$scope.checked.location){
-            return true;
-        }
-        return false;
-    };
-
-    $scope.time = function(hangoutForm) {
-        if ($scope.checked.time && !$scope.checked.day && !$scope.checked.location){
-            return true;
-        }
-        return false;
-    };
-    
-    $scope.day = function(hangoutForm) {
-       if ($scope.checked.day && !$scope.checked.time && !$scope.checked.location){
-        return true;
-       }
-       return false;
-    };
-    
-    $scope.location = function(hangoutForm) {
-       if ($scope.checked.location && !$scope.checked.day && !$scope.checked.time){
-        return true;
-       }
-       return false;
     };
 
     $scope.createHangout = function (hangoutForm) {
@@ -438,12 +291,10 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function ($scope, $l
             execute(function(resp){
                 $scope.$apply(function() {
                     if (resp.error){
-                        $log.error('There was an Error Yo');
+                        $log.error('There was an Error');
                     }
                     else {
-                        $log.info("Success Bitch!");
-                        $log.info(resp);
-                        $log.info(resp.result);
+                        $log.info("Success!");
                     }
                 });
             });
@@ -464,10 +315,10 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $r
             execute(function(resp){
                 $scope.$apply(function() {
                     if (resp.error){
-                        $log.error('There was an Error Yo');
+                        $log.error('There was an Error');
                     }
                     else {
-                        $log.info("Success Bitch!");
+                        $log.info("Success");
                         $scope.invitedHangouts = []
                         $scope.invitedHangout=[]
                         angular.forEach(resp.items, function(invitedHangout){
@@ -491,13 +342,12 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $r
             execute(function(resp){
                 $scope.$apply(function() {
                     if (resp.error){
-                        $log.error('There was an Error Yo');
+                        $log.error('There was an Error');
                     }
                     else {
-                        $log.info("Success Bitch!");
+                        $log.info("Success");
                         $scope.hangouts = []
                         $scope.hangout=[]
-                        $log.info(resp.items);
                         angular.forEach(resp.items, function(hangout){
                             $scope.hangouts.push(hangout);
                         });
@@ -519,10 +369,10 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $r
             execute(function(resp){
                 $scope.$apply(function() {
                     if (resp.error){
-                        $log.error('There was an Error Yo');
+                        $log.error('There was an Error');
                     }
                     else {
-                        $log.info("Success Bitch!");
+                        $log.info("Success");
                         $scope.doneHangouts = []
                         $scope.doneHangout=[]
                         angular.forEach(resp.items, function(doneHangout){
@@ -532,49 +382,6 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $r
                 });
             });
     };
-
-});
-
-conferenceApp.controllers.controller('RegLogsCtrl', function($scope,$log,$location){
-    /*
-    Get the models for registration
-
-    send through the api and see if it has been created. if not send a reply
-    back that user already exists and try another login.
-    */
-
-    //Set the global variable
-    //Run encryption or do a put here. Security issue.
-    $scope.regLogInfo = $scope.regLogInfo || {};
-
-    $scope.emailRegistration = function(registrationForm){
-
-        //Api hit to register and save
-
-        /*
-            If email is able to save then
-                save the data and direct to the dashboard
-                Then trigger the signedIn state to true change the navbar
-                oauth2Provider.signedIn = True
-                //$location.path('/myDashboard').replace;
-            if not able to save, then redirect back to the registration page.
-                I think release the lock where it shows javascript that you need to change password
-        */
-        $log.info($scope.regLogInfo)
-
-        gapi.client.conference.emailRegistration($scope.regLogInfo).
-            execute(function(resp){
-                $scope.$apply(function() {
-                    if (resp.error){
-                        $log.error('There was an Error Yo');
-                    }
-                    else {
-                        $log.info("Success Bitch!");
-                    }
-            });
-        });
-    };
-
 
 });
 
@@ -589,11 +396,10 @@ conferenceApp.controllers.controller('VoteCtrl', function($scope,$log,$routePara
                 execute(function(resp){
                     $scope.$apply(function() {
                         if (resp.error){
-                            $log.error('There was an Error Yo');
+                            $log.error('There was an Error');
                         }
                         else {
-                            $log.info("Success Bitch!");
-                            $log.info($scope.votes);
+                            $log.info("Success");
                             //send back to the dashboard. Use the location
                         }
                     });
@@ -695,33 +501,6 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
 
             };
 
-            /*DEPRECATED NOT NEEDED
-
-            $scope.truthy = function () {
-                return $scope.truthValue;
-            };
-        
-            $scope.stillVoting = function () {
-            
-            gapi.client.conference.stillVoting({
-                webSafeKey: $routeParams.webSafeKey
-            }).
-                execute(function(resp){
-                    $scope.$apply(function() {
-                        if (resp.error){
-                            $log.error('There was an Error Yo');
-                        }
-                        else {
-                            $log.info("Success Bitch!");
-                            $log.info(resp.data);
-                            $scope.truthValue = resp.data
-                            //or parse resp.items here and set a new $scope variable    
-                        }
-                    });
-                });
-
-    };*/
-
         $scope.getResultsWaiting = function () {
 
         gapi.client.conference.getResultsWaiting({
@@ -730,21 +509,18 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
             execute(function(resp){
                 $scope.$apply(function() {
                     if (resp.error){
-                        $log.error('There was an Error Yo');
+                        $log.error('There was an Error');
                     }
                     else {
-                        $log.info("Success Bitch!");
+                        $log.info("Success");
                         $scope.results = []
                         $scope.result=[]
                         angular.forEach(resp.items, function(result){
                             $scope.results.push(result);
                         });
                         $scope.bardata = JSON.parse(resp.items[0]['finalResults']);
-                        $log.info(resp.items[0]);
                         $scope.d3j();
-                        //or parse resp.items here and set a new $scope variable
-                        //friends
-                        //Need Logic to get friends who's ranks are added.
+
                         var notVotedFriends=[];
                         var votedFriends=[];
                         var s, friends = JSON.parse(resp.items[0]['friendList']);
@@ -787,10 +563,10 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
             execute(function(resp){
                 $scope.$apply(function() {
                     if (resp.error){
-                        $log.error('There was an Error Yo');
+                        $log.error('There was an Error');
                     }
                     else {
-                        $log.info("Success Bitch!");
+                        $log.info("Success");
                         $scope.results = []
                         $scope.result=[]
                         angular.forEach(resp.items, function(result){
@@ -799,7 +575,6 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                         $scope.bardata = JSON.parse(resp.items[0]['finalResults']);
                         $scope.d3j();
 
-                        $log.info($scope.results);
                         var event1=[
                                     {"date1":resp.items[0]['date1'], 
                                     "time1":resp.items[0]['time1'],
@@ -825,7 +600,6 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                                     ];
 
                         //display the winner Event information
-                        $log.info($scope.bardata);
                         var finalResults = $scope.bardata
                         var winnerVal = Math.max.apply(null, $scope.bardata);
                         var winnerOptionNum = finalResults.indexOf(winnerVal);
@@ -923,51 +697,4 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
 
         };
     
-});
-
-conferenceApp.controllers.controller('ShowAllCtrl', function($scope, $log) {
- 
-    $scope.getHangoutsMade = function() {
-            gapi.client.conference.getHangoutsMade().
-                execute(function (resp) {
-                    $scope.$apply(function(){
-                        if(resp.error) {
-                            $scope.message = 'Error Boss';
-                            $log.error($scope.message);
-
-                        } else {
-                            $scope.message = 'Success Boss';
-                            $log.info($scope.message);
-                            $scope.mades = []
-                            $scope.made=[]
-                        angular.forEach(resp.items, function(made){
-                            $scope.mades.push(made);
-                        });
-                        }
-                    });
-
-                });
-        };
-
-    $scope.getHangoutsInProgress = function() {
-            gapi.client.conference.getHangoutsInProgress().
-                execute(function (resp) {
-                    $scope.$apply(function(){
-                        if(resp.error) {
-                            $scope.message = 'Error Boss';
-                            $log.error($scope.message);
-
-                        } else {
-                            $scope.message = 'Success Boss';
-                            $log.info($scope.message);
-                            $scope.votes = []
-                            $scope.vote=[]
-                        angular.forEach(resp.items, function(vote){
-                            $scope.votes.push(vote);
-                        });
-                        }
-                    });
-
-                });
-        };
 });

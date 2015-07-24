@@ -12,24 +12,6 @@
     <div class="row">
         <div class="col-md-8">
             <h3>My Profile</h3>
-            <!--
-                Logic that if the user has no picture
-                show the robot....but if does 
-                show the image link to where he saved his upload
-                <img="/serve/230129fsdf@#!@">
-             -->
-            <img src="/img/robot-character.jpg" height="300" width="300">
-            
-            <!--Use some ng controller here to make an api call -->
-            <form ng-submit="pictureUpload(picture)" name="picture" enctype="multipart/form-data">
-            <label>Upload:
-            <input type="file" ng-model="file" name="file">
-            </label>
-            <br> 
-            <input type="submit" name="submit" value="Submit">
-            
-            </form>
-
             <form name="profileForm" novalidate role="form">
                 <div class="form-group" ng-class="{'has-warning': profile.displayName != initialProfile.displayName}">
                     <label for="displayName">Display Name </label>
@@ -38,55 +20,6 @@
                     <input id="displayName" type="text" name="displayName" ng-model="profile.displayName"
                            class="form-control"/>
                 </div>
-
-                <p>Contact Information</p>
-                <div>
-                    <label>Phone Number for SMS</label>
-                    <input/>
-                </div>
-
-                <div>
-                    <label>Email</label>
-                    <input/>
-                </div>
-
-                <div>
-                    <label>First Name</label>
-                    <input/>
-                </div>
-
-                <div>
-                    <label>Last Name</label>
-                    <input/>
-                </div>
-
-                <div>
-                    <label>Old Password</label>
-                    <input/>
-                </div>
-
-                <p>Change Password</p>
-                <div>
-                    <label>New Password</label>
-                    <input/>
-                </div>
-
-                <div>
-                    <label>Confirm New Password</label>
-                    <input/>
-                </div>
-
-<!--
-                <div class="form-group" ng-class="{'has-warning': profile.teeShirtSize != initialProfile.teeShirtSize}">
-                    <label for="teeShirtSize">Tee shirt size</label>
-                    <span class="label label-warning"
-                          ng-show="profile.teeShirtSize != initialProfile.teeShirtSize"> Changed</span>
-                    <select id="teeShirtSize" ng-model="profile.teeShirtSize" name="teeShirtSize" ng-options="
-shirt.size as shirt.text for shirt in teeShirtSizes"
-                            class="form-control">
-                    </select>
-                </div>
-            -->
 
                 <button ng-click="saveProfile(profileForm)" class="btn btn-primary"
                         ng-disabled="loading">Update profile

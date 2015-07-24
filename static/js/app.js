@@ -28,15 +28,6 @@ var app = angular.module('conferenceApp',
                     templateUrl: '/partials/profile.html',
                     controller: 'MyProfileCtrl'
                 }).
-                when('/businessDashboard', {
-                    templateUrl: '/partials/businessDashboard.html'
-                }).
-                when('/businessProfile', {
-                    templateUrl: '/partials/businessProfile.html'
-                }).
-                when('/businessRegistration', {
-                    templateUrl: '/partials/businessRegistration.html'
-                }).
                 when('/vote/:webSafeKey', {
                     templateUrl: '/partials/vote.html',
                     controller:'VoteCtrl'
@@ -49,24 +40,12 @@ var app = angular.module('conferenceApp',
                     templateUrl: '/partials/waiting.html',
                     controller:'ResultsCtrl'
                 }).
-                when('/login', {
-                    templateUrl: '/partials/login.html',
-                    controller: 'RegLogsCtrl'
-                }).
-                when('/registration', {
-                    templateUrl: '/partials/registration.html',
-                    controller: 'RegLogsCtrl'
-                }).
                 when('/test', {
                     templateUrl: '/partials/test.html',
                     controller: 'HangoutCreationCtrl'
                 }).
-                when('/forgotPassword', {
-                    templateUrl: '/partials/forgotPassword.html'
-                }).
                 when('/', {
                     templateUrl: '/partials/home.html',
-                    controller:'ShowAllCtrl'
                 }).
                 otherwise({
                     redirectTo: '/'
