@@ -44,6 +44,9 @@ var app = angular.module('conferenceApp',
                     templateUrl: '/partials/test.html',
                     controller: 'TestCtrl'
                 }).
+                    when('/invite', {
+                    templateUrl: '/partials/invite.html',
+                }).
                 when('/', {
                     templateUrl: '/partials/home.html',
                 }).

@@ -202,6 +202,7 @@ class ConferenceApi(remote.Service):
         counter=0
         
         #Passing in emails
+        #for this version, the friend is an email ID
         for friend in friendsInJson:
             if friend == None:
                 pass
