@@ -165,7 +165,8 @@ class ConferenceApi(remote.Service):
             http_method='POST', name='createHangout')
     def createHangout(self, request):
         #initialize key datapoints here
-
+        print request
+        """
         #getUserInformationHere
         user = endpoints.get_current_user()
         if not user:
@@ -263,10 +264,10 @@ class ConferenceApi(remote.Service):
 
         ###Voting Completed
         data['votingCompleted'] = False
-
+        """
         ####NOT MANDATORY, BUT WOULD IMPLEMENT HERE
         #Don't know how to implement yet, but account for those users not registered.
-        
+        """
         #place into the database
         Hangout(**data).put()
         #wait for it to generate the keys
@@ -289,17 +290,22 @@ class ConferenceApi(remote.Service):
         #Placing event key to all friends except the creator.        
         for friendID in friendIDList:
             friendObject = ndb.Key(Profile, friendID).get()
-            if friendObject == creatorObj:
-                print "Test that friendObj equals creatorObj"
-                pass
+            if friendObject:
+                if friendObject == creatorObj:
+                    print "Test that friendObj equals creatorObj"
+                    pass
+                else:
+                    eventsInvited=friendObject.eventsInvited
+                    for event in hangoutQry:
+                        eventKeyId = event.key.id()
+                        eventsInvited.append(eventKeyId)
+                        friendObject.eventsInvited = eventsInvited
+                        friendObject.put()
             else:
-                eventsInvited=friendObject.eventsInvited
-                for event in hangoutQry:
-                    eventKeyId = event.key.id()
-                    eventsInvited.append(eventKeyId)
-                    friendObject.eventsInvited = eventsInvited
-                    friendObject.put()
+                pass
 
+        #handle those that were not found...new inVites
+        """
         return request
 
     @endpoints.method(message_types.VoidMessage, HangoutForms, 

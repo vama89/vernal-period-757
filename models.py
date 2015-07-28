@@ -18,7 +18,7 @@ from protorpc import messages
 from google.appengine.ext import ndb
 
 import json
-
+        
 class Profile(ndb.Model):
     """Profile -- User profile object"""
     displayName = ndb.StringProperty()

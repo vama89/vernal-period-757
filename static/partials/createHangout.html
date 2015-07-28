@@ -18,6 +18,7 @@
         <input type="text" ng-model = "checked.friend1">
         <input type="text" ng-model = "checked.friend2">
         -->
+
         <div ng-init="getSearchList()"></div> 
           <ul>
           <li ng-repeat="todo in todos">
@@ -35,8 +36,20 @@
         </ul>
         </div>
 
+
         <br>
         <br>
+
+        <h3>Can't Find Your Friend? inViteVote them!</h3>
+        <small>Enter their gmail email below to send an email.</small>
+        <br>
+        <ul>
+          <li ng-repeat="notFriend in notInSystemFriends">
+            <p>{{notFriend}}</p>
+          </li>
+        </ul>
+        <input ng-model="notEmail"placeholder="Email">
+        <button ng-click="notInSystemAdd()">Add</button>
 
         <div><h3>Hangout 1</h3></div>
         <table>

@@ -254,6 +254,8 @@ conferenceApp.controllers.controller('OAuth2LoginModalCtrl',
 conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $log, $location){
     $scope.todos=[];
     $scope.checked = $scope.checked || {};
+    $scope.notEmail;
+    $scope.notInSystemFriends=[];
 
     $scope.createHangout = function (hangoutForm) {
         //Grab all the individual friends and put them into a list
@@ -268,7 +270,7 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
             friendList.push(friend.mainEmail);
                 });
         $scope.checked.friendList = JSON.stringify(friendList);
-        
+
         var userVote = [$scope.checked.option1, $scope.checked.option2, $scope.checked.option3];
         //Convert to integers
         var i;
@@ -290,6 +292,12 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
                     }
                 });
             });
+
+        var notInSystem=[]
+        angular.forEach($scope.notInSystemFriends, function(friend){
+            notInSystem.push(friend);
+                });
+        $scope.checked.notInSystem = JSON.stringify(notInSystem);
     };
 
     $scope.getSearchList = function() {
@@ -313,7 +321,12 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
 
     $scope.addTodo = function (resp) {
         $scope.todos.push(resp);
-        $log.info($scope.todos);
+        $scope.query='';
+    };
+
+    $scope.notInSystemAdd = function() {
+        $scope.notInSystemFriends.push($scope.notEmail);
+        $scope.notEmail='';
     };
 
 });
