@@ -21,6 +21,7 @@ import json
         
 class Profile(ndb.Model):
     """Profile -- User profile object"""
+    confirmation = ndb.BooleanProperty()
     displayName = ndb.StringProperty()
     mainEmail = ndb.StringProperty()
     listOfContacts = ndb.StringProperty(repeated=True)
@@ -75,6 +76,7 @@ class Hangout(ndb.Model):
     finalResults=ndb.JsonProperty()
     votingCompleted=ndb.BooleanProperty()
     groupVoteRanks = ndb.JsonProperty()
+    notInSystem = ndb.JsonProperty()
 
 class HangoutForm(messages.Message):
     eventName = messages.StringField(1)
@@ -106,6 +108,7 @@ class HangoutForm(messages.Message):
     groupVoteRanks = messages.StringField(23)
     deadlineTime = messages.StringField(24)
     webSafeKey = messages.StringField(25)
+    notInSystem = messages.StringField(26)
 
 class HangoutForms(messages.Message):
     items = messages.MessageField(HangoutForm, 1, repeated=True)

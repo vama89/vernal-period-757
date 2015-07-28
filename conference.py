@@ -78,15 +78,9 @@ class ConferenceApi(remote.Service):
 
     def _getProfileFromUser(self):
         """Return user Profile from datastore, creating new one if non-existent."""
-        # make sure user is authed
-        #if email:
-            #do this
-        #else:
-
         user = endpoints.get_current_user()
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
-        print user
 
         # get Profile from datastore
 
@@ -103,7 +97,8 @@ class ConferenceApi(remote.Service):
                 eventsWaitingOn=[],
                 eventsVoteDone=[],
                 eventsPassedDate=[],
-                eventsRegrets=[]
+                eventsRegrets=[],
+                confirmation =True
             )
             profile.put()
 
@@ -114,6 +109,9 @@ class ConferenceApi(remote.Service):
         """Get user Profile and return to user, possibly updating it first."""
         # get user Profile
         prof = self._getProfileFromUser()
+        if prof.confirmation == False:
+            prof.confirmation = True
+            prof.put()
 
         # if saveProfile(), process user-modifyable fields
         if save_request:
@@ -131,13 +129,29 @@ class ConferenceApi(remote.Service):
         # return ProfileForm
         return self._copyProfileToForm(prof)
 
+    def _doNotInSystemRegs(self, request):
+        p_key= ndb.Key(Profile, request)
+
+        profile = Profile(
+            key = p_key,
+            displayName = request,
+            mainEmail= request,
+            eventsInvited=[],
+            eventsWaitingOn=[],
+            eventsVoteDone=[],
+            eventsPassedDate=[],
+            eventsRegrets=[],
+            confirmation=False
+        )
+        profile.put()
+
+
 
     @endpoints.method(message_types.VoidMessage, ProfileForm,
             path='profile', http_method='GET', name='getProfile')
     def getProfile(self, request):
         """Return user profile."""
         return self._doProfile()
-
 
     @endpoints.method(ProfileMiniForm, ProfileForm,
             path='profile', http_method='POST', name='saveProfile')
@@ -164,9 +178,6 @@ class ConferenceApi(remote.Service):
             path='createHangout', 
             http_method='POST', name='createHangout')
     def createHangout(self, request):
-        #initialize key datapoints here
-        print request
-        """
         #getUserInformationHere
         user = endpoints.get_current_user()
         if not user:
@@ -264,10 +275,7 @@ class ConferenceApi(remote.Service):
 
         ###Voting Completed
         data['votingCompleted'] = False
-        """
-        ####NOT MANDATORY, BUT WOULD IMPLEMENT HERE
-        #Don't know how to implement yet, but account for those users not registered.
-        """
+
         #place into the database
         Hangout(**data).put()
         #wait for it to generate the keys
@@ -275,6 +283,10 @@ class ConferenceApi(remote.Service):
 
         #Query the hangout. This must be unique. Note to self. Find if there is a way to get the key before it is created.
         hangoutQry = Hangout.query(Hangout.eventCreator == str(user_id), Hangout.dateEventCreated == data['dateEventCreated'])
+        #Getting the key
+        hangoutKey=None
+        for event in hangoutQry:
+            hangoutKey = event.key.id()
 
         #Placing event key  in Creator's Waiting Queue
         creatorObj = p_key.get()
@@ -292,7 +304,6 @@ class ConferenceApi(remote.Service):
             friendObject = ndb.Key(Profile, friendID).get()
             if friendObject:
                 if friendObject == creatorObj:
-                    print "Test that friendObj equals creatorObj"
                     pass
                 else:
                     eventsInvited=friendObject.eventsInvited
@@ -304,8 +315,23 @@ class ConferenceApi(remote.Service):
             else:
                 pass
 
-        #handle those that were not found...new inVites
-        """
+        #handle those that were not found...Register them
+        notInSystem = json.loads(data['notInSystem'])
+        for friend in notInSystem:
+            #check to see they really are not in the system
+            
+            #add them into the system
+            self._doNotInSystemRegs(friend)
+        
+        #place the hangout key in each one of the new regesterees
+        for friend in notInSystem:
+            obj = ndb.Key(Profile, friend).get()
+            print obj
+            eventsInvited = obj.eventsInvited
+            eventsInvited.append(hangoutKey)
+            obj.eventsInvited = eventsInvited
+            obj.put()
+        
         return request
 
     @endpoints.method(message_types.VoidMessage, HangoutForms, 

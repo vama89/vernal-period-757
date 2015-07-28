@@ -277,8 +277,13 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
         for(i=0; i<3; i++){
             userVote[i]=parseInt(userVote[i]);
         };
-
         $scope.checked.groupVoteRanks = JSON.stringify(userVote);
+
+        var notInSystem=[];
+        angular.forEach($scope.notInSystemFriends, function(friend){
+            notInSystem.push(friend);
+                });
+        $scope.checked.notInSystem = JSON.stringify(notInSystem);
 
         gapi.client.conference.createHangout($scope.checked).
             execute(function(resp){
@@ -292,12 +297,6 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
                     }
                 });
             });
-
-        var notInSystem=[]
-        angular.forEach($scope.notInSystemFriends, function(friend){
-            notInSystem.push(friend);
-                });
-        $scope.checked.notInSystem = JSON.stringify(notInSystem);
     };
 
     $scope.getSearchList = function() {
