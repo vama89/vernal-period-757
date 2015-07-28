@@ -1,26 +1,18 @@
-<!--<div ng-controller="TestCtrl">-->
-	<!--
-<form name="testy">
-<input ng-model="testVar" placeholder=""></input>
-<button ng-click="test(testy)">PRESS</button>
-</form>-->
+<div ng-init="getSearchList()"></div>
+  <ul>
+    <li ng-repeat="todo in todos">
+      <p>{{todo.displayName}}<button>Delete</button></p>
+    </li>
+  </ul>
 
-    <h2>Todo</h2>
-    <div ng-controller="TestCtrl as todoList">
-      <span>{{todoList.remaining()}} of {{todoList.todos.length}} remaining</span>
-      [ <a href="" ng-click="todoList.archive()">archive</a> ]
-      <ul class="unstyled">
-        <li ng-repeat="todo in todoList.todos">
-          <input type="checkbox" ng-model="todo.done">
-          <span class="done-{{todo.done}}">{{todo.text}}</span>
-        </li>
-      </ul>
-      <form ng-submit="todoList.addTodo()">
-        <input type="text" ng-model="todoList.todoText"  size="30"
-               placeholder="add new todo here">
-        <input class="btn-primary" type="submit" value="add">
-      </form>
-      <button ng-click="test()">Submit</button>
-    </div>
+<input ng-model="query">
+<div ng-show="query">
+<ul>
+  <li ng-repeat="profile in profiles | filter: query">
+    <h3>{{profile.displayName}}<button ng-click="addTodo(profile)">Add</button></h3>
+    <h3>{{profile.mainEmail}}</h3>
+  </li>
+</ul>
+</div>
 
-<!--</div>-->
+<button ng-click="button()">Button</button>

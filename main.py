@@ -36,9 +36,19 @@ class SendConfirmationEmailHandler(webapp2.RequestHandler):
             'conference:\r\n\r\n%s' % self.request.get(
                 'conferenceInfo')
         )
-
+"""
+class MainHandler(webapp2.RequestHandler):
+  def get(self):
+    #upload_url = blobstore.create_upload_url('/upload')
+    #print upload_url
+    self.response.out.write('<html><body>')
+    self.response.out.write('<form action="%s" method="POST" enctype="multipart/form-data">') #% upload_url)
+    self.response.out.write("""Upload File: <input type="file" name="file"><br> <input type="submit"
+        name="submit" value="Submit"> </form></body></html>""")
+"""
 
 app = webapp2.WSGIApplication([
     ('/crons/set_announcement', SetAnnouncementHandler),
     ('/tasks/send_confirmation_email', SendConfirmationEmailHandler),
+    #('/main', MainHandler)
 ], debug=True)

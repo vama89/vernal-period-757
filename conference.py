@@ -31,6 +31,7 @@ from models import Hangout
 from models import HangoutForm
 from models import HangoutForms
 from models import VoteForm
+from models import ProfileForms
 
 from settings import WEB_CLIENT_ID
 from settings import ANDROID_CLIENT_ID
@@ -317,7 +318,6 @@ class ConferenceApi(remote.Service):
         #handle the string processing
         eventsInvited = userData.eventsInvited
         eventList=[]
-        form = HangoutForm()
         for eventId in eventsInvited:
             #get the event from ndb
             event = ndb.Key(Hangout, eventId).get()
@@ -344,7 +344,6 @@ class ConferenceApi(remote.Service):
         #handle the string processing
         eventsWaitingOn = userData.eventsWaitingOn
         eventList=[]
-        form = HangoutForm()
         for eventId in eventsWaitingOn:
             #get the event from ndb
             event = ndb.Key(Hangout, eventId).get()
@@ -372,7 +371,6 @@ class ConferenceApi(remote.Service):
         #handle the string processing
         eventsVoteDone = userData.eventsVoteDone
         eventList=[]
-        form = HangoutForm()
         for eventId in eventsVoteDone:
             #get the event from ndb
             event = ndb.Key(Hangout, eventId).get()
@@ -589,21 +587,15 @@ class ConferenceApi(remote.Service):
         #return t
         return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList])
     
-    @endpoints.method(message_types.VoidMessage, message_types.VoidMessage, 
+    @endpoints.method(message_types.VoidMessage, ProfileForms, 
         path='test', 
         http_method='GET', name='test')
     def test(self, request):        
-        print "Test Function"
+        #get all the people in the database and return an object in FriendSearchForm format
+        profiles = Profile.query()
 
-        #Get list of objects
-        hangoutObjects = Hangout.query()
-        for hangoutObject in hangoutObjects:
-            print hangoutObject.eventName
-
-        #Get one individual object:
-        #singleObject = ndb.Key(Hangout, 5663034638860288)
-
-        return request
+        return ProfileForms(items=[self._copyProfileToForm(profile) for profile in profiles])
+        #return request
 
 api = endpoints.api_server([ConferenceApi]) # register API
 

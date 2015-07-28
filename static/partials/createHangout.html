@@ -1,4 +1,4 @@
-<div ng-controller = "HangoutCreationCtrl"> 
+<div ng-controller = "HangoutCreationCtrl">
 <h2> Create Event </h2> 
     <form name = "hangoutForm">
         <table>
@@ -14,9 +14,26 @@
             <br>
         <br>
         <div><h3>Friends Invited</h3></div>
-        
+        <!--
         <input type="text" ng-model = "checked.friend1">
         <input type="text" ng-model = "checked.friend2">
+        -->
+        <div ng-init="getSearchList()"></div> 
+          <ul>
+          <li ng-repeat="todo in todos">
+          <p>{{todo.displayName}}</p>
+          </li>
+          </ul>
+
+        <input ng-model="query" placeholder="Friend's Name">
+        <div ng-show="query">
+        <ul>
+        <li ng-repeat="profile in profiles | filter: query">
+        <h3>{{profile.displayName}}<button ng-click="addTodo(profile)">Add</button></h3>
+        <h3>{{profile.mainEmail}}</h3>
+        </li>
+        </ul>
+        </div>
 
         <br>
         <br>

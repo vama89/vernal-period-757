@@ -252,14 +252,21 @@ conferenceApp.controllers.controller('OAuth2LoginModalCtrl',
  *
  */
 conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $log, $location){
-
+    $scope.todos=[];
     $scope.checked = $scope.checked || {};
 
     $scope.createHangout = function (hangoutForm) {
         //Grab all the individual friends and put them into a list
         //Seems I need these entities as strings in order for it to work with the python model
         
-        var friendList = [$scope.checked.friend1, $scope.checked.friend2, $scope.checked.friend3];
+        //var friendList = [$scope.checked.friend1, $scope.checked.friend2, $scope.checked.friend3];
+        //$scope.checked.friendList = JSON.stringify(friendList);
+
+        //Use an angular foreach here from the todos. parse the right friend's list
+        var friendList =[];
+        angular.forEach($scope.todos, function(friend){
+            friendList.push(friend.mainEmail);
+                });
         $scope.checked.friendList = JSON.stringify(friendList);
         
         var userVote = [$scope.checked.option1, $scope.checked.option2, $scope.checked.option3];
@@ -268,6 +275,7 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
         for(i=0; i<3; i++){
             userVote[i]=parseInt(userVote[i]);
         };
+
         $scope.checked.groupVoteRanks = JSON.stringify(userVote);
 
         gapi.client.conference.createHangout($scope.checked).
@@ -282,6 +290,30 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
                     }
                 });
             });
+    };
+
+    $scope.getSearchList = function() {
+
+        gapi.client.conference.test().
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error');
+                    }
+                    else {
+                        $log.info("Success!");
+                        $scope.profiles = [];
+                        angular.forEach(resp.items, function(profile){
+                            $scope.profiles.push(profile);
+                        });
+                    }
+                });
+            });        
+    };
+
+    $scope.addTodo = function (resp) {
+        $scope.todos.push(resp);
+        $log.info($scope.todos);
     };
 
 });
@@ -684,28 +716,36 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
 });
 
 conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routeParams){
+    $scope.todos=[];
 
-    $scope.testVar = $scope.testVar || {};
+    $scope.getSearchList = function() {
 
-    $scope.test = function() {
-        //$log.info($scope.checked.friend1);
-    $log.info($scope.testVar.friends);
-
-        /*
-         gapi.client.conference.test().
-            execute(function(resp){
-                $scope.$apply(function() {
-                    if (resp.error){
-                        $log.error('There was an Error');
-                    }
-                    else {
-                        $log.info("Success!");
-                    }
-                });
+    gapi.client.conference.test().
+        execute(function(resp){
+            $scope.$apply(function() {
+                if (resp.error){
+                    $log.error('There was an Error');
+                }
+                else {
+                    $log.info("Success!");
+                    $scope.profiles = [];
+                    angular.forEach(resp.items, function(profile){
+                        $scope.profiles.push(profile);
+                    });
+                }
             });
-        */
+        });        
     };
 
+    $scope.addTodo = function (resp) {
+        $scope.todos.push(resp);
+    };
+
+    $scope.button = function(){
+        $log.info($scope.todos);
+    };
+
+/*
     var todoList = this;
     todoList.todos = [];
 
@@ -730,5 +770,6 @@ conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routePara
         if (!todo.done) todoList.todos.push(todo);
       });
     };
+*/
 
 });
