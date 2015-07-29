@@ -566,18 +566,26 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                         }
 
                         //THOSE THAT DID NOT VOTE
-                        $scope.friends = []
-                        $scope.friend=[]
+                        $scope.friends = [];
+                        $scope.friend=[];
                         angular.forEach(notVotedFriends, function(friend){
                             $scope.friends.push(friend);
                         });
                         
                         //THOSE THAT DID VOTE
-                        $scope.vFriends = []
-                        $scope.vFriend=[]
+                        $scope.vFriends = [];
+                        $scope.vFriend=[];
                         angular.forEach(votedFriends, function(vFriend){
                             $scope.vFriends.push(vFriend);
                         });
+
+                        //THOSE NOT IN SYSTEM
+                        var notInSystem = JSON.parse(resp.items[0]['notInSystem']);
+                        $scope.notInSystemDisplay = [];
+                        angular.forEach(notInSystem, function(person){
+                            $scope.notInSystemDisplay.push(person);
+                        });
+
 
                         //post process items (correct Date Structure)
                         //post process itesm (correct Time (am or pm))

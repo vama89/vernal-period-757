@@ -111,6 +111,9 @@ class ConferenceApi(remote.Service):
         prof = self._getProfileFromUser()
         if prof.confirmation == False:
             prof.confirmation = True
+
+            #then for each hangout that is in your waiting queue, place yourself in the friendlist 
+            #removed yourself from the notInSystem list
             prof.put()
 
         # if saveProfile(), process user-modifyable fields
@@ -144,8 +147,6 @@ class ConferenceApi(remote.Service):
             confirmation=False
         )
         profile.put()
-
-
 
     @endpoints.method(message_types.VoidMessage, ProfileForm,
             path='profile', http_method='GET', name='getProfile')
@@ -319,14 +320,18 @@ class ConferenceApi(remote.Service):
         notInSystem = json.loads(data['notInSystem'])
         for friend in notInSystem:
             #check to see they really are not in the system
-            
-            #add them into the system
-            self._doNotInSystemRegs(friend)
+            #that they didn't miss them in the friend add.
+            prof = ndb.Key(Profile, friend).get()
+            if prof:
+                #do not create a profile again, it'll just add them in the key below
+                print "test success"
+            else:
+                #add them into the system
+                self._doNotInSystemRegs(friend)
         
         #place the hangout key in each one of the new regesterees
         for friend in notInSystem:
             obj = ndb.Key(Profile, friend).get()
-            print obj
             eventsInvited = obj.eventsInvited
             eventsInvited.append(hangoutKey)
             obj.eventsInvited = eventsInvited
