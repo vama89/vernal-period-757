@@ -112,8 +112,22 @@ class ConferenceApi(remote.Service):
         if prof.confirmation == False:
             prof.confirmation = True
 
-            #then for each hangout that is in your waiting queue, place yourself in the friendlist 
-            #removed yourself from the notInSystem list
+            eventsInvited = prof.eventsInvited
+            for hangoutId in eventsInvited:
+                hangoutObject = ndb.Key(Hangout, hangoutId).get()
+                #then for each hangout that is in your invited queue, place yourself in the friendlist 
+                p = {"profileID" : prof.mainEmail, "voteRank" : [0,0,0], "firstChoie" : 0, "confirmation" :0}
+                friendList = json.loads(hangoutObject.friendList)
+                friendList[prof.mainEmail] = p
+                hangoutObject.friendList = json.dumps(friendList)
+
+                #removed yourself from the notInSystem list
+                notInSystem = json.loads(hangoutObject.notInSystem)
+                notInSystem.remove(prof.mainEmail)
+                hangoutObject.notInSystem = json.dumps(notInSystem)
+
+                hangoutObject.put()
+
             prof.put()
 
         # if saveProfile(), process user-modifyable fields
