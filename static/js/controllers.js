@@ -723,10 +723,10 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                         });
 
                         //display those definitely not
-                        $scope.nots = []
-                        $scope.not=[]
-                        angular.forEach(notGoing, function(not){
-                            $scope.nots.push(not);
+                        var notInSystem = JSON.parse(resp.items[0]['notInSystem']);
+                        $scope.notInSystemDisplay = [];
+                        angular.forEach(notInSystem, function(person){
+                            $scope.notInSystemDisplay.push(person);
                         });
                     }
                 });
