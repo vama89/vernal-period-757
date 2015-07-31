@@ -1,7 +1,7 @@
 <div ng-init="getSearchList()"></div>
   <ul>
     <li ng-repeat="todo in todos">
-      <p>{{todo.displayName}}<button>Delete</button></p>
+      <p>{{todo}}<button ng-click="john(todo)">Delete</button></p>
     </li>
   </ul>
 
@@ -13,6 +13,7 @@
     <h3>{{profile.mainEmail}}</h3>
   </li>
 </ul>
+<button ng-click="addTodo(query)">Button</button>
 </div>
 
 <button ng-click="button()">Button</button>

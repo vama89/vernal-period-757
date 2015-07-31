@@ -23,7 +23,7 @@
           <table>
           <tr ng-repeat="todo in todos">
           <td>{{todo.displayName}}</td>
-          <td><button>Delete</button></td>
+          <td><button ng-click="deleteToDo(todo)">Delete</button></td>
           </tr>
           </table>
 
@@ -48,7 +48,7 @@
         <table>
           <tr ng-repeat="notFriend in notInSystemFriends">
             <td>{{notFriend}}</td>
-            <td><button>Delete</button><td>
+            <td><button ng-click="deleteNotInSystem(notFriend)">Delete</button><td>
           </tr>
         </table>
         <input ng-model="notEmail"placeholder="Email">

@@ -328,6 +328,17 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
         $scope.notEmail='';
     };
 
+    $scope.deleteToDo = function(name){
+        var index = $scope.todos.indexOf(name);
+        $scope.todos.splice(index, 1);
+    };
+
+    $scope.deleteNotInSystem = function(name) {
+        var index = $scope.notInSystemFriends.indexOf(name);
+        $scope.notInSystemFriends.splice(index, 1);
+    };
+
+
 });
 
 conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $routeParams){
@@ -763,6 +774,12 @@ conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routePara
 
     $scope.button = function(){
         $log.info($scope.todos);
+    };
+
+    $scope.john =function(loc){
+        var plub = $scope.todos.indexOf(loc);
+        $scope.todos.splice(plub, 1);
+
     };
 
 /*
