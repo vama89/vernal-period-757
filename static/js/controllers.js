@@ -782,6 +782,10 @@ conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routePara
 
     };
 
+    $scope.test = function(){
+        $log.info("hello world");
+    };
+
 /*
     var todoList = this;
     todoList.todos = [];
