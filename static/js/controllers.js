@@ -220,6 +220,42 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
         angular.element(document.querySelector('.navbar-collapse')).removeClass('in');
     };
 
+    $scope.signUpVar = false;
+    $scope.signInVar = false;
+
+    $scope.emailSignUpClick = function () {
+        $scope.signUpVar = true;
+        
+    };
+
+    $scope.emailSignInClick = function () {
+        $scope.signInVar = true;
+        
+    };
+
+    $scope.emailSignUp = function () {
+        return $scope.signUpVar
+    };
+
+    $scope.emailSignIn = function () {
+        return $scope.signInVar;
+    };
+
+    $scope.emailRegistration = function () {
+        //make and api call first to ensure that it is not a key
+        //Grab the list of names
+
+        // for i in listof names:
+        // if email is member in list of names keys
+            //then return a failure -- bootstrap or javascript
+        //else:
+            //Make the api call to save into the database.
+
+        $scope.registration = $scope.registration || {};
+        $log.info($scope.registration.email);
+        //Make an api call
+    };
+
 });
 
 /**
