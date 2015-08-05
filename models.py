@@ -43,6 +43,12 @@ class ProfileForm(messages.Message):
 class ProfileForms(messages.Message):
     items = messages.MessageField(ProfileForm, 1, repeated=True)
 
+class EmailRegForm(messages.Message):
+    firstName = messages.StringField(1)
+    lastName = messages.StringField(2)
+    email = messages.StringField(3)
+    password = messages.StringField(4)
+
 #My Additions The Hangout Code
 class Hangout(ndb.Model):
     eventName = ndb.StringProperty()

@@ -252,8 +252,24 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
             //Make the api call to save into the database.
 
         $scope.registration = $scope.registration || {};
-        $log.info($scope.registration.email);
+        
         //Make an api call
+        gapi.client.conference.emailRegs($scope.registration).
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error');
+                    }
+                    else {
+                        $log.info("Success!");
+                        //$location.path('myDashboard');
+                    }
+                });
+            });
+    };
+
+    $scope.emailLogin = function () {
+
     };
 
 });

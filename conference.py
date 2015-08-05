@@ -32,6 +32,7 @@ from models import HangoutForm
 from models import HangoutForms
 from models import VoteForm
 from models import ProfileForms
+from models import EmailRegForm
 
 from settings import WEB_CLIENT_ID
 from settings import ANDROID_CLIENT_ID
@@ -162,6 +163,9 @@ class ConferenceApi(remote.Service):
         )
         profile.put()
 
+    def _emailRegs(self, request):
+        pass
+
     @endpoints.method(message_types.VoidMessage, ProfileForm,
             path='profile', http_method='GET', name='getProfile')
     def getProfile(self, request):
@@ -173,6 +177,17 @@ class ConferenceApi(remote.Service):
     def saveProfile(self, request):
         """Update & return user profile."""
         return self._doProfile(request)
+
+    @endpoints.method(EmailRegForm, message_types.VoidMessage,
+            path='emailRegs', http_method='POST', name='emailRegs')
+    def emailRegs(self, request):
+        """Update & return user profile."""
+        print request
+        
+        data = {field.name: getattr(request, field.name) for field in request.all_fields()}
+        print data
+
+        return message_types.VoidMessage()
 
 # - - - Hangout - - - - - - - - - - - - - - - - - - - - - - - 
     def _copyHangoutToForm(self, hangout):
