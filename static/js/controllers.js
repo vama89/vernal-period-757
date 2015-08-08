@@ -134,6 +134,29 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
         return oauth2Provider.signedIn;
     };
 
+    $scope.isRegistered = function () {
+
+        gapi.client.conference.isRegistered().
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error');
+                    }
+                    else {
+                        $log.info("Success");
+                    }
+                });
+            });
+
+
+        $log.info("tester");
+
+
+    };
+
+    $scope.myAuthentication = function() {
+    };
+
     /**
      * Calls the OAuth2 authentication method.
      */
@@ -252,7 +275,7 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
             //Make the api call to save into the database.
 
         $scope.registration = $scope.registration || {};
-        
+
         //Make an api call
         gapi.client.conference.emailRegs($scope.registration).
             execute(function(resp){
@@ -262,13 +285,14 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
                     }
                     else {
                         $log.info("Success!");
-                        //$location.path('myDashboard');
+                        $location.path('myDashboard');
                     }
                 });
             });
     };
 
     $scope.emailLogin = function () {
+        $scope.login = $scope.login || {};
 
     };
 

@@ -13,10 +13,10 @@
 					<form>
 						<table class="pull-right">
 						<tr>
-							<td><input ng-model="registration.email" placeholder="email"></td>
+							<td><input ng-model="login.email" placeholder="email"></td>
 						</tr>
 						<tr>
-							<td><input ng-model="registration.password" placeholder="password"></td>
+							<td><input ng-model="login.password" placeholder="password"></td>
 						</tr>
 						<tr>
 							<td><button ng-click="emailLogin()">Submit</button></td>
@@ -42,7 +42,7 @@
 			</div>
 
 			<p class="text-center text-muted">
-				<small>Or Sign-up with <a ng-click="emailSignUpClick()">Email</a></small>
+				<small>Or Sign-up with <a ng-click="emailSignUpClick(); isRegistered()">Email</a></small>
 			</p>
 
 			<div class="col-md-6 col-md-offset-3">
@@ -59,10 +59,10 @@
 							<td><input ng-model="registration.email" placeholder="email"></td>
 						</tr>
 						<tr>
-							<td><input ng-model="registration.password" placeholder="password"></td>
+							<td><input type="password" ng-model="registration.password" placeholder="password"></td>
 						</tr>
 						<tr>
-							<td><input ng-model="registration.confirmPassword"placeholder="confirm"></td>
+							<td><input type="password" ng-model="registration.confirmPassword"placeholder="confirm"></td>
 						</tr>
 						<tr>
 							<td><button ng-click="emailRegistration()">Submit</button></td>

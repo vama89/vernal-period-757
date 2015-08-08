@@ -33,6 +33,7 @@ from models import HangoutForms
 from models import VoteForm
 from models import ProfileForms
 from models import EmailRegForm
+from models import BooleanMessage
 
 from settings import WEB_CLIENT_ID
 from settings import ANDROID_CLIENT_ID
@@ -163,9 +164,6 @@ class ConferenceApi(remote.Service):
         )
         profile.put()
 
-    def _emailRegs(self, request):
-        pass
-
     @endpoints.method(message_types.VoidMessage, ProfileForm,
             path='profile', http_method='GET', name='getProfile')
     def getProfile(self, request):
@@ -182,12 +180,40 @@ class ConferenceApi(remote.Service):
             path='emailRegs', http_method='POST', name='emailRegs')
     def emailRegs(self, request):
         """Update & return user profile."""
-        print request
-        
         data = {field.name: getattr(request, field.name) for field in request.all_fields()}
-        print data
+        
+        #find if the email is already a profile in the system
+        profileObj = ndb.Key(Profile, data['email']).get()
+        if profileObj:
+            pass
+            #return something indicating entry was a failure. Write something on the client
+        else:
+            #create the profile with the information
+            p_key = ndb.Key(Profile, data['email'])
+
+            profile = Profile(
+                key = p_key,
+                displayName = data['email'],
+                mainEmail= data['email'],
+                password = data['password'],
+                firstName= data['firstName'],
+                lastName= data['lastName'],
+                eventsInvited=[],
+                eventsWaitingOn=[],
+                eventsVoteDone=[],
+                eventsPassedDate=[],
+                eventsRegrets=[],
+                confirmation =True
+            )
+            profile.put()
 
         return message_types.VoidMessage()
+
+    @endpoints.method(message_types.VoidMessage, BooleanMessage,
+            path='isRegistered', http_method='GET', name='isRegistered')
+    def isRegistered(self, request):
+        """Return user profile."""
+        return BooleanMessage(data=True)
 
 # - - - Hangout - - - - - - - - - - - - - - - - - - - - - - - 
     def _copyHangoutToForm(self, hangout):
