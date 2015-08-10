@@ -1,5 +1,33 @@
 <div ng-controller="VoteCtrl">
-<h3>This is the Vote Page</h3>
+	<div ng-init="getResultsWaiting()">
+		<table id="conference-table" class="table table-striped table-hover">
+			<tr>
+				<td>Hangout1</td>
+				<td>Hangout2</td>
+				<td>Hangout3</td>
+			</tr>
+			<tr ng-repeat="result in results">
+				<td>{{result.date1}}</td>
+				<td>{{result.date2}}</td>
+				<td>{{result.date3}}</td>
+			</tr>
+			<tr ng-repeat="result in results">
+				<td>{{result.time1}}</td>
+				<td>{{result.time2}}</td>
+				<td>{{result.time3}}</td>
+			</tr>
+			<tr ng-repeat="result in results">
+				<td>{{result.locationName1}}</td>
+				<td>{{result.locationName2}}</td>
+				<td>{{result.locationName3}}</td>
+			</tr>
+			<tr ng-repeat="result in results">
+				<td>{{result.address1}}</td>
+				<td>{{result.address2}}</td>
+				<td>{{result.address3}}</td>
+			</tr>
+		</table>
+	</div>
 
 <form name="voteForm">
 <!--Use ngShow and the javascript functions within a div to display
@@ -19,7 +47,7 @@ the appropriate voting information
 	-->
 
 <div>Ok, so what are your preferences? First being the most preferred!</div>
-<label>Vote1
+<label>Hangout1
 <select ng-model="votes.option1">
 		<option>1</option>
 		<option>2</option>
@@ -29,7 +57,7 @@ the appropriate voting information
 
 <br>
 
-<label>Vote2
+<label>Hangout2
 <select ng-model="votes.option2">
 		<option>1</option>
 		<option>2</option>
@@ -39,7 +67,7 @@ the appropriate voting information
 
 <br>
 
-	<label>Vote3
+	<label>Hangout3
 <select ng-model="votes.option3">
 		<option>1</option>
 		<option>2</option>

@@ -537,6 +537,29 @@ conferenceApp.controllers.controller('VoteCtrl', function($scope,$log,$location,
                 });
     };
 
+    $scope.getResultsWaiting = function () {
+
+            gapi.client.conference.getResultsWaiting({
+                webSafeKey: $routeParams.webSafeKey
+            }).
+                execute(function(resp){
+                    $scope.$apply(function() {
+                        if (resp.error){
+                            $log.error('There was an Error');
+                        }
+                        else {
+                            $log.info("Success");
+                            $log.info(resp.items);
+                            $scope.results = []
+                            $scope.result=[]
+                            angular.forEach(resp.items, function(result){
+                                $scope.results.push(result);
+                            });
+                        }
+                    });
+                });
+    };
+
 });
 
 conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $routeParams){
@@ -644,6 +667,8 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                     }
                     else {
                         $log.info("Success");
+                        $scope.webSafeKey = $routeParams.webSafeKey;
+
                         $scope.results = []
                         $scope.result=[]
                         angular.forEach(resp.items, function(result){
@@ -708,7 +733,7 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                     else {
                         $log.info("Success");
                         $scope.webSafeKey = $routeParams.webSafeKey;
-                        
+
                         $scope.results = []
                         $scope.result=[]
                         angular.forEach(resp.items, function(result){

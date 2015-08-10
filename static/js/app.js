@@ -47,10 +47,7 @@ var app = angular.module('conferenceApp',
                     when('/invite', {
                     templateUrl: '/partials/invite.html',
                 }).
-                    when('/recastVote/:webSafeKey', {
-                    templateUrl: '/partials/recastVote.html',
-                }).
-                when('/', {
+                    when('/', {
                     templateUrl: '/partials/home.html',
                 }).
                 otherwise({
