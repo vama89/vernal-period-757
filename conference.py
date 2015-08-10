@@ -213,6 +213,7 @@ class ConferenceApi(remote.Service):
             path='isRegistered', http_method='GET', name='isRegistered')
     def isRegistered(self, request):
         """Return user profile."""
+        #getUserInformationHere
         return BooleanMessage(data=True)
 
 # - - - Hangout - - - - - - - - - - - - - - - - - - - - - - - 

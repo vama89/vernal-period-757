@@ -134,28 +134,38 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
         return oauth2Provider.signedIn;
     };
 
+    //This code sorta kinda work to account for checking not only are they Google logged in but if they are 
+    //registered as well. Use this as inspiration to fix this problem later
+    /*
+    $scope.fix = false;
     $scope.isRegistered = function () {
-
-        gapi.client.conference.isRegistered().
-            execute(function(resp){
-                $scope.$apply(function() {
-                    if (resp.error){
-                        $log.error('There was an Error');
-                    }
-                    else {
-                        $log.info("Success");
-                    }
+            gapi.client.conference.isRegistered().
+                execute(function(resp){
+                    $scope.$apply(function() {
+                        if (resp.error){
+                            $log.error('There was an Error');
+                            $scope.fix = false;
+                        }
+                        else {
+                            $log.info("Success");
+                            $scope.fix = resp.data;
+                        }
+                    });
                 });
-            });
-
-
-        $log.info("tester");
-
 
     };
 
     $scope.myAuthentication = function() {
-    };
+
+        if ($scope.getSignedInState() && $scope.fix) {
+            $log.info("hello");
+            return true;
+        } else {
+            $log.info("world");
+            return false;
+        }
+
+    };/*
 
     /**
      * Calls the OAuth2 authentication method.
@@ -293,6 +303,10 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
 
     $scope.emailLogin = function () {
         $scope.login = $scope.login || {};
+
+    };
+
+    $scope.uniqueNameCheck = function () {
 
     };
 
@@ -681,6 +695,7 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
             });
     };
 
+
         $scope.getResultsFinal = function () {
         gapi.client.conference.getResultsFinal({
             webSafeKey: $routeParams.webSafeKey
@@ -692,6 +707,8 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                     }
                     else {
                         $log.info("Success");
+                        $scope.webSafeKey = $routeParams.webSafeKey;
+                        
                         $scope.results = []
                         $scope.result=[]
                         angular.forEach(resp.items, function(result){
@@ -861,7 +878,6 @@ conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routePara
     $scope.test = function(){
         $log.info("hello world");
     };
-
 /*
     var todoList = this;
     todoList.todos = [];
