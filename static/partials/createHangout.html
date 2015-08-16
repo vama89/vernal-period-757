@@ -1,186 +1,188 @@
-<div ng-controller = "HangoutCreationCtrl">
-<h2> Create Event </h2> 
-    <form name = "hangoutForm">
-        <table>
-          <tr>
-            <td><b>Event Title:</b></td>
-            <td><input ng-model="checked.eventName"type="string" name="event" placeholder="Event Name"></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td><input ng-model="checked.description" type="textarea" name="description" placeholder="Description" required></td>
-          </tr>
-        </table>
-            <br>
-        <br>
-        <div><h3>Friends Invited</h3></div>
-        <!--
-        <input type="text" ng-model = "checked.friend1">
-        <input type="text" ng-model = "checked.friend2">
-        -->
-
-        <div ng-init="getSearchList()"></div> 
+<div ng-controller = "HangoutCreationCtrl" ng-init="init()">
+  <div ng-show="trigger">
+  <h2> Create Event </h2> 
+      <form name = "hangoutForm">
           <table>
-          <tr ng-repeat="todo in todos">
-          <td>{{todo.displayName}}</td>
-          <td><button ng-click="deleteToDo(todo)">Delete</button></td>
+            <tr>
+              <td><b>Event Title:</b></td>
+              <td><input ng-model="checked.eventName"type="string" name="event" placeholder="Event Name"></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td><input ng-model="checked.description" type="textarea" name="description" placeholder="Description" required></td>
+            </tr>
+          </table>
+              <br>
+          <br>
+          <div><h3>Friends Invited</h3></div>
+          <!--
+          <input type="text" ng-model = "checked.friend1">
+          <input type="text" ng-model = "checked.friend2">
+          -->
+
+          <div ng-init="getSearchList()"></div> 
+            <table>
+            <tr ng-repeat="todo in todos">
+            <td>{{todo.displayName}}</td>
+            <td><button ng-click="deleteToDo(todo)">Delete</button></td>
+            </tr>
+            </table>
+
+          <input ng-model="query" placeholder="Friend's Name">
+          <div ng-show="query">
+          <table>
+          <tr ng-repeat="profile in profiles | filter: query">
+          <td>{{profile.displayName}}</td>
+          <td>{{profile.mainEmail}}</td>
+          <td><button ng-click="addTodo(profile)">Add</button></td>
           </tr>
           </table>
-
-        <input ng-model="query" placeholder="Friend's Name">
-        <div ng-show="query">
-        <table>
-        <tr ng-repeat="profile in profiles | filter: query">
-        <td>{{profile.displayName}}</td>
-        <td>{{profile.mainEmail}}</td>
-        <td><button ng-click="addTodo(profile)">Add</button></td>
-        </tr>
-        </table>
-        </div>
+          </div>
 
 
-        <br>
-        <br>
+          <br>
+          <br>
 
-        <h3>Can't Find Your Friend? inViteVote them!</h3>
-        <small>Enter their gmail email below to send an email.</small>
-        <br>
-        <table>
-          <tr ng-repeat="notFriend in notInSystemFriends">
-            <td>{{notFriend}}</td>
-            <td><button ng-click="deleteNotInSystem(notFriend)">Delete</button><td>
-          </tr>
-        </table>
-        <input ng-model="notEmail"placeholder="Email">
-        <button ng-click="notInSystemAdd()">Add</button>
+          <h3>Can't Find Your Friend? inViteVote them!</h3>
+          <small>Enter their gmail email below to send an email.</small>
+          <br>
+          <table>
+            <tr ng-repeat="notFriend in notInSystemFriends">
+              <td>{{notFriend}}</td>
+              <td><button ng-click="deleteNotInSystem(notFriend)">Delete</button><td>
+            </tr>
+          </table>
+          <input ng-model="notEmail"placeholder="Email">
+          <button ng-click="notInSystemAdd()">Add</button>
 
-        <div><h3>Hangout 1</h3></div>
-        <table>
-          <tr>
-            <td>Date:</td>
-            <td><input ng-model="checked.date1" type="date" name="date1" placeholder="Date" required></td>
-          </tr>
-          <tr>
-            <td>Time:</td>
-            <td><input ng-model="checked.time1" type="time" name="time1" required></td>
-          </tr>
-          <tr>
-            <td>Location:</td>
-            <td><input ng-model="checked.locationName1" type="string" name="locationName1" placeholder="Enter Location Name" required></td>
-          </tr>   
-          <tr>
-            <td></td>
-            <td><div id="locationField">
-            <input  ng-model="checked.address1" name="address1" placeholder="Enter your address"
-                      type="text" required>
-            </div></td>
-          </tr>
-        </table>
-        
-        <br>
-        <div><h3>Hangout 2</h3></div>
-        <table>
-          <tr>
-            <td>Date:</td>
-            <td><input ng-model="checked.date2" type="date" name="date2" placeholder="Date" required></td>
-          </tr>
-          <tr>
-            <td>Time:</td>
-            <td><input ng-model="checked.time2" type="time" name="time2" required></td>
-          </tr>
-          <tr>
-            <td>Location:</td>
-            <td><input ng-model="checked.locationName2" type="string" name="locationName2" placeholder="Enter Location Name" required></td>
-          </tr>   
-          <tr>
-            <td></td>
-            <td><div id="locationField">
-            <input ng-model="checked.address2"  name="address2" placeholder="Enter your address"
-                      type="text" required>
-            </div></td>
-          </tr> 
-        </table>
-
-        <br>
-        <div><h3>Hangout 3</h3></div>
-        <table>
-          <tr>
-            <td>Date:</td>
-            <td><input ng-model="checked.date3" type="date" name="date3" placeholder="Date" required></td>
-          </tr>
-          <tr>
-            <td>Time:</td>
-            <td><input ng-model="checked.time3"type="time" name="time3" required></td>
-          </tr>
-          <tr>
-            <td>Location:</td>
-            <td><input ng-model="checked.locationName3" type="string" name="locationName3" placeholder="Enter Location Name" required></td>
-          </tr>   
-          <tr>
-            <td></td>
-            <td><div id="locationField">
-            <input ng-model="checked.address3"  name="address3" placeholder="Enter your address"
-                      type="text" required>
-            </div></td>
-          </tr> 
-        </table>
-
-        <br>
-
-        <div><h3>So what is your vote?</h3></div>
-        <table>
+          <div><h3>Hangout 1</h3></div>
+          <table>
             <tr>
-                <td><label>Hangout 1
-                    <select ng-model="checked.option1">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    </select>
-                    </label>
-                </td>
+              <td>Date:</td>
+              <td><input ng-model="checked.date1" type="date" name="date1" placeholder="Date" required></td>
             </tr>
             <tr>
-                <td><label>Hangout 2
-                    <select ng-model="checked.option2">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    </select>
-                    </label>
-                </td>
+              <td>Time:</td>
+              <td><input ng-model="checked.time1" type="time" name="time1" required></td>
             </tr>
             <tr>
-                <td><label>Hangout 3
-                    <select ng-model="checked.option3">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    </select>
-                    </label>
-                </td>
-            </tr>
-        </table>
-
-        <div><h3>Deadline to Cast Votes?</h3></div>
-        <table>
+              <td>Location:</td>
+              <td><input ng-model="checked.locationName1" type="string" name="locationName1" placeholder="Enter Location Name" required></td>
+            </tr>   
             <tr>
-                <td>Date:</td>
-                <td><input ng-model="checked.deadlineDate" type="date" name="deadlineDate"required>
-                </td>
-
+              <td></td>
+              <td><div id="locationField">
+              <input  ng-model="checked.address1" name="address1" placeholder="Enter your address"
+                        type="text" required>
+              </div></td>
+            </tr>
+          </table>
+          
+          <br>
+          <div><h3>Hangout 2</h3></div>
+          <table>
+            <tr>
+              <td>Date:</td>
+              <td><input ng-model="checked.date2" type="date" name="date2" placeholder="Date" required></td>
             </tr>
             <tr>
-                <td>Time:</td>
-                <td><input ng-model="checked.deadlineTime" type="time" name="deadlineTime"required>
-                </td>
+              <td>Time:</td>
+              <td><input ng-model="checked.time2" type="time" name="time2" required></td>
             </tr>
-        </table>
-        
-    <br>
-    <br>
-    
-    <button ng-click="createHangout(hangoutform)">Submit</button>
+            <tr>
+              <td>Location:</td>
+              <td><input ng-model="checked.locationName2" type="string" name="locationName2" placeholder="Enter Location Name" required></td>
+            </tr>   
+            <tr>
+              <td></td>
+              <td><div id="locationField">
+              <input ng-model="checked.address2"  name="address2" placeholder="Enter your address"
+                        type="text" required>
+              </div></td>
+            </tr> 
+          </table>
 
-    </form>
+          <br>
+          <div><h3>Hangout 3</h3></div>
+          <table>
+            <tr>
+              <td>Date:</td>
+              <td><input ng-model="checked.date3" type="date" name="date3" placeholder="Date" required></td>
+            </tr>
+            <tr>
+              <td>Time:</td>
+              <td><input ng-model="checked.time3"type="time" name="time3" required></td>
+            </tr>
+            <tr>
+              <td>Location:</td>
+              <td><input ng-model="checked.locationName3" type="string" name="locationName3" placeholder="Enter Location Name" required></td>
+            </tr>   
+            <tr>
+              <td></td>
+              <td><div id="locationField">
+              <input ng-model="checked.address3"  name="address3" placeholder="Enter your address"
+                        type="text" required>
+              </div></td>
+            </tr> 
+          </table>
+
+          <br>
+
+          <div><h3>So what is your vote?</h3></div>
+          <table>
+              <tr>
+                  <td><label>Hangout 1
+                      <select ng-model="checked.option1">
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      </select>
+                      </label>
+                  </td>
+              </tr>
+              <tr>
+                  <td><label>Hangout 2
+                      <select ng-model="checked.option2">
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      </select>
+                      </label>
+                  </td>
+              </tr>
+              <tr>
+                  <td><label>Hangout 3
+                      <select ng-model="checked.option3">
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      </select>
+                      </label>
+                  </td>
+              </tr>
+          </table>
+
+          <div><h3>Deadline to Cast Votes?</h3></div>
+          <table>
+              <tr>
+                  <td>Date:</td>
+                  <td><input ng-model="checked.deadlineDate" type="date" name="deadlineDate"required>
+                  </td>
+
+              </tr>
+              <tr>
+                  <td>Time:</td>
+                  <td><input ng-model="checked.deadlineTime" type="time" name="deadlineTime"required>
+                  </td>
+              </tr>
+          </table>
+          
+      <br>
+      <br>
+      
+      <button ng-click="createHangout(hangoutform)">Submit</button>
+
+      </form>
+  </div>
 </div>
 

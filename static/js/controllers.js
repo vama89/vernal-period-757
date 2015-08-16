@@ -216,6 +216,33 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
         }
     };
 
+    /*
+    $scope.fix = false;
+
+    $scope.test = function () {
+        oauth2Provider.signIn(function () {
+            gapi.client.oauth2.userinfo.get().execute(function (resp) {
+                $scope.$apply(function () {
+                    gapi.client.conference.isRegistered().
+                        execute(function(resp){
+                            $scope.$apply(function() {
+                                if (resp.error){
+                                    $log.error('There was an Error');
+                                    $scope.fix = false;
+                                }
+                                else {
+                                    $log.info("Success 123");
+                                    $scope.fix = resp.data;
+                                }
+                            });
+                        });
+
+                });
+           });
+        });
+    };*/
+    
+
     /**
      * Render the signInButton and restore the credential if it's stored in the cookie.
      * (Just calling this to restore the credential from the stored cookie. So hiding the signInButton immediately
@@ -228,6 +255,9 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
                 if (gapi.auth.getToken() && gapi.auth.getToken().access_token) {
                     $scope.$apply(function () {
                         oauth2Provider.signedIn = true;
+
+                        //Then check if they are registered.
+                            //If this passes then return true.
                     });
                 }
             },
@@ -235,6 +265,8 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
             'cookiepolicy': 'single_host_origin',
             'scope': oauth2Provider.SCOPES
         });
+
+        
     };
 
     /**
@@ -344,11 +376,41 @@ conferenceApp.controllers.controller('OAuth2LoginModalCtrl',
  * Method to show certain hangouts
  *
  */
-conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $log, $location){
+conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $log, $location, oauth2Provider){
     $scope.todos=[];
     $scope.checked = $scope.checked || {};
     $scope.notEmail;
     $scope.notInSystemFriends=[];
+    $scope.trigger = false;
+
+    $scope.init = function () {
+            var retrieveProfileCallback = function () {
+                $scope.profile = {};
+                $scope.loading = true;
+                gapi.client.conference.getProfile().
+                    execute(function (resp) {
+                        $scope.$apply(function () {
+                            $scope.loading = false;
+                            if (resp.error) {
+                                // Failed to get a user profile.
+                            } else {
+                                // Succeeded to get the user profile.
+                                $scope.profile.displayName = resp.result.displayName;
+                                $scope.initialProfile = resp.result;
+                                $scope.trigger = true;
+                            }
+                        });
+                    }
+                );
+            };
+            
+            if (!oauth2Provider.signedIn) {
+                var modalInstance = oauth2Provider.showLoginModal();
+                modalInstance.result.then(retrieveProfileCallback);
+            } else {
+                retrieveProfileCallback();
+            }
+        };
 
     $scope.createHangout = function (hangoutForm) {
         //Grab all the individual friends and put them into a list
@@ -393,22 +455,28 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
     };
 
     $scope.getSearchList = function() {
+        oauth2Provider.signIn(function () {
+            gapi.client.oauth2.userinfo.get().execute(function (resp) {
+                $scope.$apply(function () {
+                    gapi.client.conference.test().
+                        execute(function(resp){
+                            $scope.$apply(function() {
+                                if (resp.error){
+                                    $log.error('There was an Error');
+                                }
+                                else {
+                                    $log.info("Success!");
+                                    $scope.profiles = [];
+                                    angular.forEach(resp.items, function(profile){
+                                        $scope.profiles.push(profile);
+                                    });
+                                }
+                            });
+                        });   
 
-        gapi.client.conference.test().
-            execute(function(resp){
-                $scope.$apply(function() {
-                    if (resp.error){
-                        $log.error('There was an Error');
-                    }
-                    else {
-                        $log.info("Success!");
-                        $scope.profiles = [];
-                        angular.forEach(resp.items, function(profile){
-                            $scope.profiles.push(profile);
-                        });
-                    }
                 });
-            });        
+           });
+        });     
     };
 
     $scope.addTodo = function (resp) {
@@ -885,6 +953,12 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
 
 conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routeParams){
     $scope.todos=[];
+
+    $scope.fix = false;
+
+    $scope.lop = function(){
+        $scope.fix = true;
+    }
 
     $scope.getSearchList = function() {
 
