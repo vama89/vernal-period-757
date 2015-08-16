@@ -690,6 +690,13 @@ class ConferenceApi(remote.Service):
         return ProfileForms(items=[self._copyProfileToForm(profile) for profile in profiles])
         #return request
 
+    @endpoints.method(message_types.VoidMessage, BooleanMessage,
+            path='testRegistered', http_method='GET', name='testRegistered')
+    def testRegistered(self, request):
+        """Return user profile."""
+        #getUserInformationHere
+        return BooleanMessage(data=True)
+
 api = endpoints.api_server([ConferenceApi]) # register API
 
 #Sample Code to help me out. Reminder Code

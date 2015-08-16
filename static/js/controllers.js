@@ -58,6 +58,7 @@ conferenceApp.controllers.controller('MyProfileCtrl',
                     }
                 );
             };
+            
             if (!oauth2Provider.signedIn) {
                 var modalInstance = oauth2Provider.showLoginModal();
                 modalInstance.result.then(retrieveProfileCallback);
@@ -114,7 +115,7 @@ conferenceApp.controllers.controller('MyProfileCtrl',
  * such as user authentications.
  *
  */
-conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $log, oauth2Provider) {
+conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $log, oauth2Provider, $q) {
     /**
      * Returns if the viewLocation is the currently viewed page.
      *
@@ -165,7 +166,7 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
             return false;
         }
 
-    };/*
+    };*/
 
     /**
      * Calls the OAuth2 authentication method.
@@ -253,6 +254,7 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
         angular.element(document.querySelector('.navbar-collapse')).removeClass('in');
     };
 
+    /*
     $scope.signUpVar = false;
     $scope.signInVar = false;
 
@@ -310,6 +312,7 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
 
     };
 
+    */
 });
 
 /**
@@ -431,7 +434,24 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
 
 });
 
-conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $routeParams){
+conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $routeParams, oauth2Provider){
+    $scope.trigger = false;
+
+    $scope.init = function () {
+        var retrieveProfileCallback = function () {
+            $scope.trigger = true;
+            $scope.invited();
+            $scope.votedWaiting();
+            $scope.done();
+            };
+            
+            if (!oauth2Provider.signedIn) {
+                var modalInstance = oauth2Provider.showLoginModal();
+                modalInstance.result.then(retrieveProfileCallback);
+            } else {
+                retrieveProfileCallback();
+            }
+    };
 
     $scope.invited = function () {
         //Check if in the backend he was invited and didn't vote
@@ -440,7 +460,6 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $r
             Under true, showcase the resp of the gapi
         else return false
         */
-
         gapi.client.conference.invited().
             execute(function(resp){
                 $scope.$apply(function() {

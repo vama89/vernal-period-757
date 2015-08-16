@@ -40,8 +40,8 @@ handlers:       # static then dynamic
   script: conference.api
   secure: always
 
-#- url: .*
-#  script: main.app
+- url: .*
+  script: main.app
 
 libraries:
 
