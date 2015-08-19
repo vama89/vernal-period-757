@@ -381,36 +381,6 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
     $scope.checked = $scope.checked || {};
     $scope.notEmail;
     $scope.notInSystemFriends=[];
-    $scope.trigger = false;
-
-    $scope.init = function () {
-            var retrieveProfileCallback = function () {
-                $scope.profile = {};
-                $scope.loading = true;
-                gapi.client.conference.getProfile().
-                    execute(function (resp) {
-                        $scope.$apply(function () {
-                            $scope.loading = false;
-                            if (resp.error) {
-                                // Failed to get a user profile.
-                            } else {
-                                // Succeeded to get the user profile.
-                                $scope.profile.displayName = resp.result.displayName;
-                                $scope.initialProfile = resp.result;
-                                $scope.trigger = true;
-                            }
-                        });
-                    }
-                );
-            };
-            
-            if (!oauth2Provider.signedIn) {
-                var modalInstance = oauth2Provider.showLoginModal();
-                modalInstance.result.then(retrieveProfileCallback);
-            } else {
-                retrieveProfileCallback();
-            }
-        };
 
     $scope.createHangout = function (hangoutForm) {
         //Grab all the individual friends and put them into a list
@@ -952,6 +922,26 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
 });
 
 conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routeParams){
+    //this.qty= function () {
+    $scope.test = function() {
+        gapi.client.conference.isRegistered().
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error');
+                        $scope.fix = false;
+                    }
+                    else {
+                        $log.info("Success");
+                        $scope.fix = resp.data;
+                        $log.info(resp.data);
+                    }
+                });
+            });
+        }
+    //};
+
+    /*
     $scope.todos=[];
 
     $scope.fix = false;
@@ -996,6 +986,7 @@ conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routePara
     $scope.test = function(){
         $log.info("hello world");
     };
+    */
 /*
     var todoList = this;
     todoList.todos = [];

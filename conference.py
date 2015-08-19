@@ -214,7 +214,7 @@ class ConferenceApi(remote.Service):
     def isRegistered(self, request):
         """Return user profile."""
         #getUserInformationHere
-        return BooleanMessage(data=True)
+        return BooleanMessage(data=False)
 
 # - - - Hangout - - - - - - - - - - - - - - - - - - - - - - - 
     def _copyHangoutToForm(self, hangout):
