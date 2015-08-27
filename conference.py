@@ -212,8 +212,13 @@ class ConferenceApi(remote.Service):
     @endpoints.method(message_types.VoidMessage, BooleanMessage,
             path='isRegistered', http_method='GET', name='isRegistered')
     def isRegistered(self, request):
-        """Return user profile."""
-        #getUserInformationHere
+        
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+        user_id = getUserId(user)
+        p_key = ndb.Key(Profile, user_id)
+        
         return BooleanMessage(data=False)
 
 # - - - Hangout - - - - - - - - - - - - - - - - - - - - - - - 

@@ -1,14 +1,13 @@
 <div ng-controller="RootCtrl">
 	<!--<div ng-init="isRegistered()"></div>-->
 	<!--<div ng-show="myAuthentication()">-->
-		<div ng-show="getSignedInState()">
+	<div ng-show="getSignedInState()">
 		<h3>You're already signed in. Go inViteVote!</h3>
 	</div>
 
 	<!--<div ng-hide="myAuthentication()">-->
 		<div ng-hide="getSignedInState()">
-		
-		<!--
+			
 			<div class="pull-right">
 			<p class="text-muted">
 			<small>Or Sign-In with <a ng-click="emailSignInClick()">Email</a></small>
@@ -31,7 +30,7 @@
 			</div>
 
 			<br>
-		-->
+		
 
 		<h3 class="text-center">Quit haggling over when to hangout, just get to it already! inViteVite!</h3>
 
@@ -41,9 +40,8 @@
 		      </li>
 		</ul>
 
-		<!--
-			<div class="signup-or-separator">
-			 <h6 class="text">or</h6> 
+		
+			<div class="signup-or-separator"> 
 			<hr>
 			</div>
 
@@ -53,7 +51,7 @@
 
 			<div class="col-md-6 col-md-offset-3">
 				<div ng-show="emailSignUp()">
-					<form>
+					<form name="emailRegs" novalidate>
 						<table>
 						<tr>
 							<td><input ng-model="registration.firstName" placeholder="first name"></td>
@@ -62,7 +60,7 @@
 							<td><input ng-model="registration.lastName" placeholder="last name"></td>
 						</tr>
 						<tr>
-							<td><input ng-model="registration.email" placeholder="email"></td>
+							<td><input type="email" name="email" ng-model="registration.email" placeholder="email" required><p ng-show="emailRegs.email.$invalid &&emailRegs.email.$touched">Invalid Email</p></td>
 						</tr>
 						<tr>
 							<td><input type="password" ng-model="registration.password" placeholder="password"></td>
@@ -71,14 +69,12 @@
 							<td><input type="password" ng-model="registration.confirmPassword"placeholder="confirm"></td>
 						</tr>
 						<tr>
-							<td><button ng-click="emailRegistration()">Submit</button></td>
+							<td><button ng-click="emailRegistration()" ng-disabled="emailRegs.$invalid">Submit</button></td>
 						</tr>
 						</table>
 					</form>
 				</div>
 			</div>
-		-->
+		
 	</div>
-	<!--<a href="/main">Main</a>-->
-
 </div>

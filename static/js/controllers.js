@@ -215,32 +215,6 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
             retrieveProfileCallback();
         }
     };
-
-    /*
-    $scope.fix = false;
-
-    $scope.test = function () {
-        oauth2Provider.signIn(function () {
-            gapi.client.oauth2.userinfo.get().execute(function (resp) {
-                $scope.$apply(function () {
-                    gapi.client.conference.isRegistered().
-                        execute(function(resp){
-                            $scope.$apply(function() {
-                                if (resp.error){
-                                    $log.error('There was an Error');
-                                    $scope.fix = false;
-                                }
-                                else {
-                                    $log.info("Success 123");
-                                    $scope.fix = resp.data;
-                                }
-                            });
-                        });
-
-                });
-           });
-        });
-    };*/
     
 
     /**
@@ -286,7 +260,7 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
         angular.element(document.querySelector('.navbar-collapse')).removeClass('in');
     };
 
-    /*
+    
     $scope.signUpVar = false;
     $scope.signInVar = false;
 
@@ -344,7 +318,7 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
 
     };
 
-    */
+    
 });
 
 /**
