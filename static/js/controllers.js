@@ -263,6 +263,8 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
     
     $scope.signUpVar = false;
     $scope.signInVar = false;
+    $scope.passwordValid = false;
+    $scope.submitConfirm = true;
 
     $scope.emailSignUpClick = function () {
         $scope.signUpVar = true;
@@ -309,15 +311,23 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
             });
     };
 
+    $scope.passwordConfirmation = function () {
+
+        if ($scope.registration.password == $scope.registration.passwordConfirm) {
+            $scope.passwordValid = false;
+            $scope.submitConfirm = false;
+            return $scope.passwordValid;
+        } else {
+            $scope.passwordValid = true;
+            $scope.submitConfirm = true;
+            return $scope.passwordValid;
+        };
+    };
+
     $scope.emailLogin = function () {
         $scope.login = $scope.login || {};
 
     };
-
-    $scope.uniqueNameCheck = function () {
-
-    };
-
     
 });
 
@@ -399,28 +409,21 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
     };
 
     $scope.getSearchList = function() {
-        oauth2Provider.signIn(function () {
-            gapi.client.oauth2.userinfo.get().execute(function (resp) {
-                $scope.$apply(function () {
-                    gapi.client.conference.test().
-                        execute(function(resp){
-                            $scope.$apply(function() {
-                                if (resp.error){
-                                    $log.error('There was an Error');
-                                }
-                                else {
-                                    $log.info("Success!");
-                                    $scope.profiles = [];
-                                    angular.forEach(resp.items, function(profile){
-                                        $scope.profiles.push(profile);
-                                    });
-                                }
-                            });
-                        });   
-
+        gapi.client.conference.test().
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error');
+                    }
+                    else {
+                        $log.info("Success!");
+                        $scope.profiles = [];
+                        angular.forEach(resp.items, function(profile){
+                            $scope.profiles.push(profile);
+                        });
+                    }
                 });
-           });
-        });     
+            });   
     };
 
     $scope.addTodo = function (resp) {
@@ -914,6 +917,10 @@ conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routePara
             });
         }
     //};
+
+    $scope.testy = function () {
+        $log.info("hello world");
+    }
 
     /*
     $scope.todos=[];

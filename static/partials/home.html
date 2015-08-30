@@ -54,22 +54,27 @@
 					<form name="emailRegs" novalidate>
 						<table>
 						<tr>
-							<td><input ng-model="registration.firstName" placeholder="first name"></td>
+							<td><input ng-model="registration.firstName" name="firstName" ng-required="true" placeholder="first name"><p ng-show="emailRegs.firstName.$invalid && emailRegs.firstName.$touched">First Name Required</p></td>
 						</tr>
 						<tr>
-							<td><input ng-model="registration.lastName" placeholder="last name"></td>
+							<td><input ng-model="registration.lastName" name="lastName" ng-required="true"placeholder="last name"><p ng-show="emailRegs.lastName.$invalid &&emailRegs.lastName.$touched">Last Name Required</p></td>
 						</tr>
 						<tr>
-							<td><input type="email" name="email" ng-model="registration.email" placeholder="email" required><p ng-show="emailRegs.email.$invalid &&emailRegs.email.$touched">Invalid Email</p></td>
+							<td><input type="email" name="email" ng-model="registration.email" ng-required="true" placeholder="email" required><p ng-show="emailRegs.email.$invalid &&emailRegs.email.$touched">Invalid Email. Ex: johndoe@gmail.com</p></td>
 						</tr>
 						<tr>
-							<td><input type="password" ng-model="registration.password" placeholder="password"></td>
+							<td><input type="password" name="password" ng-model="registration.password" ng-required="true" placeholder="password"><p ng-show="emailRegs.password.$invalid &&emailRegs.password.$touched">Password Required</p></td></td>
 						</tr>
 						<tr>
-							<td><input type="password" ng-model="registration.confirmPassword"placeholder="confirm"></td>
+							<td><input type="password" name="passwordConfirm" ng-model="registration.passwordConfirm" ng-blur="passwordConfirmation()" ng-required="true" placeholder="Confirm Password">
+								<div ng-show="passwordValid">
+									<p>No Password Match</p>
+								</div>
+							</td>
 						</tr>
+						
 						<tr>
-							<td><button ng-click="emailRegistration()" ng-disabled="emailRegs.$invalid">Submit</button></td>
+							<td><button ng-click="emailRegistration()" ng-disabled="emailRegs.$invalid && submitConfirm">Submit</button></td>
 						</tr>
 						</table>
 					</form>
