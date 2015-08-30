@@ -135,39 +135,6 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
         return oauth2Provider.signedIn;
     };
 
-    //This code sorta kinda work to account for checking not only are they Google logged in but if they are 
-    //registered as well. Use this as inspiration to fix this problem later
-    /*
-    $scope.fix = false;
-    $scope.isRegistered = function () {
-            gapi.client.conference.isRegistered().
-                execute(function(resp){
-                    $scope.$apply(function() {
-                        if (resp.error){
-                            $log.error('There was an Error');
-                            $scope.fix = false;
-                        }
-                        else {
-                            $log.info("Success");
-                            $scope.fix = resp.data;
-                        }
-                    });
-                });
-
-    };
-
-    $scope.myAuthentication = function() {
-
-        if ($scope.getSignedInState() && $scope.fix) {
-            $log.info("hello");
-            return true;
-        } else {
-            $log.info("world");
-            return false;
-        }
-
-    };*/
-
     /**
      * Calls the OAuth2 authentication method.
      */
@@ -264,7 +231,7 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
     $scope.signUpVar = false;
     $scope.signInVar = false;
     $scope.passwordValid = false;
-    $scope.submitConfirm = true;
+    
 
     $scope.emailSignUpClick = function () {
         $scope.signUpVar = true;
@@ -311,6 +278,7 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
             });
     };
 
+    $scope.submitConfirm = true;
     $scope.passwordConfirmation = function () {
 
         if ($scope.registration.password == $scope.registration.passwordConfirm) {
@@ -328,6 +296,39 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
         $scope.login = $scope.login || {};
 
     };
+
+    //This code sorta kinda work to account for checking not only are they Google logged in but if they are 
+    //registered as well. Use this as inspiration to fix this problem later
+    
+    $scope.isRegistered = function () {
+        gapi.client.conference.isRegistered($scope.registration).
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error');
+                    }
+                    else {
+                        $log.info("Success");
+                        $scope.regTruthVal = resp.boolVal;
+                    }
+                });
+            });
+
+    };
+
+    /*
+    $scope.myAuthentication = function() {
+
+        if ($scope.getSignedInState() && $scope.fix) {
+            $log.info("hello");
+            return true;
+        } else {
+            $log.info("world");
+            return false;
+        }
+
+    };
+    */
     
 });
 

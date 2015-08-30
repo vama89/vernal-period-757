@@ -32,7 +32,7 @@
 			<br>
 		
 
-		<h3 class="text-center">Quit haggling over when to hangout, just get to it already! inViteVite!</h3>
+		<h3 class="text-center">Quit haggling over when to hangout, just get to it already! inViteVote!</h3>
 
 		<ul class="text-center list-inline intro-social-buttons">
 			<li id="signInLink">
@@ -60,10 +60,13 @@
 							<td><input ng-model="registration.lastName" name="lastName" ng-required="true"placeholder="last name"><p ng-show="emailRegs.lastName.$invalid &&emailRegs.lastName.$touched">Last Name Required</p></td>
 						</tr>
 						<tr>
-							<td><input type="email" name="email" ng-model="registration.email" ng-required="true" placeholder="email" required><p ng-show="emailRegs.email.$invalid &&emailRegs.email.$touched">Invalid Email. Ex: johndoe@gmail.com</p></td>
+							<td><input type="email" name="email" ng-model="registration.email" ng-required="true" ng-blur="isRegistered()" placeholder="email" required>
+								<p ng-show="emailRegs.email.$invalid && emailRegs.email.$touched">Invalid Email. Ex: johndoe@gmail.com</p>
+								<p ng-show="regTruthVal">You already used this email to register. Either log-in with the 3rd party associated with the email or login manually with the email sign-up credentials above.</p>
+							</td>
 						</tr>
 						<tr>
-							<td><input type="password" name="password" ng-model="registration.password" ng-required="true" placeholder="password"><p ng-show="emailRegs.password.$invalid &&emailRegs.password.$touched">Password Required</p></td></td>
+							<td><input type="password" name="password" ng-model="registration.password" ng-required="true" placeholder="password"><p ng-show="emailRegs.password.$invalid && emailRegs.password.$touched">Password Required</p></td></td>
 						</tr>
 						<tr>
 							<td><input type="password" name="passwordConfirm" ng-model="registration.passwordConfirm" ng-blur="passwordConfirmation()" ng-required="true" placeholder="Confirm Password">

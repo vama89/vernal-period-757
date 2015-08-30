@@ -33,6 +33,7 @@ from models import HangoutForms
 from models import VoteForm
 from models import ProfileForms
 from models import EmailRegForm
+from models import EmailRegFormCheck
 from models import BooleanMessage
 
 from settings import WEB_CLIENT_ID
@@ -209,17 +210,20 @@ class ConferenceApi(remote.Service):
 
         return message_types.VoidMessage()
 
-    @endpoints.method(message_types.VoidMessage, BooleanMessage,
+    @endpoints.method(EmailRegFormCheck, BooleanMessage,
             path='isRegistered', http_method='GET', name='isRegistered')
     def isRegistered(self, request):
         
-        user = endpoints.get_current_user()
-        if not user:
-            raise endpoints.UnauthorizedException('Authorization required')
-        user_id = getUserId(user)
-        p_key = ndb.Key(Profile, user_id)
+        data = {field.name: getattr(request, field.name) for field in request.all_fields()}
+        p_key = ndb.Key(Profile, data['email'])
+        profile = p_key.get()
+
+        if profile:
+            boolVal = True
+        else:
+            boolVal = False
         
-        return BooleanMessage(data=False)
+        return BooleanMessage(boolVal = boolVal)
 
 # - - - Hangout - - - - - - - - - - - - - - - - - - - - - - - 
     def _copyHangoutToForm(self, hangout):

@@ -52,6 +52,9 @@ class EmailRegForm(messages.Message):
     email = messages.StringField(3)
     password = messages.StringField(4)
 
+class EmailRegFormCheck(messages.Message):
+    email = messages.StringField(1)
+
 #My Additions The Hangout Code
 class Hangout(ndb.Model):
     eventName = ndb.StringProperty()
@@ -129,7 +132,7 @@ class VoteForm(messages.Message):
     webSafeKey = messages.StringField(4)
 
 class BooleanMessage(messages.Message):
-    data = messages.BooleanField(1)
+    boolVal = messages.BooleanField(1)
 
 #class EventsWaitingForms(messages.Message):
 #    items = messages.MessageField()
