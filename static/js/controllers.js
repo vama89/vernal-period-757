@@ -115,7 +115,7 @@ conferenceApp.controllers.controller('MyProfileCtrl',
  * such as user authentications.
  *
  */
-conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $log, oauth2Provider, $q) {
+conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $log, oauth2Provider) {
     /**
      * Returns if the viewLocation is the currently viewed page.
      *
@@ -207,7 +207,6 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
             'scope': oauth2Provider.SCOPES
         });
 
-        
     };
 
     /**
@@ -899,8 +898,13 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
         }; 
 });
 
-conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routeParams){
+conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routeParams, $cookies){
+    var jo= $cookies.get('myFavorite');
+    $log.info(jo);
+    $log.info("hello world");
     //this.qty= function () {
+
+    /*
     $scope.test = function() {
         gapi.client.conference.isRegistered().
             execute(function(resp){
@@ -917,12 +921,14 @@ conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routePara
                 });
             });
         }
+        */
     //};
 
+    /*
     $scope.testy = function () {
         $log.info("hello world");
     }
-
+    */
     /*
     $scope.todos=[];
 
