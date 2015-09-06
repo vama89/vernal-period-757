@@ -115,7 +115,7 @@ conferenceApp.controllers.controller('MyProfileCtrl',
  * such as user authentications.
  *
  */
-conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $log, oauth2Provider) {
+conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $log, $q, oauth2Provider) {
     /**
      * Returns if the viewLocation is the currently viewed page.
      *
@@ -147,41 +147,62 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
                         $scope.alertStatus = 'success';
                         $scope.rootMessages = 'Logged in with ' + resp.email;
                         //My addition to get to the dashboard and load items properly
-                        $scope.makeProfile();
-                        $location.path('/myDashboard').replace;
+
+                        //make the async call here. make profile first then move the the dashboard
+                        function first() {
+                            var deferred = $q.defer();
+                            
+                            //Clean this up later - Quick fix to sync this correctly. There is a deferred resolve in this
+                            //so that it knows when to switch pages
+                            //This is used to make a profile as soon as you google Sign in. Used in SignIn above.
+                            $scope.makeProfile = function () {
+                                var retrieveProfileCallback = function () {
+                                    $scope.profile = {};
+                                    $scope.loading = true;
+                                    gapi.client.conference.getProfile().
+                                        execute(function (resp) {
+                                            $scope.$apply(function () {
+                                                $scope.loading = false;
+                                                if (resp.error) {
+                                                    // Failed to get a user profile.
+                                                } else {
+                                                    // Succeeded to get the user profile.
+                                                    $scope.profile.displayName = resp.result.displayName;
+                                                    $scope.initialProfile = resp.result;
+                                                    $log.info("high");
+                                                    deferred.resolve();
+                                                }
+                                            });
+                                        }
+                                    );
+                                };
+
+                                if (!oauth2Provider.signedIn) {
+                                    var modalInstance = oauth2Provider.showLoginModal();
+                                    modalInstance.result.then(retrieveProfileCallback);
+                                } else {
+                                    retrieveProfileCallback();
+                                }
+                            };
+
+                            $scope.makeProfile();
+                            
+                            return deferred.promise; 
+                        }
+
+                        
+
+                        first().then(function () {
+                            $location.path('/myDashboard').replace;
+                        });
+                        
                     }
                 });
             });
         });
     };
 
-    //This is used to make a profile as soon as you google Sign in. Used in SignIn above.
-    $scope.makeProfile = function () {
-        var retrieveProfileCallback = function () {
-            $scope.profile = {};
-            $scope.loading = true;
-            gapi.client.conference.getProfile().
-                execute(function (resp) {
-                    $scope.$apply(function () {
-                        $scope.loading = false;
-                        if (resp.error) {
-                            // Failed to get a user profile.
-                        } else {
-                            // Succeeded to get the user profile.
-                            $scope.profile.displayName = resp.result.displayName;
-                            $scope.initialProfile = resp.result;
-                        }
-                    });
-                }
-            );
-        };
-        if (!oauth2Provider.signedIn) {
-            var modalInstance = oauth2Provider.showLoginModal();
-            modalInstance.result.then(retrieveProfileCallback);
-        } else {
-            retrieveProfileCallback();
-        }
-    };
+
     
 
     /**
@@ -899,9 +920,10 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
 });
 
 conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routeParams, $cookies){
-    var jo= $cookies.get('myFavorite');
+    /*var jo= $cookies.get('myFavorite');
     $log.info(jo);
     $log.info("hello world");
+    */
     //this.qty= function () {
 
     /*
