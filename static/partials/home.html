@@ -60,7 +60,7 @@
 							<td><input ng-model="registration.lastName" name="lastName" ng-required="true"placeholder="last name"><p ng-show="emailRegs.lastName.$invalid &&emailRegs.lastName.$touched">Last Name Required</p></td>
 						</tr>
 						<tr>
-							<td><input type="email" name="email" ng-model="registration.email" ng-required="true" ng-blur="isRegistered()" placeholder="email" required>
+							<td><input type="email" name="email" ng-model="registration.email" ng-required="true" ng-blur="isRegisteredEmail()" placeholder="email" required>
 								<p ng-show="emailRegs.email.$invalid && emailRegs.email.$touched">Invalid Email. Ex: johndoe@gmail.com</p>
 								<p ng-show="regTruthVal">You already used this email to register. Either log-in with the 3rd party associated with the email or login manually with the email sign-up credentials above.</p>
 							</td>

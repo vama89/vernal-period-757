@@ -144,6 +144,7 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
                 $scope.$apply(function () {
                     if (resp.email) {
                         oauth2Provider.signedIn = true;
+                        $log.info(oauth2Provider.signedIn);
                         $scope.alertStatus = 'success';
                         $scope.rootMessages = 'Logged in with ' + resp.email;
                         //My addition to get to the dashboard and load items properly
@@ -170,6 +171,10 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
                                                     $scope.profile.displayName = resp.result.displayName;
                                                     $scope.initialProfile = resp.result;
                                                     $log.info("high");
+
+                                                    //check to see if already registered.
+                                                    //if already registered then set to false....indicator that already logged in
+
                                                     deferred.resolve();
                                                 }
                                             });
@@ -190,9 +195,14 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
                             return deferred.promise; 
                         }
 
-                        
-
                         first().then(function () {
+                            /*I don't know why it is doing this. The previous executions have oauth2Prov as true
+                            but by the time it finishes then executes here....it turns it false....don't know why
+                            Quick patch is just switching it back on to true, but need to fix this bug.
+                            I think for some reason it goes back to initSignInButton because of the way it gets the oauthinfo
+                            then reloads the page back on our app....eventually fix this
+                            */
+                            oauth2Provider.signedIn = true;
                             $location.path('/myDashboard').replace;
                         });
                         
@@ -216,10 +226,27 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
                 jQuery('#signInButton button').attr('disabled', 'true').css('cursor', 'default');
                 if (gapi.auth.getToken() && gapi.auth.getToken().access_token) {
                     $scope.$apply(function () {
-                        oauth2Provider.signedIn = true;
+                        //Commented out in order fix the login order
+                        //oauth2Provider.signedIn = true;
 
-                        //Then check if they are registered.
-                            //If this passes then return true.
+                        gapi.client.conference.isRegisteredGoogle().
+                            execute(function(resp){
+                                $scope.$apply(function() {
+                                    if (resp.error){
+                                        $log.error('There was an Error');
+                                    }
+                                    else {
+                                        $log.info("Successful");
+                                        if(resp.boolVal){
+                                            oauth2Provider.signedIn = true;
+
+                                        } else {
+                                            oauth2Provider.signedIn = false;
+                                        }
+                                    }
+                                });
+                            });
+
                     });
                 }
             },
@@ -320,8 +347,8 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
     //This code sorta kinda work to account for checking not only are they Google logged in but if they are 
     //registered as well. Use this as inspiration to fix this problem later
     
-    $scope.isRegistered = function () {
-        gapi.client.conference.isRegistered($scope.registration).
+    $scope.isRegisteredEmail = function () {
+        gapi.client.conference.isRegisteredEmail($scope.registration).
             execute(function(resp){
                 $scope.$apply(function() {
                     if (resp.error){
@@ -335,6 +362,23 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
             });
 
     };
+
+    $scope.isRegisteredGoogle = function () {
+        gapi.client.conference.isRegisteredGoogle().
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error');
+                    }
+                    else {
+                        $log.info("Success");
+                        $scope.regTruthVal = resp.boolVal;
+                    }
+                });
+            });
+
+    };
+
 
     /*
     $scope.myAuthentication = function() {
@@ -482,6 +526,7 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $r
             };
             
             if (!oauth2Provider.signedIn) {
+                $log.info("hwehrwe");
                 var modalInstance = oauth2Provider.showLoginModal();
                 modalInstance.result.then(retrieveProfileCallback);
             } else {

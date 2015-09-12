@@ -211,12 +211,30 @@ class ConferenceApi(remote.Service):
         return message_types.VoidMessage()
 
     @endpoints.method(EmailRegFormCheck, BooleanMessage,
-            path='isRegistered', http_method='GET', name='isRegistered')
-    def isRegistered(self, request):
+            path='isRegisteredEmail', http_method='GET', name='isRegisteredEmail')
+    def isRegisteredEmail(self, request):
         
         data = {field.name: getattr(request, field.name) for field in request.all_fields()}
         p_key = ndb.Key(Profile, data['email'])
         profile = p_key.get()
+
+        if profile:
+            boolVal = True
+        else:
+            boolVal = False
+        
+        return BooleanMessage(boolVal = boolVal)
+
+    @endpoints.method(message_types.VoidMessage, BooleanMessage,
+            path='isRegisteredGoogle', http_method='GET', name='isRegisteredGoogle')
+    def isRegisteredGoogle(self, request):
+        
+        user = endpoints.get_current_user()
+        user_id = getUserId(user)
+        p_key = ndb.Key(Profile, user_id)
+        profile = p_key.get()
+
+        print profile
 
         if profile:
             boolVal = True
