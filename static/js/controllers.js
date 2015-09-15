@@ -115,7 +115,7 @@ conferenceApp.controllers.controller('MyProfileCtrl',
  * such as user authentications.
  *
  */
-conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $log, $q, oauth2Provider) {
+conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $log, $q, $cookies, oauth2Provider) {
     /**
      * Returns if the viewLocation is the currently viewed page.
      *
@@ -319,7 +319,10 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
                     }
                     else {
                         $log.info("Success!");
-                        $location.path('myDashboard');
+                        //Set the cookies....then switch the page
+                        $cookies.put('user_id',$scope.registration.email);
+                        oauth2Provider.signedIn = true;
+                        $location.path('/myDashboard').replace;
                     }
                 });
             });
@@ -341,6 +344,9 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
 
     $scope.emailLogin = function () {
         $scope.login = $scope.login || {};
+
+        //make api call to see if registered and password is correct
+        //send back true if yes then direct to the dashboard
 
     };
 
@@ -467,7 +473,7 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
                     }
                     else {
                         $log.info("Success!");
-                        $location.path('myDashboard');
+                        $location.path('/myDashboard').replace;
                     }
                 });
             });
@@ -514,7 +520,7 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
 
 });
 
-conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $routeParams, oauth2Provider){
+conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $routeParams,$cookies, oauth2Provider){
     $scope.trigger = false;
 
     $scope.init = function () {
@@ -525,13 +531,26 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $r
             $scope.done();
             };
             
-            if (!oauth2Provider.signedIn) {
-                $log.info("hwehrwe");
-                var modalInstance = oauth2Provider.showLoginModal();
-                modalInstance.result.then(retrieveProfileCallback);
-            } else {
-                retrieveProfileCallback();
-            }
+        var jo = $cookies.get('user_id');
+
+        var retrieveProfileCallbackEmail = function () {
+            $scope.trigger = true;
+            $scope.invitedEmail();
+            $scope.votedWaitingEmail();
+            $scope.doneEmail();
+        }
+
+
+        if (jo) {
+            retrieveProfileCallbackEmail();
+        }
+        else if (!oauth2Provider.signedIn) {
+            var modalInstance = oauth2Provider.showLoginModal();
+            modalInstance.result.then(retrieveProfileCallback);
+        } 
+         else {
+            retrieveProfileCallback();
+        }
     };
 
     $scope.invited = function () {
@@ -557,6 +576,10 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $r
                     }
                 });
             });
+
+    };
+
+    $scope.invitedEmail = function () {
 
     };
 
@@ -586,6 +609,10 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $r
             });
     };
 
+    $scope.votedWaitingEmail = function () {
+
+    };
+
     $scope.done = function () {
         /*
         if he was invited return Events
@@ -611,6 +638,10 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $r
                     }
                 });
             });
+    };
+
+    $scope.doneEmail = function () {
+
     };
 
 });
@@ -965,10 +996,33 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
 });
 
 conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routeParams, $cookies){
+    //Google+ API
+    $scope.test = function () {
+        gapi.client.load('plus','v1', function(){
+                 var request = gapi.client.plus.people.list({
+                   'userId': 'me',
+                   'collection': 'visible'
+                 });
+                 request.execute(function(resp) {
+                   console.log('Num people visible:' + resp.totalItems);
+                 });
+                });
+    };
+
     /*var jo= $cookies.get('myFavorite');
     $log.info(jo);
-    $log.info("hello world");
+    var jo= $cookies.put('myFavorite', 'oatmeal');
     */
+    
+    /*
+    var jo= $cookies.get('myFavorite');
+    if (jo) {
+        console.log("true");
+    } else {
+        console.log("false");
+    }
+    */
+
     //this.qty= function () {
 
     /*
