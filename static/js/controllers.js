@@ -239,6 +239,7 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
                                         $log.info("Successful");
                                         if(resp.boolVal){
                                             oauth2Provider.signedIn = true;
+                                            $location.path('/myDashboard').replace;
 
                                         } else {
                                             oauth2Provider.signedIn = false;

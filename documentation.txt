@@ -1,0 +1,12 @@
+Things to Note as I forget when I move on to other builds
+
+1.) When you invite somebody not in the system yet.
+This is applicable to when you are inviting from the create page.
+
+I set a confirmation boolean. False if you haven't registered. True if you have.
+Oh this was to correctly display your profile when showing up-to-date results.
+
+When you invite somebody not in the system yet, you create a profile for that email.
+And it waits until it is confirmed.
+
+2.) To make the manual image upload work. I have the blobstore link. Then I link to that source as an image tag.
