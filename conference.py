@@ -277,19 +277,19 @@ class ConferenceApi(remote.Service):
         data['dateEventCreated'] = datetime.utcnow()
 
         #Handle Dates
-        data['date1'] = datetime.strptime(data['date1'], "%Y-%m-%d").date()
-        data['date2'] = datetime.strptime(data['date2'], "%Y-%m-%d").date()
-        data['date3'] = datetime.strptime(data['date3'], "%Y-%m-%d").date()
+        data['date1'] = datetime.strptime(data['date1'][:10], "%Y-%m-%d").date()
+        data['date2'] = datetime.strptime(data['date2'][:10], "%Y-%m-%d").date()
+        data['date3'] = datetime.strptime(data['date3'][:10], "%Y-%m-%d").date()
 
         #Handle Times
-        data['time1'] = datetime.strptime(data['time1'], "%H:%M").time()
-        data['time2'] = datetime.strptime(data['time2'], "%H:%M").time()
-        data['time3'] = datetime.strptime(data['time3'], "%H:%M").time()
+        data['time1'] = datetime.strptime(data['time1'][11:15], "%H:%M").time()
+        data['time2'] = datetime.strptime(data['time2'][11:15], "%H:%M").time()
+        data['time3'] = datetime.strptime(data['time3'][11:15], "%H:%M").time()
 
         #Handle deadlineDate
-        data['deadlineDate'] = datetime.strptime(data['deadlineDate'], "%Y-%m-%d").date()
+        data['deadlineDate'] = datetime.strptime(data['deadlineDate'][:10], "%Y-%m-%d").date()
         #Handle deadlineTime
-        data['deadlineTime'] = datetime.strptime(data['deadlineTime'], "%H:%M").time()
+        data['deadlineTime'] = datetime.strptime(data['deadlineTime'][11:15], "%H:%M").time()
 
         #FriendListHandling
         friendIDList=[]
