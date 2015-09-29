@@ -20,6 +20,7 @@ from conference import ConferenceApi
 #Blobstore
 from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
+import urllib
 
 class SetAnnouncementHandler(webapp2.RequestHandler):
     def get(self):
@@ -58,11 +59,10 @@ class MainHandler(webapp2.RequestHandler):
     upload_url = blobstore.create_upload_url('/upload')
     print upload_url
     self.response.out.write('<html><body>')
-    self.response.out.write('<form action="%s" method="POST" enctype="multipart/form-data">') #% upload_url)
+    self.response.out.write('<form action="%s" method="POST" enctype="multipart/form-data">' % upload_url)
     self.response.out.write("""Upload File: <input type="file" name="file"><br> <input type="submit"
         name="submit" value="Submit"> </form></body></html>""")
     #self.response.out.write('<a href="#/hangout/create">Testing</a>')
-
 
 app = webapp2.WSGIApplication([
     ('/crons/set_announcement', SetAnnouncementHandler),

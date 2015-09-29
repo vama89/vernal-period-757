@@ -13,16 +13,19 @@
 			<small>Or Sign-In with <a ng-click="emailSignInClick()">Email</a></small>
 			</p>
 				<div ng-show="emailSignIn()">
-					<form>
+					<form name="emailLogin" novalidate>
 						<table class="pull-right">
 						<tr>
-							<td><input ng-model="login.email" placeholder="email"></td>
+							<td><input type="email" name="email" ng-model="login.email" ng-required="true" ng-blur="isRegisteredEmailLogin()" placeholder="email" required>
+								<p ng-show="emailLogin.email.$invalid && emailLogin.email.$touched">Invalid Email. Ex: johndoe@gmail.com</p>
+								<p ng-show="regTruthValLogin">Please Register first! Sign-up below!</p>
+							</td>
 						</tr>
 						<tr>
-							<td><input ng-model="login.password" placeholder="password"></td>
+							<td><input type="password" name="password" ng-model="login.password" ng-required="true" placeholder="password"><p ng-show="emailLogin.password.$invalid && emailLogin.password.$touched">Password Required</p></td>
 						</tr>
 						<tr>
-							<td><button ng-click="emailLogin()">Submit</button></td>
+							<td><button ng-click="emailLogin()" ng-disabled="emailLogin.$invalid && submitConfirm">Submit</button></td>
 						</tr>
 						</table>
 					</form>
@@ -66,7 +69,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td><input type="password" name="password" ng-model="registration.password" ng-required="true" placeholder="password"><p ng-show="emailRegs.password.$invalid && emailRegs.password.$touched">Password Required</p></td></td>
+							<td><input type="password" name="password" ng-model="registration.password" ng-required="true" placeholder="password"><p ng-show="emailRegs.password.$invalid && emailRegs.password.$touched">Password Required</p></td>
 						</tr>
 						<tr>
 							<td><input type="password" name="passwordConfirm" ng-model="registration.passwordConfirm" ng-blur="passwordConfirmation()" ng-required="true" placeholder="Confirm Password">

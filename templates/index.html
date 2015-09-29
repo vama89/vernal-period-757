@@ -27,6 +27,8 @@
          * Initializes the Google API JavaScript client. Bootstrap the angular module after loading the Google libraries
          * so that Google JavaScript library ready in the angular modules.
          */
+         
+         // This is the asynchonous load that works locally. My improvement
         function init() {
             gapi.client.load('conference', 'v1', null, '//' + window.location.host + '/_ah/api').then(function () {
                     gapi.client.load('oauth2', 'v2', function () {
@@ -35,6 +37,14 @@
 
                 });
         };
+        
+        //This is the synchronous load that bugs out with the conference backend when using ng-init
+        /*function init() {
+            gapi.client.load('conference', 'v1', null, '//' + window.location.host + '/_ah/api');
+            gapi.client.load('oauth2', 'v2', function () {
+                angular.bootstrap(document, ['conferenceApp']);
+            });
+        };*/
     </script>
     <script src="//apis.google.com/js/client:plusone.js?onload=init"></script>
     <style type="text/css">

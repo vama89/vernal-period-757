@@ -212,9 +212,6 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
         });
     };
 
-
-    
-
     /**
      * Render the signInButton and restore the credential if it's stored in the cookie.
      * (Just calling this to restore the credential from the stored cookie. So hiding the signInButton immediately
@@ -364,6 +361,22 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
                     else {
                         $log.info("Success");
                         $scope.regTruthVal = resp.boolVal;
+                    }
+                });
+            });
+
+    };
+
+    $scope.isRegisteredEmailLogin = function () {
+        gapi.client.conference.isRegisteredEmail($scope.login).
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error');
+                    }
+                    else {
+                        $log.info("Success");
+                        $scope.regTruthValLogin = !resp.boolVal;
                     }
                 });
             });
@@ -548,7 +561,7 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $r
             var modalInstance = oauth2Provider.showLoginModal();
             modalInstance.result.then(retrieveProfileCallback);
         } 
-         else {
+        else {
             retrieveProfileCallback();
         }
     };
@@ -1007,6 +1020,37 @@ conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routePara
                    console.log('Num people visible:' + resp.totalItems);
                  });
                 });
+    };
+
+    $scope.fileUpload = $scope.fileUpload || {};
+    $scope.pictures = function () {
+        $log.info($scope.fileUpload.picture);
+    };
+
+    $scope.votedWaiting = function () {
+        //Check if he voted and is waiting on the event
+        /*
+        if he was VotedandisWaiting return Events
+            Under true, showcase the resp of the gapi
+        else return false
+        */
+
+        gapi.client.conference.votedWaiting().
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error');
+                    }
+                    else {
+                        $log.info("Success");
+                        $scope.hangouts = []
+                        $scope.hangout=[]
+                        angular.forEach(resp.items, function(hangout){
+                            $scope.hangouts.push(hangout);
+                        });
+                    }
+                });
+            });
     };
 
     /*var jo= $cookies.get('myFavorite');

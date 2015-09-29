@@ -35,3 +35,17 @@
 <!--<input ng-blur="testy()" placeholder="Testy">-->
 
 <button ng-click="test()">Test Google+</button>
+
+<!-- This is if I try to implement it in angular though I don't think angular can grab images yet.
+<form enctype="multipart/form-data">
+	<p>Upload File:</p> <input type="file" ng-model="fileUpload.picture"><br> 
+	<button ng-click="pictures()">submit</button> 
+</form>
+-->
+<!-- This is the form which would let the app grab the data via webapp2-->
+<form action="/main" method="GET" enctype="multipart/form-data">
+	<p>Upload File:</p> <input type="file" name="file"><br> 
+	<input type="submit" name="submit" value="Submit"> 
+</form>
+
+<button ng-click="votedWaiting()">Testing Dashboard Waiting</button>
