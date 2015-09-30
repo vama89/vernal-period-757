@@ -19,13 +19,14 @@
 							<td><input type="email" name="email" ng-model="login.email" ng-required="true" ng-blur="isRegisteredEmailLogin()" placeholder="email" required>
 								<p ng-show="emailLogin.email.$invalid && emailLogin.email.$touched">Invalid Email. Ex: johndoe@gmail.com</p>
 								<p ng-show="regTruthValLogin">Please Register first! Sign-up below!</p>
+								<p ng-show="regTruthValLoginGoogSigned">Seems you already signed-in with Google. SignIn w/ Google below.</p>
 							</td>
 						</tr>
 						<tr>
 							<td><input type="password" name="password" ng-model="login.password" ng-required="true" placeholder="password"><p ng-show="emailLogin.password.$invalid && emailLogin.password.$touched">Password Required</p></td>
 						</tr>
 						<tr>
-							<td><button ng-click="emailLogin()" ng-disabled="emailLogin.$invalid && submitConfirm">Submit</button></td>
+							<td><button ng-click="emailLoginFunc()" ng-disabled="emailLogin.$invalid && submitConfirm">Submit</button></td>
 						</tr>
 						</table>
 					</form>

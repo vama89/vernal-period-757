@@ -52,6 +52,10 @@ class EmailRegForm(messages.Message):
     email = messages.StringField(3)
     password = messages.StringField(4)
 
+class EmailLoginForm(messages.Message):
+    email = messages.StringField(1)
+    password = messages.StringField(2)
+
 class EmailRegFormCheck(messages.Message):
     email = messages.StringField(1)
 

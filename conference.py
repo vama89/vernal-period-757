@@ -34,6 +34,7 @@ from models import VoteForm
 from models import ProfileForms
 from models import EmailRegForm
 from models import EmailRegFormCheck
+from models import EmailLoginForm
 from models import BooleanMessage
 
 from settings import WEB_CLIENT_ID
@@ -180,6 +181,39 @@ class ConferenceApi(remote.Service):
     @endpoints.method(EmailRegForm, message_types.VoidMessage,
             path='emailRegs', http_method='POST', name='emailRegs')
     def emailRegs(self, request):
+        """Update & return user profile."""
+        data = {field.name: getattr(request, field.name) for field in request.all_fields()}
+        
+        #find if the email is already a profile in the system
+        profileObj = ndb.Key(Profile, data['email']).get()
+        if profileObj:
+            pass
+            #return something indicating entry was a failure. Write something on the client
+        else:
+            #create the profile with the information
+            p_key = ndb.Key(Profile, data['email'])
+
+            profile = Profile(
+                key = p_key,
+                displayName = data['email'],
+                mainEmail= data['email'],
+                password = data['password'],
+                firstName= data['firstName'],
+                lastName= data['lastName'],
+                eventsInvited=[],
+                eventsWaitingOn=[],
+                eventsVoteDone=[],
+                eventsPassedDate=[],
+                eventsRegrets=[],
+                confirmation =True
+            )
+            profile.put()
+
+        return message_types.VoidMessage()
+
+    @endpoints.method(EmailLoginForm, message_types.VoidMessage,
+            path='emailLogin', http_method='GET', name='emailLogin')
+    def emailLogin(self, request):
         """Update & return user profile."""
         data = {field.name: getattr(request, field.name) for field in request.all_fields()}
         

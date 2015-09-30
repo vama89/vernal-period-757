@@ -340,11 +340,12 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
         };
     };
 
-    $scope.emailLogin = function () {
+    $scope.emailLoginFunc = function () {
         $scope.login = $scope.login || {};
 
         //make api call to see if registered and password is correct
         //send back true if yes then direct to the dashboard
+
 
     };
 
@@ -377,6 +378,7 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
                     else {
                         $log.info("Success");
                         $scope.regTruthValLogin = !resp.boolVal;
+                        $scope.regTruthValLoginGoogSigned = resp.boolVal;
                     }
                 });
             });
