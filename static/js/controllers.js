@@ -1034,6 +1034,26 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
             });
 
         }; 
+
+        $scope.sendMessage = function () {
+
+            gapi.client.conference.sendMessage($scope.message).
+                execute(function(resp){
+                    $scope.$apply(function() {
+                        if (resp.error){
+                            $log.error('There was an Error');
+                        }
+                        else {
+                            $log.info("Success");
+                        }
+                    });
+            });
+
+            //After you send to the servers. Clear the message scope. Possible use of promises here
+            //To correctly
+
+            $scope.message='';
+        };
 });
 
 conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routeParams, $cookies){
