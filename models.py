@@ -59,6 +59,9 @@ class EmailLoginForm(messages.Message):
 class EmailRegFormCheck(messages.Message):
     email = messages.StringField(1)
 
+class GroupMessageForm(messages.Message):
+    groupMessage = messages.StringField(1)
+
 #My Additions The Hangout Code
 class Hangout(ndb.Model):
     eventName = ndb.StringProperty()
@@ -93,6 +96,7 @@ class Hangout(ndb.Model):
     votingCompleted=ndb.BooleanProperty()
     groupVoteRanks = ndb.JsonProperty()
     notInSystem = ndb.JsonProperty()
+    groupMessage = ndb.TextProperty()
 
 class HangoutForm(messages.Message):
     eventName = messages.StringField(1)

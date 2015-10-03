@@ -36,6 +36,7 @@ from models import EmailRegForm
 from models import EmailRegFormCheck
 from models import EmailLoginForm
 from models import BooleanMessage
+from models import GroupMessageForm
 
 from settings import WEB_CLIENT_ID
 from settings import ANDROID_CLIENT_ID
@@ -211,7 +212,7 @@ class ConferenceApi(remote.Service):
 
         return message_types.VoidMessage()
 
-    @endpoints.method(EmailLoginForm, message_types.VoidMessage,
+    @endpoints.method(EmailLoginForm, BooleanMessage,
             path='emailLogin', http_method='GET', name='emailLogin')
     def emailLogin(self, request):
         """Update & return user profile."""
@@ -220,29 +221,14 @@ class ConferenceApi(remote.Service):
         #find if the email is already a profile in the system
         profileObj = ndb.Key(Profile, data['email']).get()
         if profileObj:
-            pass
-            #return something indicating entry was a failure. Write something on the client
+            #if not only the profile is true are the passwords tru
+            if profileObj.password == data['password']:
+                boolVal = True
+            else:
+                boolVal = False
         else:
-            #create the profile with the information
-            p_key = ndb.Key(Profile, data['email'])
-
-            profile = Profile(
-                key = p_key,
-                displayName = data['email'],
-                mainEmail= data['email'],
-                password = data['password'],
-                firstName= data['firstName'],
-                lastName= data['lastName'],
-                eventsInvited=[],
-                eventsWaitingOn=[],
-                eventsVoteDone=[],
-                eventsPassedDate=[],
-                eventsRegrets=[],
-                confirmation =True
-            )
-            profile.put()
-
-        return message_types.VoidMessage()
+            boolVal = False
+        return BooleanMessage(boolVal = boolVal)
 
     @endpoints.method(EmailRegFormCheck, BooleanMessage,
             path='isRegisteredEmail', http_method='GET', name='isRegisteredEmail')
@@ -757,6 +743,14 @@ class ConferenceApi(remote.Service):
         """Return user profile."""
         #getUserInformationHere
         return BooleanMessage(data=True)
+
+    @endpoints.method(GroupMessageForm, GroupMessageForm,
+            path='sendMessage', http_method='POST', name='sendMessage')
+    def sendMessage(self, request):
+        """Update & return user profile."""
+        data = {field.name: getattr(request, field.name) for field in request.all_fields()}
+
+        return GroupMessageForm()
 
 api = endpoints.api_server([ConferenceApi]) # register API
 

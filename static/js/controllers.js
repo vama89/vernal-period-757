@@ -345,7 +345,34 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
 
         //make api call to see if registered and password is correct
         //send back true if yes then direct to the dashboard
+        gapi.client.conference.emailLogin($scope.login).
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error');
+                    }
+                    else {
+                        $log.info("Success");
+                        /*
+                        if the return value is true then we are good and go to the dash
+                        else{
+                            trigger an ng-show to say on the home page that credentials are wrong.
+                        }
+                        */
+                        if (resp.boolVal){
+                            $cookies.put('user_id',$scope.login.email);
+                            oauth2Provider.signedIn = true;
+                            $location.path('/myDashboard').replace;
 
+                        } else {
+                            oauth2Provider.signedIn = false;
+                            //Trigger the ng-show to say that there is wrong credentials
+                            $scope.wrongCredentials = true;
+                        }
+                        
+                    }
+                });
+            });
 
     };
 
@@ -865,8 +892,7 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                 });
             });
     };
-
-
+        
         $scope.getResultsFinal = function () {
         gapi.client.conference.getResultsFinal({
             webSafeKey: $routeParams.webSafeKey
