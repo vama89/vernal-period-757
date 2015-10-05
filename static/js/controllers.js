@@ -116,6 +116,9 @@ conferenceApp.controllers.controller('MyProfileCtrl',
  *
  */
 conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $log, $q, $cookies, oauth2Provider) {
+    //Variable to just easily access the username in the frontend of the application
+    $scope.user = $scope.user || {};
+    
     /**
      * Returns if the viewLocation is the currently viewed page.
      *
@@ -169,6 +172,7 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
                                                 } else {
                                                     // Succeeded to get the user profile.
                                                     $scope.profile.displayName = resp.result.displayName;
+                                                    $scope.user = resp.result.displayName;
                                                     $scope.initialProfile = resp.result;
                                                     $log.info("high");
 
@@ -235,6 +239,10 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
                                     else {
                                         $log.info("Successful");
                                         if(resp.boolVal){
+                                            //Get the user name of the user here....create the promises
+                                            //so emulate it like the sign-in above
+                                            //first run isRegistered and get the dispalyname.
+                                            //Then when that is done, turn it to true and switch to dash
                                             oauth2Provider.signedIn = true;
                                             $location.path('/myDashboard').replace;
 
@@ -1036,8 +1044,11 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
         }; 
 
         $scope.sendMessage = function () {
+            $scope.groupMessage = $scope.groupMessage || {};
+            $scope.groupMessage.nameOfMessenger = $scope.user;
+            $scope.groupMessage.webSafeKey = $routeParams.webSafeKey;
 
-            gapi.client.conference.sendMessage($scope.message).
+            gapi.client.conference.sendMessage($scope.groupMessage).
                 execute(function(resp){
                     $scope.$apply(function() {
                         if (resp.error){
@@ -1045,15 +1056,25 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                         }
                         else {
                             $log.info("Success");
+
+                            //Looks like you need to make your own var variable with a JSON parse
+                            //You can't seem to JSONparse and iterate at the same time.
+                            var groupMessage = JSON.parse(resp.groupMessage);
+                            
+                            $scope.discussionMessages = []
+                            $scope.discussionMessage=[]
+                            angular.forEach(groupMessage, function(discussionMessage){
+                                $scope.discussionMessages.push(discussionMessage);
+                            });
+                            
+
+                            $scope.groupMessage.groupMessage='';
                         }
                     });
             });
 
-            //After you send to the servers. Clear the message scope. Possible use of promises here
-            //To correctly
-
-            $scope.message='';
         };
+
 });
 
 conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routeParams, $cookies){

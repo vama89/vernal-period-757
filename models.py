@@ -61,6 +61,8 @@ class EmailRegFormCheck(messages.Message):
 
 class GroupMessageForm(messages.Message):
     groupMessage = messages.StringField(1)
+    nameOfMessenger = messages.StringField(2)
+    webSafeKey = messages.StringField(3)
 
 #My Additions The Hangout Code
 class Hangout(ndb.Model):
