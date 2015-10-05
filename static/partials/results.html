@@ -53,13 +53,16 @@
 	</tr>	
 	</table>
 
-	<h3>Discussion</h3>
+	<h3>Discussion:</h3>
 	<!--Make sure to align alternating left and right via css somehow-->
 	<table>
-		<tr>
-			<td></td>
+		<tr ng-repeat="discussionMessage in discussionMessages">
+			<td>{{discussionMessage.name}}</td>
+			<td>{{discussionMessage.message}}</td>
 		</tr>
 	</table>
-	<textarea></textarea>
-	<button>Submit</button>
+	
+	
+	<textarea ng-model="groupMessage.groupMessage"></textarea>
+	<button ng-click="sendMessage()">Submit</button>
 </div>

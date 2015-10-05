@@ -755,33 +755,20 @@ class ConferenceApi(remote.Service):
         #check if there is a group message already, if not, initialize the DB
         if hangout.groupMessage == None:
             #place the data into the database
-            groupMessage = {}
-            groupMessage[0]= {'name': data['nameOfMessenger'], 'date':str(datetime.utcnow()), 'message': data['groupMessage']}
+            groupMessage = []
+            groupMessage.append({'name': data['nameOfMessenger'], 'date':str(datetime.utcnow()), 'message': data['groupMessage']})
             groupMessage = json.dumps(groupMessage)
             hangout.groupMessage = groupMessage
             hangout.put()
         else:
             #if it is already initialized, then just grab and update the data
             groupMessage = json.loads(hangout.groupMessage)
-            #update the counter by 1
-            currentCounter= int(max(groupMessage.keys()))
-            #then add that counter as a key
-            newCounter = currentCounter+1
-            #then add add the message associated with the key
-            groupMessage[newCounter] = {'name': data['nameOfMessenger'], 'date':str(datetime.utcnow()), 'message': data['groupMessage']}
+            groupMessage.append({'name': data['nameOfMessenger'], 'date':str(datetime.utcnow()), 'message': data['groupMessage']})
             groupMessage = json.dumps(groupMessage)
             hangout.groupMessage = groupMessage
             hangout.put()
 
-        groupMessage = json.loads(groupMessage)
-        messageList=[]
-        #sort the data in the most recent order
-        for key in sorted(groupMessage.keys()):
-            messageList.append(groupMessage[key]) 
-        #return the sorted message
-        messageList = json.dumps(messageList)
-
-        return GroupMessageForm(groupMessage=messageList)
+        return GroupMessageForm(groupMessage=groupMessage)
 
 api = endpoints.api_server([ConferenceApi]) # register API
 

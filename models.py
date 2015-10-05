@@ -131,6 +131,7 @@ class HangoutForm(messages.Message):
     deadlineTime = messages.StringField(24)
     webSafeKey = messages.StringField(25)
     notInSystem = messages.StringField(26)
+    groupMessage = messages.StringField(27)
 
 class HangoutForms(messages.Message):
     items = messages.MessageField(HangoutForm, 1, repeated=True)

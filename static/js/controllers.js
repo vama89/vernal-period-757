@@ -747,6 +747,7 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
         
         $scope.bardata = $scope.bardata || {};
         $scope.names = $scope.names || {};
+        $scope.groupMessage = $scope.groupMessage || {};
 
         $scope.d3j = function () {
             var bardata = $scope.bardata;
@@ -896,6 +897,16 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
 
                         //post process items (correct Date Structure)
                         //post process itesm (correct Time (am or pm))
+
+                        //Show the discussion
+                        var groupMessage = JSON.parse(resp.items[0]['groupMessage']);
+                            
+                        $scope.discussionMessages = []
+                        $scope.discussionMessage=[]
+                        angular.forEach(groupMessage, function(discussionMessage){
+                            $scope.discussionMessages.push(discussionMessage);
+                        });
+
                     }
                 });
             });
@@ -1037,6 +1048,15 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                         angular.forEach(notInSystem, function(person){
                             $scope.notInSystemDisplay.push(person);
                         });
+
+                        //Show the discussion
+                        var groupMessage = JSON.parse(resp.items[0]['groupMessage']);
+                            
+                        $scope.discussionMessages = []
+                        $scope.discussionMessage=[]
+                        angular.forEach(groupMessage, function(discussionMessage){
+                            $scope.discussionMessages.push(discussionMessage);
+                        });
                     }
                 });
             });
@@ -1044,7 +1064,7 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
         }; 
 
         $scope.sendMessage = function () {
-            $scope.groupMessage = $scope.groupMessage || {};
+            
             $scope.groupMessage.nameOfMessenger = $scope.user;
             $scope.groupMessage.webSafeKey = $routeParams.webSafeKey;
 
