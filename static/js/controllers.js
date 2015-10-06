@@ -488,7 +488,7 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
     $scope.checked = $scope.checked || {};
     $scope.notEmail;
     $scope.notInSystemFriends=[];
-
+    
     $scope.createHangout = function (hangoutForm) {
         //Grab all the individual friends and put them into a list
         //Seems I need these entities as strings in order for it to work with the python model
