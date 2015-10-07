@@ -582,6 +582,8 @@ class ConferenceApi(remote.Service):
         p_key = ndb.Key(Profile, user_id)
         userData=p_key.get()
         
+        """
+        #this is what was working before I updated with deadline Code
         #handle the string processing
         eventsWaitingOn = userData.eventsWaitingOn
         eventList=[]
@@ -590,6 +592,102 @@ class ConferenceApi(remote.Service):
             event = ndb.Key(Hangout, eventId).get()
 
             eventList.append(event) 
+        """
+
+        #This is the new version to account for deadlines. Currently working on this.
+        #get the current date and time:
+        todaysDate = datetime.utcnow().date()
+        todaysTime = datetime.utcnow().time()
+        
+        #handle the string processing
+        eventsWaitingOn = userData.eventsWaitingOn
+        eventList=[]
+        for eventId in eventsWaitingOn:
+            #get the event from ndb
+            event = ndb.Key(Hangout, eventId).get()
+
+            deadlineDate = event.deadlineDate
+            deadlineTime = event.deadlineTime
+
+            friendList = json.loads(event.friendList)
+            friends = friendList.keys()
+
+            if deadlineDate < todaysDate:
+                #take that eventId remove it from the list of eventsInvited
+                for friend in friends:
+                    
+                    person = ndb.Key(Profile, friend).get()
+                    eventsInvited = person.eventsInvited 
+
+                    #removes the event passed the deadline from the person's invited Queue
+                    if eventId in eventsInvited:
+                        eventsInvited.remove(eventId)
+                        person.eventsInvited = eventsInvited
+
+                        #place in events Vote Done
+                        eventsVoteDone = person.eventsVoteDone
+                        eventsVoteDone.append(eventId)
+                        person.eventsVoteDone = eventsVoteDone
+
+                        person.put()
+                    else:
+                    #removes the event from the Waiting Queue
+                        eventsWaitingOn = person.eventsWaitingOn
+                        eventsWaitingOn.remove(eventId)
+                        person.eventsWaitingOn = eventsWaitingOn
+
+                        #place in events Vote Done
+                        eventsVoteDone = person.eventsVoteDone
+                        eventsVoteDone.append(eventId)
+                        person.eventsVoteDone = eventsVoteDone
+
+                        person.put()
+
+                #tally-up the votes of those that voted
+                groupVoteRanks = json.loads(event.groupVoteRanks)
+
+                    #tally-up the votes
+                #run the voting algorithm and get the result
+                results = voting.inViteVote(groupVoteRanks)
+                #the results will come in a list the option that gets the least amount of votes is first pick, then second and so on
+                event.finalResults = json.dumps(results)
+
+                #update the counter
+                #hangoutObject.totalCounter = hangoutObject.totalCounter + 1
+                event.votingCompleted = True
+
+                #Here add people's confirmation of whether they can go or not or maybe
+                #based off of the winner check if people's preferences match the result.
+                #if not then adjust their confirmation number accordinginly then parse it in javascript.
+
+                maxOfResults = max(results)
+                optionNumber = results.index(maxOfResults)
+
+                #friendList = json.loads(hangoutObject.friendList)
+                #check people's first preference
+                friends = friendList.keys()
+                for friend in friends:
+                    voteRank = friendList[friend]['voteRank']
+
+                    #do nothing if you find that the person didn't vote at all which is a 0
+                    #any 0 found in the vote rank means that they did not vote
+                    if 0 in voteRank:
+                        pass
+                    else:
+                        minOf = min(friendList[friend]['voteRank'])
+                        firstChoice = voteRank.index(minOf)
+
+                        if firstChoice == optionNumber:
+                            friendList[friend]['confirmation'] = 1
+                        else:
+                            pass
+
+                event.friendList = json.dumps(friendList)
+
+                event.put()
+            else:
+                eventList.append(event)
+
 
         #return request
         return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList])
