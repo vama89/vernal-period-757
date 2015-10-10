@@ -17,6 +17,12 @@ from google.appengine.api import app_identity
 from google.appengine.api import mail
 from conference import ConferenceApi
 
+#To Save in NDB
+from google.appengine.ext import ndb
+from models import Profile
+import endpoints
+from utils import getUserId
+
 #Blobstore
 from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
@@ -46,7 +52,20 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
         upload_files = self.get_uploads('file')  # 'file' is file upload field in the form
         blob_info = upload_files[0]
-        self.redirect('/serve/%s' % blob_info.key())
+        #self.redirect('/serve/%s' % blob_info.key())
+        email = self.request.get("displayName")
+        
+        #I don't know why endpoints won't get called from Mainpy, but it isn't working
+        #user = endpoints.get_current_user()
+        #user_id = getUserId(user)
+        
+        p_key = ndb.Key(Profile, email)
+        profile = p_key.get()
+
+        profile.pictureKey = blob_info.key()
+        profile.put()
+        
+        self.redirect('/#/profile')
 
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self, resource):
@@ -57,12 +76,13 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
 class MainHandler(webapp2.RequestHandler):
   def get(self):
     upload_url = blobstore.create_upload_url('/upload')
-    print upload_url
     self.response.out.write('<html><body>')
     self.response.out.write('<form action="%s" method="POST" enctype="multipart/form-data">' % upload_url)
     self.response.out.write("""Upload File: <input type="file" name="file"><br> <input type="submit"
         name="submit" value="Submit"> </form></body></html>""")
-    #self.response.out.write('<a href="#/hangout/create">Testing</a>')
+    #self.response.out.write('<a href="/#/hangout/create">Testing</a>')
+    #The below works when coming from main. You must put the / before the # = /#/ to route properly
+    #self.redirect('/#/hangout/create')
 
 app = webapp2.WSGIApplication([
     ('/crons/set_announcement', SetAnnouncementHandler),

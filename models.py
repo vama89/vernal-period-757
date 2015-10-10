@@ -22,6 +22,7 @@ import json
 class Profile(ndb.Model):
     """Profile -- User profile object"""
     confirmation = ndb.BooleanProperty()
+    pictureKey = ndb.BlobKeyProperty()
     displayName = ndb.StringProperty()
     mainEmail = ndb.StringProperty()
     password = ndb.StringProperty()
@@ -45,6 +46,9 @@ class ProfileForm(messages.Message):
 
 class ProfileForms(messages.Message):
     items = messages.MessageField(ProfileForm, 1, repeated=True)
+
+class UrlForm(messages.Message):
+    uploadUrl = messages.StringField(1)
 
 class EmailRegForm(messages.Message):
     firstName = messages.StringField(1)

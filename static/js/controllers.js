@@ -104,6 +104,24 @@ conferenceApp.controllers.controller('MyProfileCtrl',
                 });
         };
 
+        $scope.uploadUrl = function () {
+
+            gapi.client.conference.uploadUrl().
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error');
+                    }
+                    else {
+                        $log.info("Success!");
+                        $log.info(resp.uploadUrl)
+                        $scope.url = resp.uploadUrl
+                    }
+                });
+            });
+
+        };
+
     });
 
 /**
@@ -172,9 +190,12 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
                                                 } else {
                                                     // Succeeded to get the user profile.
                                                     $scope.profile.displayName = resp.result.displayName;
-                                                    $scope.user = resp.result.displayName;
                                                     $scope.initialProfile = resp.result;
-                                                    $log.info("high");
+                                                 
+                                                    //These variables used in MyProfileCtrl
+                                                    $scope.user = resp.result.displayName;
+                                                    $scope.userEmail = resp.result.mainEmail;
+                                                    $log.info("retrieved variables in SignIn Function");
 
                                                     //check to see if already registered.
                                                     //if already registered then set to false....indicator that already logged in
@@ -572,6 +593,7 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
 
 conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $routeParams,$cookies, oauth2Provider){
     $scope.trigger = false;
+    var jo = $cookies.get('user_id');
 
     $scope.init = function () {
         var retrieveProfileCallback = function () {
@@ -581,7 +603,7 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $r
             $scope.done();
             };
             
-        var jo = $cookies.get('user_id');
+        
 
         var retrieveProfileCallbackEmail = function () {
             $scope.trigger = true;
@@ -630,6 +652,26 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $r
     };
 
     $scope.invitedEmail = function () {
+        $scope.invitedEmail = $scope.invitedEmail || {};
+
+        $scope.invitedEmail.email = jo;
+        
+        gapi.client.conference.invitedEmail($scope.invitedEmail).
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error');
+                    }
+                    else {
+                        $log.info("Success");
+                        $scope.invitedHangouts = []
+                        $scope.invitedHangout=[]
+                        angular.forEach(resp.items, function(invitedHangout){
+                            $scope.invitedHangouts.push(invitedHangout);
+                        });
+                    }
+                });
+            });
 
     };
 

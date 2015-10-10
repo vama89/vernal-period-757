@@ -12,6 +12,17 @@
     <div class="row">
         <div class="col-md-8">
             <h3>My Profile</h3>
+            <!-- The source must be /serve/BLOBSTOREKEY -->
+            <img src="/img/profilePic.png">
+            <br>
+            <div ng-init="uploadUrl()"></div>
+            <form action={{url}} method="POST" enctype="multipart/form-data">
+            Upload File: <input type="file" name="file">
+            <br>
+            <input name="displayName" ng-model="userEmail"></input>
+            <input type="submit" name="submit" value="Submit"> 
+            </form>
+
             <form name="profileForm" novalidate role="form">
                 <div class="form-group" ng-class="{'has-warning': profile.displayName != initialProfile.displayName}">
                     <label for="displayName">Display Name </label>
