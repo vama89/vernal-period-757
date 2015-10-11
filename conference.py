@@ -38,6 +38,8 @@ from models import EmailLoginForm
 from models import BooleanMessage
 from models import GroupMessageForm
 from models import UrlForm
+from models import GetResultsWaitingEmailForm
+from models import VoteFormEmail
 
 from settings import WEB_CLIENT_ID
 from settings import ANDROID_CLIENT_ID
@@ -583,7 +585,7 @@ class ConferenceApi(remote.Service):
     def invitedEmail(self, request):
         data = {field.name: getattr(request, field.name) for field in request.all_fields()}
         user_id = data['email']
-        
+
         p_key = ndb.Key(Profile, user_id)
         userData=p_key.get()
         """
@@ -711,6 +713,126 @@ class ConferenceApi(remote.Service):
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
         user_id = getUserId(user)
+        p_key = ndb.Key(Profile, user_id)
+        userData=p_key.get()
+        
+        """
+        #this is what was working before I updated with deadline Code
+        #handle the string processing
+        eventsWaitingOn = userData.eventsWaitingOn
+        eventList=[]
+        for eventId in eventsWaitingOn:
+            #get the event from ndb
+            event = ndb.Key(Hangout, eventId).get()
+
+            eventList.append(event) 
+        """
+
+        #This is the new version to account for deadlines. Currently working on this.
+        #get the current date and time:
+        todaysDate = datetime.utcnow().date()
+        todaysTime = datetime.utcnow().time()
+        
+        #handle the string processing
+        eventsWaitingOn = userData.eventsWaitingOn
+        eventList=[]
+        for eventId in eventsWaitingOn:
+            #get the event from ndb
+            event = ndb.Key(Hangout, eventId).get()
+
+            deadlineDate = event.deadlineDate
+            deadlineTime = event.deadlineTime
+
+            friendList = json.loads(event.friendList)
+            friends = friendList.keys()
+
+            if deadlineDate < todaysDate:
+                #take that eventId remove it from the list of eventsInvited
+                for friend in friends:
+                    
+                    person = ndb.Key(Profile, friend).get()
+                    eventsInvited = person.eventsInvited 
+
+                    #removes the event passed the deadline from the person's invited Queue
+                    if eventId in eventsInvited:
+                        eventsInvited.remove(eventId)
+                        person.eventsInvited = eventsInvited
+
+                        #place in events Vote Done
+                        eventsVoteDone = person.eventsVoteDone
+                        eventsVoteDone.append(eventId)
+                        person.eventsVoteDone = eventsVoteDone
+
+                        person.put()
+                    else:
+                    #removes the event from the Waiting Queue
+                        eventsWaitingOn = person.eventsWaitingOn
+                        eventsWaitingOn.remove(eventId)
+                        person.eventsWaitingOn = eventsWaitingOn
+
+                        #place in events Vote Done
+                        eventsVoteDone = person.eventsVoteDone
+                        eventsVoteDone.append(eventId)
+                        person.eventsVoteDone = eventsVoteDone
+
+                        person.put()
+
+                #tally-up the votes of those that voted
+                groupVoteRanks = json.loads(event.groupVoteRanks)
+
+                    #tally-up the votes
+                #run the voting algorithm and get the result
+                results = voting.inViteVote(groupVoteRanks)
+                #the results will come in a list the option that gets the least amount of votes is first pick, then second and so on
+                event.finalResults = json.dumps(results)
+
+                #update the counter
+                #hangoutObject.totalCounter = hangoutObject.totalCounter + 1
+                event.votingCompleted = True
+
+                #Here add people's confirmation of whether they can go or not or maybe
+                #based off of the winner check if people's preferences match the result.
+                #if not then adjust their confirmation number accordinginly then parse it in javascript.
+
+                maxOfResults = max(results)
+                optionNumber = results.index(maxOfResults)
+
+                #friendList = json.loads(hangoutObject.friendList)
+                #check people's first preference
+                friends = friendList.keys()
+                for friend in friends:
+                    voteRank = friendList[friend]['voteRank']
+
+                    #do nothing if you find that the person didn't vote at all which is a 0
+                    #any 0 found in the vote rank means that they did not vote
+                    if 0 in voteRank:
+                        pass
+                    else:
+                        minOf = min(friendList[friend]['voteRank'])
+                        firstChoice = voteRank.index(minOf)
+
+                        if firstChoice == optionNumber:
+                            friendList[friend]['confirmation'] = 1
+                        else:
+                            pass
+
+                event.friendList = json.dumps(friendList)
+
+                event.put()
+            else:
+                eventList.append(event)
+
+
+        #return request
+        return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList])
+
+    @endpoints.method(EmailRegFormCheck, HangoutForms, 
+            path='votedWaitingEmail', 
+            http_method='GET', name='votedWaitingEmail')
+    def votedWaitingEmail(self, request):
+        data = {field.name: getattr(request, field.name) for field in request.all_fields()}
+        user_id = data['email']
+
         p_key = ndb.Key(Profile, user_id)
         userData=p_key.get()
         
@@ -1018,10 +1140,173 @@ class ConferenceApi(remote.Service):
 
         return request
 
+    @endpoints.method(VoteFormEmail, VoteFormEmail, 
+        path='voteEmail', 
+        http_method='POST', name='voteEmail')
+    def voteEmail(self, request):
+        data = {field.name: getattr(request, field.name) for field in request.all_fields()}
+
+        user_id = data['email']
+        p_key = ndb.Key(Profile, user_id)
+        userObject = p_key.get()
+
+        #get the proper hangout object
+        hangoutObject = ndb.Key(urlsafe=data['webSafeKey']).get()
+
+        #input the votes recieved from the form
+        userVotes=[]
+        userVotes.append(int(data['option1']))
+        userVotes.append(int(data['option2']))
+        userVotes.append(int(data['option3']))
+
+        #account for people that cannot attend at all. just null out their votes
+        #check the creator
+
+        #add the users vote to the friend list, in his or her name
+        friendList = json.loads(hangoutObject.friendList)
+        friendList[user_id]['voteRank'] = userVotes
+        hangoutObject.friendList = json.dumps(friendList)
+
+        #add the last user's vote to the hangout object groupVoteRanks
+        groupVoteRanks = json.loads(hangoutObject.groupVoteRanks)
+        for uni in groupVoteRanks:
+            if type(uni) == unicode:
+                listType=[]
+                for p in uni:
+                    for t in p:
+                        if t == '[':
+                            pass    
+                        elif t == ',':
+                            pass
+                        elif t == ']':
+                            pass
+                        #elif t == '':
+                        #    print t
+                        elif t == ' ':
+                            pass
+                        else:
+                            listType.append(int(t))
+                groupVoteRanks.remove(uni)
+                groupVoteRanks.append(listType)
+
+        #should have placed the user who voted in this collection of all the other users' votes
+        groupVoteRanks.append(userVotes)
+        hangoutObject.groupVoteRanks = json.dumps(groupVoteRanks)
+        
+        #if the totalcounter is 1 less than the partyTotal
+        if hangoutObject.totalCounter == (hangoutObject.partyTotal - 1):
+        #pull up people's profiles in the friend's list
+        #delete hangout key from the waiting list
+        #add it to the events done list
+            friendList=json.loads(hangoutObject.friendList)
+            friendListKeys=friendList.keys()
+            for friendKey in friendListKeys:
+                friendObject = ndb.Key(Profile, friendKey).get()
+                eventsInvited = friendObject.eventsInvited
+                for eventKey in eventsInvited:
+                    if eventKey == hangoutObject.key.id():
+                        eventsInvited.remove(eventKey)
+                        friendObject.eventsInvited = eventsInvited
+
+                        eventsVoteDone = friendObject.eventsVoteDone
+                        eventsVoteDone.append(eventKey)
+                        friendObject.eventsVoteDone = eventsVoteDone
+                        friendObject.put()
+                    else:
+                        pass
+
+        #remove the creator from him waiting
+        #delete hangout key from the waiting list
+        #add it to the events done list
+            eventCreator = ndb.Key(Profile, hangoutObject.eventCreator).get()
+            eventsWaitingOn = eventCreator.eventsWaitingOn
+            for eventKey in eventsWaitingOn:
+                if eventKey == hangoutObject.key.id():
+                    eventsWaitingOn.remove(eventKey)
+                    eventCreator.eventsWaitingOn = eventsWaitingOn
+
+                    eventsVoteDone = eventCreator.eventsVoteDone
+                    eventsVoteDone.append(eventKey)
+                    eventCreator.eventsVoteDone = eventsVoteDone
+                    eventCreator.put()
+                else:
+                    pass
+
+        #tally-up the votes
+            #run the voting algorithm and get the result
+            results = voting.inViteVote(groupVoteRanks)
+            #the results will come in a list the option that gets the least amount of votes is first pick, then second and so on
+            hangoutObject.finalResults = json.dumps(results)
+
+            #update the counter
+            hangoutObject.totalCounter = hangoutObject.totalCounter + 1
+            hangoutObject.votingCompleted = True
+
+            #Here add people's confirmation of whether they can go or not or maybe
+            #based off of the winner check if people's preferences match the result.
+            #if not then adjust their confirmation number accordinginly then parse it in javascript.
+
+            maxOfResults = max(results)
+            optionNumber = results.index(maxOfResults)
+
+            friendList = json.loads(hangoutObject.friendList)
+            #check people's first preference
+            friends = friendList.keys()
+            for friend in friends:
+                voteRank = friendList[friend]['voteRank']
+                minOf = min(friendList[friend]['voteRank'])
+                firstChoice = voteRank.index(minOf)
+
+                if firstChoice == optionNumber:
+                    friendList[friend]['confirmation'] = 1
+                else:
+                    pass
+
+            hangoutObject.friendList = json.dumps(friendList)
+
+            hangoutObject.put()
+            
+
+        #if you still need to wait for peopel to vote
+        else:
+            #tally-upvotes
+            #run the voting algorithm and get the result
+            results = voting.inViteVote(groupVoteRanks)
+            #the results will come in a list the option that gets the least amount of votes is first pick, then second and so on
+            hangoutObject.finalResults = json.dumps(results)
+
+            #update the user's voting preference
+            #friendList = json.loads(hangoutObject.friendList)
+            #friendList[user_id]['voteRank'] = userVotes
+            #hangoutObject.friendList = json.dumps(friendList)
+
+            #move this hangout to the voted waiting for this user
+            eventsInvited = userObject.eventsInvited
+            for eventKey in eventsInvited:
+                if eventKey == hangoutObject.key.id():
+                    #remove from the invited queue
+                    eventsInvited.remove(eventKey)
+                    userObject.eventsInvited = eventsInvited
+
+                    #place in the waiting queue
+                    eventsWaitingOn = userObject.eventsWaitingOn
+                    eventsWaitingOn.append(eventKey)
+                    userObject.eventsWaitingOn = eventsWaitingOn
+                    userObject.put()
+                else:
+                    pass
+
+            #update the counter
+            hangoutObject.totalCounter = hangoutObject.totalCounter + 1
+
+            hangoutObject.put()
+
+        return request
+
     @endpoints.method(HANG_GET_REQUEST, HangoutForms, 
         path='getResultsWaiting/{webSafeKey}', 
         http_method='GET', name='getResultsWaiting')
-    def getResultsWaiting(self, request):        
+    def getResultsWaiting(self, request):
         user = endpoints.get_current_user()
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
@@ -1031,6 +1316,24 @@ class ConferenceApi(remote.Service):
 
         #get event and place it in list to copy to the form
         hangoutObject = ndb.Key(urlsafe=request.webSafeKey).get()
+        eventList=[]
+        eventList.append(hangoutObject)
+
+        #t = message_types.VoidMessage()
+        #return t
+        return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList])
+
+    @endpoints.method(GetResultsWaitingEmailForm, HangoutForms, 
+        path='getResultsWaitingEmail/{webSafeKey}', 
+        http_method='GET', name='getResultsWaitingEmail')
+    def getResultsWaitingEmail(self, request):
+        data = {field.name: getattr(request, field.name) for field in request.all_fields()}
+        user_id = data['email']
+        p_key = ndb.Key(Profile, user_id)
+        userData=p_key.get()
+
+        #get event and place it in list to copy to the form
+        hangoutObject = ndb.Key(urlsafe=data['webSafeKey']).get()
         eventList=[]
         eventList.append(hangoutObject)
 

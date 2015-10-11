@@ -702,6 +702,26 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $r
     };
 
     $scope.votedWaitingEmail = function () {
+        $scope.votedWaitingEmail = $scope.votedWaitingEmail || {};
+
+        $scope.votedWaitingEmail.email = jo;
+
+        gapi.client.conference.votedWaitingEmail($scope.votedWaitingEmail).
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error');
+                    }
+                    else {
+                        $log.info("Success");
+                        $scope.hangouts = []
+                        $scope.hangout=[]
+                        angular.forEach(resp.items, function(hangout){
+                            $scope.hangouts.push(hangout);
+                        });
+                    }
+                });
+            });
 
     };
 
@@ -738,15 +758,62 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $r
 
 });
 
-conferenceApp.controllers.controller('VoteCtrl', function($scope,$log,$location,$routeParams){
+conferenceApp.controllers.controller('VoteCtrl', function($scope,$log,$location,$routeParams, $cookies){
+
+    var jo = $cookies.get('user_id');
 
     $scope.votes = $scope.votes || {};
 
     $scope.vote = function(voteForm){
-        
-        $scope.votes.webSafeKey = $routeParams.webSafeKey
 
-        gapi.client.conference.vote($scope.votes).
+        if (jo) {
+
+            $scope.votes.webSafeKey = $routeParams.webSafeKey;
+            $scope.votes.email = jo;
+
+            gapi.client.conference.voteEmail($scope.votes).
+                    execute(function(resp){
+                        $scope.$apply(function() {
+                            if (resp.error){
+                                $log.error('There was an Error');
+                            }
+                            else {
+                                $log.info("Success");
+                                $location.path('/myDashboard').replace;
+                            }
+                        });
+                    });
+
+        } else {
+
+            $scope.votes.webSafeKey = $routeParams.webSafeKey;
+
+            gapi.client.conference.vote($scope.votes).
+                    execute(function(resp){
+                        $scope.$apply(function() {
+                            if (resp.error){
+                                $log.error('There was an Error');
+                            }
+                            else {
+                                $log.info("Success");
+                                $location.path('/myDashboard').replace;
+                            }
+                        });
+                    });
+        }
+        
+        
+    };
+
+    $scope.getResultsWaiting = function () {
+
+        $scope.getResultsWaitingEmail = $scope.getResultsWaitingEmail || {};
+        $scope.getResultsWaitingEmail.webSafeKey = $routeParams.webSafeKey;
+        $scope.getResultsWaitingEmail.email = jo;
+
+        if (jo) {
+
+            gapi.client.conference.getResultsWaitingEmail($scope.getResultsWaitingEmail).
                 execute(function(resp){
                     $scope.$apply(function() {
                         if (resp.error){
@@ -754,13 +821,17 @@ conferenceApp.controllers.controller('VoteCtrl', function($scope,$log,$location,
                         }
                         else {
                             $log.info("Success");
-                            $location.path('/myDashboard').replace;
+                            $log.info(resp.items);
+                            $scope.results = []
+                            $scope.result=[]
+                            angular.forEach(resp.items, function(result){
+                                $scope.results.push(result);
+                            });
                         }
                     });
                 });
-    };
 
-    $scope.getResultsWaiting = function () {
+        } else {
 
             gapi.client.conference.getResultsWaiting({
                 webSafeKey: $routeParams.webSafeKey
@@ -781,15 +852,23 @@ conferenceApp.controllers.controller('VoteCtrl', function($scope,$log,$location,
                         }
                     });
                 });
-    };
+        }
 
+            
+    };
+    
 });
 
-conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $routeParams){
-        
+conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $routeParams, $cookies){
+        var jo = $cookies.get('user_id');
         $scope.bardata = $scope.bardata || {};
         $scope.names = $scope.names || {};
         $scope.groupMessage = $scope.groupMessage || {};
+
+        //Variables for Emails when getting results
+        $scope.getResultsWaitingVars = $scope.getResultsWaitingVars || {};
+        $scope.getResultsWaitingVars.webSafeKey = $routeParams.webSafeKey;
+        $scope.getResultsWaitingVars.email = jo;
 
         $scope.d3j = function () {
             var bardata = $scope.bardata;
@@ -881,77 +960,154 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
 
         $scope.getResultsWaiting = function () {
 
-        gapi.client.conference.getResultsWaiting({
-            webSafeKey: $routeParams.webSafeKey
-        }).
-            execute(function(resp){
-                $scope.$apply(function() {
-                    if (resp.error){
-                        $log.error('There was an Error');
-                    }
-                    else {
-                        $log.info("Success");
-                        $scope.webSafeKey = $routeParams.webSafeKey;
+            if (jo) {
 
-                        $scope.results = []
-                        $scope.result=[]
-                        angular.forEach(resp.items, function(result){
-                            $scope.results.push(result);
+                gapi.client.conference.getResultsWaitingEmail($scope.getResultsWaitingVars).
+                    execute(function(resp){
+                        $scope.$apply(function() {
+                            if (resp.error){
+                                $log.error('There was an Error');
+                            }
+                            else {
+                                $log.info("Success");
+                                $scope.webSafeKey = $routeParams.webSafeKey;
+
+                                $scope.results = []
+                                $scope.result=[]
+                                angular.forEach(resp.items, function(result){
+                                    $scope.results.push(result);
+                                });
+                                $scope.bardata = JSON.parse(resp.items[0]['finalResults']);
+                                $scope.d3j();
+
+                                var notVotedFriends=[];
+                                var votedFriends=[];
+                                var s, friends = JSON.parse(resp.items[0]['friendList']);
+                                var iterFriends = Object.keys(friends)
+
+                                for(s of iterFriends){
+                                if (friends[s]['voteRank'][0]==0){
+                                    notVotedFriends.push(s);
+                                }
+                                else{
+                                    votedFriends.push(s);
+                                }
+                                }
+
+                                //THOSE THAT DID NOT VOTE
+                                $scope.friends = [];
+                                $scope.friend=[];
+                                angular.forEach(notVotedFriends, function(friend){
+                                    $scope.friends.push(friend);
+                                });
+                                
+                                //THOSE THAT DID VOTE
+                                $scope.vFriends = [];
+                                $scope.vFriend=[];
+                                angular.forEach(votedFriends, function(vFriend){
+                                    $scope.vFriends.push(vFriend);
+                                });
+
+                                //THOSE NOT IN SYSTEM
+                                var notInSystem = JSON.parse(resp.items[0]['notInSystem']);
+                                $scope.notInSystemDisplay = [];
+                                angular.forEach(notInSystem, function(person){
+                                    $scope.notInSystemDisplay.push(person);
+                                });
+
+
+                                //post process items (correct Date Structure)
+                                //post process itesm (correct Time (am or pm))
+
+                                //Show the discussion
+                                var groupMessage = JSON.parse(resp.items[0]['groupMessage']);
+                                    
+                                $scope.discussionMessages = []
+                                $scope.discussionMessage=[]
+                                angular.forEach(groupMessage, function(discussionMessage){
+                                    $scope.discussionMessages.push(discussionMessage);
+                                });
+
+                            }
                         });
-                        $scope.bardata = JSON.parse(resp.items[0]['finalResults']);
-                        $scope.d3j();
+                    });                
 
-                        var notVotedFriends=[];
-                        var votedFriends=[];
-                        var s, friends = JSON.parse(resp.items[0]['friendList']);
-                        var iterFriends = Object.keys(friends)
+            } else {
 
-                        for(s of iterFriends){
-                        if (friends[s]['voteRank'][0]==0){
-                            notVotedFriends.push(s);
-                        }
-                        else{
-                            votedFriends.push(s);
-                        }
-                        }
+                gapi.client.conference.getResultsWaiting({
+                    webSafeKey: $routeParams.webSafeKey
+                }).
+                    execute(function(resp){
+                        $scope.$apply(function() {
+                            if (resp.error){
+                                $log.error('There was an Error');
+                            }
+                            else {
+                                $log.info("Success");
+                                $scope.webSafeKey = $routeParams.webSafeKey;
 
-                        //THOSE THAT DID NOT VOTE
-                        $scope.friends = [];
-                        $scope.friend=[];
-                        angular.forEach(notVotedFriends, function(friend){
-                            $scope.friends.push(friend);
+                                $scope.results = []
+                                $scope.result=[]
+                                angular.forEach(resp.items, function(result){
+                                    $scope.results.push(result);
+                                });
+                                $scope.bardata = JSON.parse(resp.items[0]['finalResults']);
+                                $scope.d3j();
+
+                                var notVotedFriends=[];
+                                var votedFriends=[];
+                                var s, friends = JSON.parse(resp.items[0]['friendList']);
+                                var iterFriends = Object.keys(friends)
+
+                                for(s of iterFriends){
+                                if (friends[s]['voteRank'][0]==0){
+                                    notVotedFriends.push(s);
+                                }
+                                else{
+                                    votedFriends.push(s);
+                                }
+                                }
+
+                                //THOSE THAT DID NOT VOTE
+                                $scope.friends = [];
+                                $scope.friend=[];
+                                angular.forEach(notVotedFriends, function(friend){
+                                    $scope.friends.push(friend);
+                                });
+                                
+                                //THOSE THAT DID VOTE
+                                $scope.vFriends = [];
+                                $scope.vFriend=[];
+                                angular.forEach(votedFriends, function(vFriend){
+                                    $scope.vFriends.push(vFriend);
+                                });
+
+                                //THOSE NOT IN SYSTEM
+                                var notInSystem = JSON.parse(resp.items[0]['notInSystem']);
+                                $scope.notInSystemDisplay = [];
+                                angular.forEach(notInSystem, function(person){
+                                    $scope.notInSystemDisplay.push(person);
+                                });
+
+
+                                //post process items (correct Date Structure)
+                                //post process itesm (correct Time (am or pm))
+
+                                //Show the discussion
+                                var groupMessage = JSON.parse(resp.items[0]['groupMessage']);
+                                    
+                                $scope.discussionMessages = []
+                                $scope.discussionMessage=[]
+                                angular.forEach(groupMessage, function(discussionMessage){
+                                    $scope.discussionMessages.push(discussionMessage);
+                                });
+
+                            }
                         });
-                        
-                        //THOSE THAT DID VOTE
-                        $scope.vFriends = [];
-                        $scope.vFriend=[];
-                        angular.forEach(votedFriends, function(vFriend){
-                            $scope.vFriends.push(vFriend);
-                        });
-
-                        //THOSE NOT IN SYSTEM
-                        var notInSystem = JSON.parse(resp.items[0]['notInSystem']);
-                        $scope.notInSystemDisplay = [];
-                        angular.forEach(notInSystem, function(person){
-                            $scope.notInSystemDisplay.push(person);
-                        });
+                    });                
+            }
 
 
-                        //post process items (correct Date Structure)
-                        //post process itesm (correct Time (am or pm))
-
-                        //Show the discussion
-                        var groupMessage = JSON.parse(resp.items[0]['groupMessage']);
-                            
-                        $scope.discussionMessages = []
-                        $scope.discussionMessage=[]
-                        angular.forEach(groupMessage, function(discussionMessage){
-                            $scope.discussionMessages.push(discussionMessage);
-                        });
-
-                    }
-                });
-            });
     };
         
         $scope.getResultsFinal = function () {

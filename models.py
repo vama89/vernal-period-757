@@ -50,6 +50,10 @@ class ProfileForms(messages.Message):
 class UrlForm(messages.Message):
     uploadUrl = messages.StringField(1)
 
+class GetResultsWaitingEmailForm(messages.Message):
+    webSafeKey = messages.StringField(1)
+    email = messages.StringField(2)
+
 class EmailRegForm(messages.Message):
     firstName = messages.StringField(1)
     lastName = messages.StringField(2)
@@ -145,6 +149,13 @@ class VoteForm(messages.Message):
     option2 = messages.StringField(2)
     option3 = messages.StringField(3)
     webSafeKey = messages.StringField(4)
+
+class VoteFormEmail(messages.Message):
+    option1 = messages.StringField(1)
+    option2 = messages.StringField(2)
+    option3 = messages.StringField(3)
+    webSafeKey = messages.StringField(4)
+    email =  messages.StringField(5)
 
 class BooleanMessage(messages.Message):
     boolVal = messages.BooleanField(1)
