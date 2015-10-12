@@ -454,6 +454,166 @@ class ConferenceApi(remote.Service):
         
         return request
 
+    @endpoints.method(HangoutForm, HangoutForm, 
+            path='createHangoutEmail', 
+            http_method='POST', name='createHangoutEmail')
+    def createHangoutEmail(self, request):
+        #Save information from html forms to Hangout Database.
+        data = {field.name: getattr(request, field.name) for field in request.all_fields()}
+        user_id = data['eventCreator']
+        user_id = str(user_id)
+        p_key = ndb.Key(Profile, user_id)
+        del data['webSafeKey']
+
+        #add in the the current time and date when event is created.
+        data['dateEventCreated'] = datetime.utcnow()
+
+        #Handle Dates
+        data['date1'] = datetime.strptime(data['date1'][:10], "%Y-%m-%d").date()
+        data['date2'] = datetime.strptime(data['date2'][:10], "%Y-%m-%d").date()
+        data['date3'] = datetime.strptime(data['date3'][:10], "%Y-%m-%d").date()
+
+        #Handle Times
+        data['time1'] = datetime.strptime(data['time1'][11:15], "%H:%M").time()
+        data['time2'] = datetime.strptime(data['time2'][11:15], "%H:%M").time()
+        data['time3'] = datetime.strptime(data['time3'][11:15], "%H:%M").time()
+
+        #Handle deadlineDate
+        data['deadlineDate'] = datetime.strptime(data['deadlineDate'][:10], "%Y-%m-%d").date()
+        #Handle deadlineTime
+        data['deadlineTime'] = datetime.strptime(data['deadlineTime'][11:15], "%H:%M").time()
+
+        #FriendListHandling
+        friendIDList=[]
+        friendsDict={}
+        friendsInJson=json.loads(data['friendList'])
+        friendsInJson.append(user_id)
+        counter=0
+        
+        #Passing in emails
+        #for this version, the friend is an email ID
+        for friend in friendsInJson:
+            if friend == None:
+                pass
+            elif friend == "":
+                pass
+            else:
+                friendIDList.append(friend)
+
+                p ={"profileID" : friend, "voteRank" : [0,0,0], "firstChoie" : 0, "confirmation" :0}
+                friendsDict[friend] = p
+                counter=counter+1
+
+        data['friendList'] = json.dumps(friendsDict)
+
+        ###Add Event Creator 
+        #data['eventCreator'] = str(user_id) 
+
+        #User's Voting Preferences. Translating unicode to an integer of strings.
+        listType=[]
+        for uni in data['groupVoteRanks']:
+            if type(uni) == unicode:
+                for p in uni:
+                    for t in p:
+                        if t == '[':
+                            pass    
+                        elif t == ',':
+                            pass
+                        elif t == ']':
+                            pass
+                        #elif t == '':
+                        #    print t
+                        elif t == ' ':
+                            pass
+                        else:
+                            listType.append(int(t))
+        #must be a list of the list NOTICE BRACKETS!!!!!!
+        data['groupVoteRanks'] = json.dumps([listType])
+
+        #just the list
+        #initialize with users first votes
+        adjustList=[]
+        for p in listType:
+            adjustNum=4-p
+            adjustList.append(adjustNum)
+        #THIS IS THE BARGRAHP ADJUSTED VOTE RANKS
+        data['finalResults'] = json.dumps(adjustList)
+
+        #adding the creator's vote preferences to the friendList REGULAR VOTERANK
+        friendList = json.loads(data['friendList'])
+        friendList[user_id]['voteRank'] = listType
+        data['friendList'] = json.dumps(friendList)
+
+        ####Add the Total Party Count
+        data['totalCounter'] = 1
+        ####Add the Party Total
+        data['partyTotal'] = counter
+
+        ###Voting Completed
+        data['votingCompleted'] = False
+
+        #place into the database
+        Hangout(**data).put()
+        #wait for it to generate the keys
+        time.sleep(.1)
+
+        #Query the hangout. This must be unique. Note to self. Find if there is a way to get the key before it is created.
+        hangoutQry = Hangout.query(Hangout.eventCreator == str(user_id), Hangout.dateEventCreated == data['dateEventCreated'])
+        #Getting the key
+        hangoutKey=None
+        for event in hangoutQry:
+            hangoutKey = event.key.id()
+
+        #Placing event key  in Creator's Waiting Queue
+        creatorObj = p_key.get()
+        
+        eventsWaitingOn=creatorObj.eventsWaitingOn
+
+        for event in hangoutQry:
+            eventKeyId = event.key.id()
+            eventsWaitingOn.append(eventKeyId)
+            creatorObj.eventsWaitingOn = eventsWaitingOn
+        creatorObj.put()
+
+        #Placing event key to all friends except the creator.        
+        for friendID in friendIDList:
+            friendObject = ndb.Key(Profile, friendID).get()
+            if friendObject:
+                if friendObject == creatorObj:
+                    pass
+                else:
+                    eventsInvited=friendObject.eventsInvited
+                    for event in hangoutQry:
+                        eventKeyId = event.key.id()
+                        eventsInvited.append(eventKeyId)
+                        friendObject.eventsInvited = eventsInvited
+                        friendObject.put()
+            else:
+                pass
+
+        #handle those that were not found...Register them
+        notInSystem = json.loads(data['notInSystem'])
+        for friend in notInSystem:
+            #check to see they really are not in the system
+            #that they didn't miss them in the friend add.
+            prof = ndb.Key(Profile, friend).get()
+            if prof:
+                #do not create a profile again, it'll just add them in the key below
+                print "test success"
+            else:
+                #add them into the system
+                self._doNotInSystemRegs(friend)
+        
+        #place the hangout key in each one of the new regesterees
+        for friend in notInSystem:
+            obj = ndb.Key(Profile, friend).get()
+            eventsInvited = obj.eventsInvited
+            eventsInvited.append(hangoutKey)
+            obj.eventsInvited = eventsInvited
+            obj.put()
+        
+        return request
+
     @endpoints.method(message_types.VoidMessage, HangoutForms, 
             path='invited', 
             http_method='GET', name='invited')
@@ -1239,7 +1399,7 @@ class ConferenceApi(remote.Service):
                 friendObject = ndb.Key(Profile, friendKey).get()
                 eventsInvited = friendObject.eventsInvited
                 eventsWaitingOn = friendObject.eventsWaitingOn
-                
+
                 for eventKey in eventsInvited:
                     if eventKey == hangoutObject.key.id():
                         eventsInvited.remove(eventKey)

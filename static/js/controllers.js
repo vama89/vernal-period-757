@@ -515,6 +515,7 @@ conferenceApp.controllers.controller('OAuth2LoginModalCtrl',
 conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $log, $location,$cookies, oauth2Provider){
     var jo = $cookies.get('user_id');
 
+    //guard to make sure you can't access the page until you are logged in
     if (jo) {
         //retrieveProfileCallbackEmail();
     }
@@ -562,7 +563,10 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
                 });
         $scope.checked.notInSystem = JSON.stringify(notInSystem);
 
-        gapi.client.conference.createHangout($scope.checked).
+        if (jo) {
+            $scope.checked.eventCreator = jo;
+            
+            gapi.client.conference.createHangoutEmail($scope.checked).
             execute(function(resp){
                 $scope.$apply(function() {
                     if (resp.error){
@@ -574,6 +578,23 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
                     }
                 });
             });
+
+        } else {
+            gapi.client.conference.createHangout($scope.checked).
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error');
+                    }
+                    else {
+                        $log.info("Success!");
+                        $location.path('/myDashboard').replace;
+                    }
+                });
+            });
+        }
+
+        
     };
 
     $scope.getSearchList = function() {
