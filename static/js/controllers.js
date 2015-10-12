@@ -753,6 +753,26 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $r
     };
 
     $scope.doneEmail = function () {
+        $scope.doneEmail = $scope.doneEmail || {};
+
+        $scope.doneEmail.email = jo;
+
+        gapi.client.conference.doneEmail($scope.doneEmail).
+            execute(function(resp){
+                $scope.$apply(function() {
+                    if (resp.error){
+                        $log.error('There was an Error');
+                    }
+                    else {
+                        $log.info("Success");
+                        $scope.doneHangouts = []
+                        $scope.doneHangout=[]
+                        angular.forEach(resp.items, function(doneHangout){
+                            $scope.doneHangouts.push(doneHangout);
+                        });
+                    }
+                });
+            });
 
     };
 
@@ -1111,153 +1131,307 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
     };
         
         $scope.getResultsFinal = function () {
-        gapi.client.conference.getResultsFinal({
-            webSafeKey: $routeParams.webSafeKey
-        }).
-            execute(function(resp){
-                $scope.$apply(function() {
-                    if (resp.error){
-                        $log.error('There was an Error');
-                    }
-                    else {
-                        $log.info("Success");
-                        $scope.webSafeKey = $routeParams.webSafeKey;
 
-                        $scope.results = []
-                        $scope.result=[]
-                        angular.forEach(resp.items, function(result){
-                            $scope.results.push(result);
-                        });
-                        $scope.bardata = JSON.parse(resp.items[0]['finalResults']);
-                        $scope.d3j();
+            if (jo) {
 
-                        var event1=[
-                                    {"date1":resp.items[0]['date1'], 
-                                    "time1":resp.items[0]['time1'],
-                                    "locationName1": resp.items[0]['locationName1'],
-                                    "address1": resp.items[0]['address1']
+                gapi.client.conference.getResultsFinalEmail($scope.getResultsWaitingVars).
+                        execute(function(resp){
+                            $scope.$apply(function() {
+                                if (resp.error){
+                                    $log.error('There was an Error');
+                                }
+                                else {
+                                    $log.info("Success");
+                                    $scope.webSafeKey = $routeParams.webSafeKey;
+
+                                    $scope.results = []
+                                    $scope.result=[]
+                                    angular.forEach(resp.items, function(result){
+                                        $scope.results.push(result);
+                                    });
+                                    $scope.bardata = JSON.parse(resp.items[0]['finalResults']);
+                                    $scope.d3j();
+
+                                    var event1=[
+                                                {"date1":resp.items[0]['date1'], 
+                                                "time1":resp.items[0]['time1'],
+                                                "locationName1": resp.items[0]['locationName1'],
+                                                "address1": resp.items[0]['address1']
+                                                }
+                                                ];
+
+                                    var event2=[
+                                                {"date2":resp.items[0]['date2'], 
+                                                "time2":resp.items[0]['time2'],
+                                                "locationName2": resp.items[0]['locationName2'],
+                                                "address2": resp.items[0]['address2']
+                                                }
+                                                ];
+
+                                    var event3=[
+                                                {"date3":resp.items[0]['date3'], 
+                                                "time3":resp.items[0]['time3'],
+                                                "locationName3": resp.items[0]['locationName3'],
+                                                "address3": resp.items[0]['address3']
+                                                }
+                                                ];
+
+                                    //display the winner Event information
+                                    var finalResults = $scope.bardata
+                                    var winnerVal = Math.max.apply(null, $scope.bardata);
+                                    var winnerOptionNum = finalResults.indexOf(winnerVal);
+
+                                    //BUGS OUT ON else if statement and don't know why right now
+                                    if (winnerOptionNum == 0) {
+                                        $scope.firstResults = []
+                                        $scope.firstResult=[]
+                                        angular.forEach(event1, function(firstResult){
+                                            $scope.firstResults.push(firstResult);
+                                        });
                                     }
-                                    ];
+                                    else {
 
-                        var event2=[
-                                    {"date2":resp.items[0]['date2'], 
-                                    "time2":resp.items[0]['time2'],
-                                    "locationName2": resp.items[0]['locationName2'],
-                                    "address2": resp.items[0]['address2']
                                     }
-                                    ];
-
-                        var event3=[
-                                    {"date3":resp.items[0]['date3'], 
-                                    "time3":resp.items[0]['time3'],
-                                    "locationName3": resp.items[0]['locationName3'],
-                                    "address3": resp.items[0]['address3']
+                                    if (winnerOptionNum == 1) {
+                                        $scope.firstResults = []
+                                        $scope.firstResult=[]
+                                        angular.forEach(event2, function(firstResult){
+                                            $scope.firstResults.push(firstResult);
+                                        });
                                     }
-                                    ];
+                                    else {
 
-                        //display the winner Event information
-                        var finalResults = $scope.bardata
-                        var winnerVal = Math.max.apply(null, $scope.bardata);
-                        var winnerOptionNum = finalResults.indexOf(winnerVal);
+                                    } 
+                                    if (winnerOptionNum == 2) {
+                                        $scope.firstResults = []
+                                        $scope.firstResult=[]
+                                        angular.forEach(event3, function(firstResult){
+                                            $scope.firstResults.push(firstResult);
+                                        });
+                                    }
+                                    else {
 
-                        //BUGS OUT ON else if statement and don't know why right now
-                        if (winnerOptionNum == 0) {
-                            $scope.firstResults = []
-                            $scope.firstResult=[]
-                            angular.forEach(event1, function(firstResult){
-                                $scope.firstResults.push(firstResult);
+                                    }
+
+                                    var friends = JSON.parse(resp.items[0]['friendList']);
+                                    var s, friendList = Object.keys(friends);
+                                    var going=[];
+                                    var maybeGoing=[];
+                                    var notGoing=[];
+
+                                    //display Those going (first choice)
+                                    for(s of friendList){
+                                        if (friends[s]['confirmation'] == 1){
+                                            going.push(s);
+                                        }
+                                        else{
+
+                                        }
+                                    }
+
+                                    for(s of friendList){
+                                        if (friends[s]['confirmation'] == 0){
+                                            maybeGoing.push(s);
+                                        }
+                                        else{
+                                            
+                                        }
+                                    }
+
+                                    for(s of friendList){
+                                        if (friends[s]['confirmation'] == 4){
+                                            notGoing.push(s);
+                                        }
+                                        else{
+                                            
+                                        }
+                                    }
+
+                                    //Those That got their first pick
+                                    $scope.prefereds = []
+                                    $scope.prefer=[]
+                                    angular.forEach(going, function(prefer){
+                                        $scope.prefereds.push(prefer);
+                                    });
+
+                                    //display Maybe
+                                    $scope.mays = []
+                                    $scope.may=[]
+                                    angular.forEach(maybeGoing, function(may){
+                                        $scope.mays.push(may);
+                                    });
+
+                                    //display those definitely not
+                                    var notInSystem = JSON.parse(resp.items[0]['notInSystem']);
+                                    $scope.notInSystemDisplay = [];
+                                    angular.forEach(notInSystem, function(person){
+                                        $scope.notInSystemDisplay.push(person);
+                                    });
+
+                                    //Show the discussion
+                                    var groupMessage = JSON.parse(resp.items[0]['groupMessage']);
+                                        
+                                    $scope.discussionMessages = []
+                                    $scope.discussionMessage=[]
+                                    angular.forEach(groupMessage, function(discussionMessage){
+                                        $scope.discussionMessages.push(discussionMessage);
+                                    });
+                                }
                             });
-                        }
-                        else {
+                        });
 
-                        }
-                        if (winnerOptionNum == 1) {
-                            $scope.firstResults = []
-                            $scope.firstResult=[]
-                            angular.forEach(event2, function(firstResult){
-                                $scope.firstResults.push(firstResult);
+            } else {
+
+                gapi.client.conference.getResultsFinal({
+                        webSafeKey: $routeParams.webSafeKey
+                    }).
+                        execute(function(resp){
+                            $scope.$apply(function() {
+                                if (resp.error){
+                                    $log.error('There was an Error');
+                                }
+                                else {
+                                    $log.info("Success");
+                                    $scope.webSafeKey = $routeParams.webSafeKey;
+
+                                    $scope.results = []
+                                    $scope.result=[]
+                                    angular.forEach(resp.items, function(result){
+                                        $scope.results.push(result);
+                                    });
+                                    $scope.bardata = JSON.parse(resp.items[0]['finalResults']);
+                                    $scope.d3j();
+
+                                    var event1=[
+                                                {"date1":resp.items[0]['date1'], 
+                                                "time1":resp.items[0]['time1'],
+                                                "locationName1": resp.items[0]['locationName1'],
+                                                "address1": resp.items[0]['address1']
+                                                }
+                                                ];
+
+                                    var event2=[
+                                                {"date2":resp.items[0]['date2'], 
+                                                "time2":resp.items[0]['time2'],
+                                                "locationName2": resp.items[0]['locationName2'],
+                                                "address2": resp.items[0]['address2']
+                                                }
+                                                ];
+
+                                    var event3=[
+                                                {"date3":resp.items[0]['date3'], 
+                                                "time3":resp.items[0]['time3'],
+                                                "locationName3": resp.items[0]['locationName3'],
+                                                "address3": resp.items[0]['address3']
+                                                }
+                                                ];
+
+                                    //display the winner Event information
+                                    var finalResults = $scope.bardata
+                                    var winnerVal = Math.max.apply(null, $scope.bardata);
+                                    var winnerOptionNum = finalResults.indexOf(winnerVal);
+
+                                    //BUGS OUT ON else if statement and don't know why right now
+                                    if (winnerOptionNum == 0) {
+                                        $scope.firstResults = []
+                                        $scope.firstResult=[]
+                                        angular.forEach(event1, function(firstResult){
+                                            $scope.firstResults.push(firstResult);
+                                        });
+                                    }
+                                    else {
+
+                                    }
+                                    if (winnerOptionNum == 1) {
+                                        $scope.firstResults = []
+                                        $scope.firstResult=[]
+                                        angular.forEach(event2, function(firstResult){
+                                            $scope.firstResults.push(firstResult);
+                                        });
+                                    }
+                                    else {
+
+                                    } 
+                                    if (winnerOptionNum == 2) {
+                                        $scope.firstResults = []
+                                        $scope.firstResult=[]
+                                        angular.forEach(event3, function(firstResult){
+                                            $scope.firstResults.push(firstResult);
+                                        });
+                                    }
+                                    else {
+
+                                    }
+
+                                    var friends = JSON.parse(resp.items[0]['friendList']);
+                                    var s, friendList = Object.keys(friends);
+                                    var going=[];
+                                    var maybeGoing=[];
+                                    var notGoing=[];
+
+                                    //display Those going (first choice)
+                                    for(s of friendList){
+                                        if (friends[s]['confirmation'] == 1){
+                                            going.push(s);
+                                        }
+                                        else{
+
+                                        }
+                                    }
+
+                                    for(s of friendList){
+                                        if (friends[s]['confirmation'] == 0){
+                                            maybeGoing.push(s);
+                                        }
+                                        else{
+                                            
+                                        }
+                                    }
+
+                                    for(s of friendList){
+                                        if (friends[s]['confirmation'] == 4){
+                                            notGoing.push(s);
+                                        }
+                                        else{
+                                            
+                                        }
+                                    }
+
+                                    //Those That got their first pick
+                                    $scope.prefereds = []
+                                    $scope.prefer=[]
+                                    angular.forEach(going, function(prefer){
+                                        $scope.prefereds.push(prefer);
+                                    });
+
+                                    //display Maybe
+                                    $scope.mays = []
+                                    $scope.may=[]
+                                    angular.forEach(maybeGoing, function(may){
+                                        $scope.mays.push(may);
+                                    });
+
+                                    //display those definitely not
+                                    var notInSystem = JSON.parse(resp.items[0]['notInSystem']);
+                                    $scope.notInSystemDisplay = [];
+                                    angular.forEach(notInSystem, function(person){
+                                        $scope.notInSystemDisplay.push(person);
+                                    });
+
+                                    //Show the discussion
+                                    var groupMessage = JSON.parse(resp.items[0]['groupMessage']);
+                                        
+                                    $scope.discussionMessages = []
+                                    $scope.discussionMessage=[]
+                                    angular.forEach(groupMessage, function(discussionMessage){
+                                        $scope.discussionMessages.push(discussionMessage);
+                                    });
+                                }
                             });
-                        }
-                        else {
-
-                        } 
-                        if (winnerOptionNum == 2) {
-                            $scope.firstResults = []
-                            $scope.firstResult=[]
-                            angular.forEach(event3, function(firstResult){
-                                $scope.firstResults.push(firstResult);
-                            });
-                        }
-                        else {
-
-                        }
-
-                        var friends = JSON.parse(resp.items[0]['friendList']);
-                        var s, friendList = Object.keys(friends);
-                        var going=[];
-                        var maybeGoing=[];
-                        var notGoing=[];
-
-                        //display Those going (first choice)
-                        for(s of friendList){
-                            if (friends[s]['confirmation'] == 1){
-                                going.push(s);
-                            }
-                            else{
-
-                            }
-                        }
-
-                        for(s of friendList){
-                            if (friends[s]['confirmation'] == 0){
-                                maybeGoing.push(s);
-                            }
-                            else{
-                                
-                            }
-                        }
-
-                        for(s of friendList){
-                            if (friends[s]['confirmation'] == 4){
-                                notGoing.push(s);
-                            }
-                            else{
-                                
-                            }
-                        }
-
-                        //Those That got their first pick
-                        $scope.prefereds = []
-                        $scope.prefer=[]
-                        angular.forEach(going, function(prefer){
-                            $scope.prefereds.push(prefer);
                         });
 
-                        //display Maybe
-                        $scope.mays = []
-                        $scope.may=[]
-                        angular.forEach(maybeGoing, function(may){
-                            $scope.mays.push(may);
-                        });
-
-                        //display those definitely not
-                        var notInSystem = JSON.parse(resp.items[0]['notInSystem']);
-                        $scope.notInSystemDisplay = [];
-                        angular.forEach(notInSystem, function(person){
-                            $scope.notInSystemDisplay.push(person);
-                        });
-
-                        //Show the discussion
-                        var groupMessage = JSON.parse(resp.items[0]['groupMessage']);
-                            
-                        $scope.discussionMessages = []
-                        $scope.discussionMessage=[]
-                        angular.forEach(groupMessage, function(discussionMessage){
-                            $scope.discussionMessages.push(discussionMessage);
-                        });
-                    }
-                });
-            });
+            }
+        
 
         }; 
 

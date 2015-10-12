@@ -972,6 +972,27 @@ class ConferenceApi(remote.Service):
 
         return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList])
 
+    @endpoints.method(EmailRegFormCheck, HangoutForms, 
+        path='doneEmail', 
+        http_method='GET', name='doneEmail')
+    def doneEmail(self, request):
+        data = {field.name: getattr(request, field.name) for field in request.all_fields()}
+        user_id = data['email']
+
+        p_key = ndb.Key(Profile, user_id)
+        userData=p_key.get()
+
+        #handle the string processing
+        eventsVoteDone = userData.eventsVoteDone
+        eventList=[]
+        for eventId in eventsVoteDone:
+            #get the event from ndb
+            event = ndb.Key(Hangout, eventId).get()
+
+            eventList.append(event)
+
+        return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList])
+
     @endpoints.method(VoteForm, VoteForm, 
         path='vote', 
         http_method='POST', name='vote')
@@ -1040,10 +1061,24 @@ class ConferenceApi(remote.Service):
             for friendKey in friendListKeys:
                 friendObject = ndb.Key(Profile, friendKey).get()
                 eventsInvited = friendObject.eventsInvited
+                eventsWaitingOn = friendObject.eventsWaitingOn
+
                 for eventKey in eventsInvited:
                     if eventKey == hangoutObject.key.id():
                         eventsInvited.remove(eventKey)
                         friendObject.eventsInvited = eventsInvited
+
+                        eventsVoteDone = friendObject.eventsVoteDone
+                        eventsVoteDone.append(eventKey)
+                        friendObject.eventsVoteDone = eventsVoteDone
+                        friendObject.put()
+                    else:
+                        pass
+
+                for eventKey in eventsWaitingOn:
+                    if eventKey == hangoutObject.key.id():
+                        eventsWaitingOn.remove(eventKey)
+                        friendObject.eventsWaitingOn = eventsWaitingOn
 
                         eventsVoteDone = friendObject.eventsVoteDone
                         eventsVoteDone.append(eventKey)
@@ -1203,6 +1238,8 @@ class ConferenceApi(remote.Service):
             for friendKey in friendListKeys:
                 friendObject = ndb.Key(Profile, friendKey).get()
                 eventsInvited = friendObject.eventsInvited
+                eventsWaitingOn = friendObject.eventsWaitingOn
+                
                 for eventKey in eventsInvited:
                     if eventKey == hangoutObject.key.id():
                         eventsInvited.remove(eventKey)
@@ -1214,6 +1251,18 @@ class ConferenceApi(remote.Service):
                         friendObject.put()
                     else:
                         pass
+
+                for eventKey in eventsWaitingOn:
+                        if eventKey == hangoutObject.key.id():
+                            eventsWaitingOn.remove(eventKey)
+                            friendObject.eventsWaitingOn = eventsWaitingOn
+
+                            eventsVoteDone = friendObject.eventsVoteDone
+                            eventsVoteDone.append(eventKey)
+                            friendObject.eventsVoteDone = eventsVoteDone
+                            friendObject.put()
+                        else:
+                            pass
 
         #remove the creator from him waiting
         #delete hangout key from the waiting list
@@ -1344,7 +1393,7 @@ class ConferenceApi(remote.Service):
     @endpoints.method(HANG_GET_REQUEST, HangoutForms, 
         path='getResultsFinal/{webSafeKey}', 
         http_method='GET', name='getResultsFinal')
-    def getResultsFinal(self, request):        
+    def getResultsFinal(self, request):
         user = endpoints.get_current_user()
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
@@ -1354,6 +1403,24 @@ class ConferenceApi(remote.Service):
 
         #get event and place it in list to copy to the form
         hangoutObject = ndb.Key(urlsafe=request.webSafeKey).get()
+        eventList=[]
+        eventList.append(hangoutObject)
+
+        #t = message_types.VoidMessage()
+        #return t
+        return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList])
+
+    @endpoints.method(GetResultsWaitingEmailForm, HangoutForms, 
+        path='getResultsFinalEmail/{webSafeKey}', 
+        http_method='GET', name='getResultsFinalEmail')
+    def getResultsFinalEmail(self, request):
+        data = {field.name: getattr(request, field.name) for field in request.all_fields()}
+        user_id = data['email']
+        p_key = ndb.Key(Profile, user_id)
+        userData=p_key.get()
+
+        #get event and place it in list to copy to the form
+        hangoutObject = ndb.Key(urlsafe=data['webSafeKey']).get()
         eventList=[]
         eventList.append(hangoutObject)
 
