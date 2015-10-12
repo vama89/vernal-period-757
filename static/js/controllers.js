@@ -25,9 +25,10 @@ conferenceApp.controllers = angular.module('conferenceControllers', ['ui.bootstr
  * A controller used for the My Profile page.
  */
 conferenceApp.controllers.controller('MyProfileCtrl',
-    function ($scope, $log, oauth2Provider, HTTP_ERRORS) {
+    function ($scope, $log, $location, $cookies, oauth2Provider, HTTP_ERRORS) {
         $scope.submitted = false;
         $scope.loading = false;
+        var jo = $cookies.get('user_id');
 
         /**
          * The initial profile retrieved from the server to know the dirty state.
@@ -59,10 +60,17 @@ conferenceApp.controllers.controller('MyProfileCtrl',
                 );
             };
             
-            if (!oauth2Provider.signedIn) {
+            if (jo) {
+                //retrieveProfileCallbackEmail();
+            }
+            else if (!oauth2Provider.signedIn) {
+                /*
                 var modalInstance = oauth2Provider.showLoginModal();
                 modalInstance.result.then(retrieveProfileCallback);
-            } else {
+                */
+                $location.path('/').replace;
+            } 
+            else {
                 retrieveProfileCallback();
             }
         };
@@ -504,7 +512,23 @@ conferenceApp.controllers.controller('OAuth2LoginModalCtrl',
  *
  */
 
-conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $log, $location, oauth2Provider){
+conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $log, $location,$cookies, oauth2Provider){
+    var jo = $cookies.get('user_id');
+
+    if (jo) {
+        //retrieveProfileCallbackEmail();
+    }
+    else if (!oauth2Provider.signedIn) {
+        /*
+        var modalInstance = oauth2Provider.showLoginModal();
+        modalInstance.result.then(retrieveProfileCallback);
+        */
+        $location.path('/').replace;
+    } 
+    else {
+        //retrieveProfileCallback();
+    }
+
     $scope.todos=[];
     $scope.checked = $scope.checked || {};
     $scope.notEmail;
