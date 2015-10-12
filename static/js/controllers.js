@@ -591,7 +591,7 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
     };
 });
 
-conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $routeParams,$cookies, oauth2Provider){
+conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $routeParams,$cookies, $location, oauth2Provider){
     $scope.trigger = false;
     var jo = $cookies.get('user_id');
 
@@ -617,8 +617,11 @@ conferenceApp.controllers.controller('MyDashboardCtrl', function($scope,$log, $r
             retrieveProfileCallbackEmail();
         }
         else if (!oauth2Provider.signedIn) {
+            /*
             var modalInstance = oauth2Provider.showLoginModal();
             modalInstance.result.then(retrieveProfileCallback);
+            */
+            $location.path('/').replace;
         } 
         else {
             retrieveProfileCallback();
