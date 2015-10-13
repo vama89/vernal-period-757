@@ -268,12 +268,51 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
                                     else {
                                         $log.info("Successful");
                                         if(resp.boolVal){
-                                            //Get the user name of the user here....create the promises
-                                            //so emulate it like the sign-in above
-                                            //first run isRegistered and get the dispalyname.
-                                            //Then when that is done, turn it to true and switch to dash
-                                            oauth2Provider.signedIn = true;
-                                            $location.path('/myDashboard').replace;
+                                            $scope.profile = {};
+                                            $scope.loading = true;
+                                            //My addition to get to the dashboard and load items properly
+
+                                            //make the async call here. make profile first then move the the dashboard
+                                            function first() {
+                                                var deferred = $q.defer();
+                                                        gapi.client.conference.getProfile().
+                                                            execute(function (resp) {
+                                                                $scope.$apply(function () {
+                                                                    $scope.loading = false;
+                                                                    if (resp.error) {
+                                                                        // Failed to get a user profile.
+                                                                    } else {
+                                                                        // Succeeded to get the user profile.
+                                                                        $scope.profile.displayName = resp.result.displayName;
+                                                                        $scope.initialProfile = resp.result;
+                                                                     
+                                                                        //These variables used in MyProfileCtrl
+                                                                        $scope.user = resp.result.displayName;
+                                                                        $scope.userEmail = resp.result.mainEmail;
+                                                                        $log.info("retrieved variables in SignIn Function");
+
+                                                                        //check to see if already registered.
+                                                                        //if already registered then set to false....indicator that already logged in
+
+                                                                        deferred.resolve();
+                                                                    }
+                                                                });
+                                                            }
+                                                        );
+                                                
+                                                return deferred.promise; 
+                                            }
+
+                                            first().then(function () {
+                                                /*I don't know why it is doing this. The previous executions have oauth2Prov as true
+                                                but by the time it finishes then executes here....it turns it false....don't know why
+                                                Quick patch is just switching it back on to true, but need to fix this bug.
+                                                I think for some reason it goes back to initSignInButton because of the way it gets the oauthinfo
+                                                then reloads the page back on our app....eventually fix this
+                                                */
+                                                oauth2Provider.signedIn = true;
+                                                $location.path('/myDashboard').replace;
+                                            });
 
                                         } else {
                                             oauth2Provider.signedIn = false;
