@@ -675,6 +675,7 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
         var index = $scope.notInSystemFriends.indexOf(name);
         $scope.notInSystemFriends.splice(index, 1);
     };
+    
   $scope.steps = [
     'Step 1:',
     'Step 2:',

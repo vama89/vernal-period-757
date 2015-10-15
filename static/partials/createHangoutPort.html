@@ -70,6 +70,8 @@
                 <input ng-model="notEmail"placeholder="Email">
                 <button ng-click="notInSystemAdd()">Add</button>
 
+                <br>
+
                 <ul class="pager pull-left">
                   <li class="" ng-class="{disabled: !hasPreviousStep()}">
                     <a href="javascript:void(0);" ng-click="decrementStep()">&larr; Previous</a>
@@ -87,13 +89,17 @@
               <h1>Step 3: Option 1</h1>
               <div>
                 <label>Date:</label>
+                <br>
                 <input ng-model="checked.date1" type="date" name="date1" placeholder="Date" required>
+                <br>
                 <label>Time:</label>
+                <br>
                 <input ng-model="checked.time1" type="time" name="time1" required>
-
+                <br>
                 <label>Location:</label>
+                <br>
                 <input ng-model="checked.locationName1" type="string" name="locationName1" placeholder="Enter Location Name" required>
-
+                <br>
                 <input  ng-model="checked.address1" name="address1" placeholder="Enter your address"
                           type="text" required>
               </div>
@@ -115,13 +121,17 @@
               <h1>Step 4: Option 1</h1>
               <div>
                 <label>Date:</label>
+                <br>
                 <input ng-model="checked.date2" type="date" name="date2" placeholder="Date" required>
+                <br>
                 <label>Time:</label>
+                <br>
                 <input ng-model="checked.time2" type="time" name="time2" required>
-
+                <br>
                 <label>Location:</label>
+                <br>
                 <input ng-model="checked.locationName2" type="string" name="locationName2" placeholder="Enter Location Name" required>
-
+                <br>
                 <input  ng-model="checked.address2" name="address2" placeholder="Enter your address"
                           type="text" required>
               </div>
@@ -143,13 +153,17 @@
               <h1>Step 5: Option 1</h1>
               <div>
                 <label>Date:</label>
+                <br>
                 <input ng-model="checked.date3" type="date" name="date3" placeholder="Date" required>
+                <br>
                 <label>Time:</label>
+                <br>
                 <input ng-model="checked.time3" type="time" name="time3" required>
-
+                <br>
                 <label>Location:</label>
+                <br>
                 <input ng-model="checked.locationName3" type="string" name="locationName3" placeholder="Enter Location Name" required>
-
+                <br>
                 <input  ng-model="checked.address3" name="address3" placeholder="Enter your address"
                           type="text" required>
               </div>
@@ -175,6 +189,7 @@
                     <label>Date:</label>
                     <br>
                     <input ng-model="checked.deadlineDate" type="date" name="deadlineDate"required>
+                    <br>
                     <label>Time:</label>
                     <br>
                     <input ng-model="checked.deadlineTime" type="time" name="deadlineTime"required>
@@ -212,23 +227,23 @@
                   <option>3</option>
                   </select>
                 <br>
-
               <label>Option 3</label>
                   <select ng-model="checked.option3">
                   <option>1</option>
                   <option>2</option>
                   <option>3</option>
                   </select>
+                
+                <br>
 
               <ul class="pager pull-left">
                 <li class="" ng-class="{disabled: !hasPreviousStep()}">
                   <a href="javascript:void(0);" ng-click="decrementStep()">&larr; Previous</a>
                 </li>
+                <li>
+                  <button ng-click="createHangout(hangoutform)">Submit</button>
+                </li>
               </ul>
-
-              <div class="pull-right">
-                <button ng-click="createHangout(hangoutform)">Submit</button>
-              </div>
           </fieldset>
       </div>
     </div>
