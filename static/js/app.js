@@ -21,7 +21,7 @@ var app = angular.module('conferenceApp',
                     controller: 'MyDashboardCtrl'
                 }).
                 when('/hangout/create', {
-                    templateUrl: '/partials/createHangout.html',
+                    templateUrl: '/partials/createHangoutPort.html',
                     controller: 'HangoutCreationCtrl'
                 }).
                 when('/profile', {
