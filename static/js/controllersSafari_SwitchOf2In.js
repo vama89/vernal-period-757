@@ -1155,7 +1155,7 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                                 var s, friends = JSON.parse(resp.items[0]['friendList']);
                                 var iterFriends = Object.keys(friends)
 
-                                for(s of iterFriends){
+                                for(s in iterFriends){
                                 if (friends[s]['voteRank'][0]==0){
                                     notVotedFriends.push(s);
                                 }
@@ -1229,7 +1229,7 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                                 var s, friends = JSON.parse(resp.items[0]['friendList']);
                                 var iterFriends = Object.keys(friends)
 
-                                for(s of iterFriends){
+                                for(s in iterFriends){
                                 if (friends[s]['voteRank'][0]==0){
                                     notVotedFriends.push(s);
                                 }
@@ -1370,7 +1370,7 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                                     var notGoing=[];
 
                                     //display Those going (first choice)
-                                    for(s of friendList){
+                                    for(s in friendList){
                                         if (friends[s]['confirmation'] == 1){
                                             going.push(s);
                                         }
@@ -1379,7 +1379,7 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                                         }
                                     }
 
-                                    for(s of friendList){
+                                    for(s in friendList){
                                         if (friends[s]['confirmation'] == 0){
                                             maybeGoing.push(s);
                                         }
@@ -1388,7 +1388,7 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                                         }
                                     }
 
-                                    for(s of friendList){
+                                    for(s in friendList){
                                         if (friends[s]['confirmation'] == 4){
                                             notGoing.push(s);
                                         }
@@ -1520,7 +1520,7 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                                     var notGoing=[];
 
                                     //display Those going (first choice)
-                                    for(s of friendList){
+                                    for(s in friendList){
                                         if (friends[s]['confirmation'] == 1){
                                             going.push(s);
                                         }
@@ -1529,7 +1529,7 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                                         }
                                     }
 
-                                    for(s of friendList){
+                                    for(s in friendList){
                                         if (friends[s]['confirmation'] == 0){
                                             maybeGoing.push(s);
                                         }
@@ -1538,7 +1538,7 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
                                         }
                                     }
 
-                                    for(s of friendList){
+                                    for(s in friendList){
                                         if (friends[s]['confirmation'] == 4){
                                             notGoing.push(s);
                                         }
