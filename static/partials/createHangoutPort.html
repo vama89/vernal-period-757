@@ -1,6 +1,4 @@
-<div ng-controller = "HangoutCreationCtrl">
-  <div>
-  <h2> Create Event </h2> 
+<h2> Create Event </h2> 
       <form name = "hangoutForm">
         <div ng-switch on="selection">
 
@@ -38,17 +36,10 @@
                 </tr>
                 </table>
 
+                <input ng-model="query.query" placeholder="Friend's Name">
+                <div ng-show="query.query">
                 <table>
-                <tr ng-repeat="todo in todos">
-                <td>{{todo.displayName}}</td>
-                <td><button ng-click="deleteToDo(todo)">Delete</button></td>
-                </tr>
-                </table>
-
-                <input ng-model="query" placeholder="Friend's Name">
-                <div ng-show="query">
-                <table>
-                <tr ng-repeat="profile in profiles | filter: query">
+                <tr ng-repeat="profile in profiles | filter: query.query">
                 <td>{{profile.displayName}}</td>
                 <td>{{profile.mainEmail}}</td>
                 <td><button ng-click="addTodo(profile)">Add</button></td>
@@ -67,7 +58,7 @@
                     <td><button ng-click="deleteNotInSystem(notFriend)">Delete</button><td>
                   </tr>
                 </table>
-                <input ng-model="notEmail"placeholder="Email">
+                <input ng-model="notEmail.notEmail" placeholder="Email">
                 <button ng-click="notInSystemAdd()">Add</button>
 
                 <br>
@@ -118,7 +109,7 @@
           <br>
           <div ng-switch-when="Step 4:">
             <fieldset>
-              <h1>Step 4: Option 1</h1>
+              <h1>Step 4: Option 2</h1>
               <div>
                 <label>Date:</label>
                 <br>
@@ -150,7 +141,7 @@
           <br>
           <div ng-switch-when="Step 5:">
             <fieldset>
-              <h1>Step 5: Option 1</h1>
+              <h1>Step 5: Option 3</h1>
               <div>
                 <label>Date:</label>
                 <br>
@@ -248,5 +239,3 @@
       </div>
     </div>
   </form>
-</div>
-</div>

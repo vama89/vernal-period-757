@@ -576,9 +576,11 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
     }
 
     $scope.todos=[];
-    $scope.checked = $scope.checked || {};
-    $scope.notEmail;
     $scope.notInSystemFriends=[];
+    $scope.checked = $scope.checked || {};
+    $scope.notEmail = $scope.notEmail || {};
+    
+    $scope.query = $scope.query || {};
     
     $scope.createHangout = function (hangoutForm) {
         //Grab all the individual friends and put them into a list
@@ -662,12 +664,13 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
 
     $scope.addTodo = function (resp) {
         $scope.todos.push(resp);
-        $scope.query='';
+        $scope.query.query='';
     };
 
     $scope.notInSystemAdd = function() {
-        $scope.notInSystemFriends.push($scope.notEmail);
-        $scope.notEmail='';
+        $scope.notInSystemFriends.push($scope.notEmail.notEmail);
+        $log.info($scope.notEmail);
+        $scope.notEmail.notEmail='';
     };
 
     $scope.deleteToDo = function(name){
@@ -678,6 +681,10 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
     $scope.deleteNotInSystem = function(name) {
         var index = $scope.notInSystemFriends.indexOf(name);
         $scope.notInSystemFriends.splice(index, 1);
+    };
+
+    $scope.test = function(){
+        $log.info($scope.checked);
     };
     
   $scope.steps = [
@@ -1620,165 +1627,6 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
 });
 
 conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routeParams, $cookies){
-    //Google+ API
-    $scope.test = function () {
-        gapi.client.load('plus','v1', function(){
-                 var request = gapi.client.plus.people.list({
-                   'userId': 'me',
-                   'collection': 'visible'
-                 });
-                 request.execute(function(resp) {
-                   console.log('Num people visible:' + resp.totalItems);
-                 });
-                });
-    };
 
-    $scope.fileUpload = $scope.fileUpload || {};
-    $scope.pictures = function () {
-        $log.info($scope.fileUpload.picture);
-    };
-
-    $scope.votedWaiting = function () {
-        //Check if he voted and is waiting on the event
-        /*
-        if he was VotedandisWaiting return Events
-            Under true, showcase the resp of the gapi
-        else return false
-        */
-
-        gapi.client.conference.votedWaiting().
-            execute(function(resp){
-                $scope.$apply(function() {
-                    if (resp.error){
-                        $log.error('There was an Error');
-                    }
-                    else {
-                        $log.info("Success");
-                        $scope.hangouts = []
-                        $scope.hangout=[]
-                        angular.forEach(resp.items, function(hangout){
-                            $scope.hangouts.push(hangout);
-                        });
-                    }
-                });
-            });
-    };
-
-    /*var jo= $cookies.get('myFavorite');
-    $log.info(jo);
-    var jo= $cookies.put('myFavorite', 'oatmeal');
-    */
-    
-    /*
-    var jo= $cookies.get('myFavorite');
-    if (jo) {
-        console.log("true");
-    } else {
-        console.log("false");
-    }
-    */
-
-    //this.qty= function () {
-
-    /*
-    $scope.test = function() {
-        gapi.client.conference.isRegistered().
-            execute(function(resp){
-                $scope.$apply(function() {
-                    if (resp.error){
-                        $log.error('There was an Error');
-                        $scope.fix = false;
-                    }
-                    else {
-                        $log.info("Success");
-                        $scope.fix = resp.data;
-                        $log.info(resp.data);
-                    }
-                });
-            });
-        }
-        */
-    //};
-
-    /*
-    $scope.testy = function () {
-        $log.info("hello world");
-    }
-    */
-    /*
-    $scope.todos=[];
-
-    $scope.fix = false;
-
-    $scope.lop = function(){
-        $scope.fix = true;
-    }
-
-    $scope.getSearchList = function() {
-
-    gapi.client.conference.test().
-        execute(function(resp){
-            $scope.$apply(function() {
-                if (resp.error){
-                    $log.error('There was an Error');
-                }
-                else {
-                    $log.info("Success!");
-                    $scope.profiles = [];
-                    angular.forEach(resp.items, function(profile){
-                        $scope.profiles.push(profile);
-                    });
-                }
-            });
-        });        
-    };
-
-    $scope.addTodo = function (resp) {
-        $scope.todos.push(resp);
-    };
-
-    $scope.button = function(){
-        $log.info($scope.todos);
-    };
-
-    $scope.john =function(loc){
-        var plub = $scope.todos.indexOf(loc);
-        $scope.todos.splice(plub, 1);
-
-    };
-
-    $scope.test = function(){
-        $log.info("hello world");
-    };
-    */
-/*
-    var todoList = this;
-    todoList.todos = [];
-
-    todoList.addTodo = function() {
-      todoList.todos.push({text:todoList.todoText, done:false});
-      $scope.testVar.friends = todoList.todos;
-      todoList.todoText = '';
-    };
-
-    todoList.remaining = function() {
-      var count = 0;
-      angular.forEach(todoList.todos, function(todo) {
-        count += todo.done ? 0 : 1;
-      });
-      return count;
-    };
-
-    todoList.archive = function() {
-      var oldTodos = todoList.todos;
-      todoList.todos = [];
-      angular.forEach(oldTodos, function(todo) {
-        if (!todo.done) todoList.todos.push(todo);
-      });
-    };
-*/
-$scope.blueButton = function () {
-$log.info(blue);
-};
 
 });
