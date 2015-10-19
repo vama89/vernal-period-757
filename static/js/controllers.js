@@ -578,8 +578,9 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
     $scope.todos=[];
     $scope.notInSystemFriends=[];
     $scope.checked = $scope.checked || {};
+    //For the big CreateHangout Form, I was able to just use $scope.notEmail and I didn't have a $scope.query initialized
+    //For the add buttons to work with this ng-switch, I
     $scope.notEmail = $scope.notEmail || {};
-    
     $scope.query = $scope.query || {};
     
     $scope.createHangout = function (hangoutForm) {
@@ -681,10 +682,6 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
     $scope.deleteNotInSystem = function(name) {
         var index = $scope.notInSystemFriends.indexOf(name);
         $scope.notInSystemFriends.splice(index, 1);
-    };
-
-    $scope.test = function(){
-        $log.info($scope.checked);
     };
     
   $scope.steps = [

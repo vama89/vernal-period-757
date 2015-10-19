@@ -1533,7 +1533,7 @@ class ConferenceApi(remote.Service):
         return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList])
 
     @endpoints.method(GetResultsWaitingEmailForm, HangoutForms, 
-        path='getResultsWaitingEmail/{webSafeKey}', 
+        path='getResultsWaitingEmail', 
         http_method='GET', name='getResultsWaitingEmail')
     def getResultsWaitingEmail(self, request):
         data = {field.name: getattr(request, field.name) for field in request.all_fields()}
@@ -1571,7 +1571,7 @@ class ConferenceApi(remote.Service):
         return HangoutForms(items=[self._copyHangoutToForm(hangout) for hangout in eventList])
 
     @endpoints.method(GetResultsWaitingEmailForm, HangoutForms, 
-        path='getResultsFinalEmail/{webSafeKey}', 
+        path='getResultsFinalEmail', 
         http_method='GET', name='getResultsFinalEmail')
     def getResultsFinalEmail(self, request):
         data = {field.name: getattr(request, field.name) for field in request.all_fields()}
