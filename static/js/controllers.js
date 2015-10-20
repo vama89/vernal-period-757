@@ -683,8 +683,35 @@ conferenceApp.controllers.controller('HangoutCreationCtrl', function($scope, $lo
         var index = $scope.notInSystemFriends.indexOf(name);
         $scope.notInSystemFriends.splice(index, 1);
     };
-    
-  $scope.steps = [
+
+    $scope.option1Copy = function () {
+        $scope.checked.date2 = $scope.checked.date1;
+        $scope.checked.time2 = $scope.checked.time1;
+        $scope.checked.locationName2 = $scope.checked.locationName1;
+        $scope.checked.address2 = $scope.checked.address1;
+        $log.info($scope.checked);
+    };
+
+    $scope.option31Copy = function () {
+        $scope.checked.date3 = $scope.checked.date1;
+        $scope.checked.time3 = $scope.checked.time1;
+        $scope.checked.locationName3 = $scope.checked.locationName1;
+        $scope.checked.address3 = $scope.checked.address1;
+        $log.info($scope.checked);
+    };
+
+
+    $scope.option32Copy = function () {
+        $scope.checked.date3 = $scope.checked.date2;
+        $scope.checked.time3 = $scope.checked.time2;
+        $scope.checked.locationName3 = $scope.checked.locationName2;
+        $scope.checked.address3 = $scope.checked.address2;
+        $log.info($scope.checked);
+    };
+
+
+
+    $scope.steps = [
     'Step 1:',
     'Step 2:',
     'Step 3:',
