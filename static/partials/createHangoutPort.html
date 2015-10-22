@@ -16,11 +16,9 @@
                   <input ng-model="checked.description" type="textarea" name="description" placeholder="Description" required>
                 </div>
             
-              <ul class="pager pull-left">
-                <li class="" ng-class="{disabled: !hasNextStep()}">
-                <a href="javascript:void(0);" ng-click="incrementStep()">Next &rarr;</a>
-                </li>
-              </ul>
+                <div class="pager pull-left" ng-class="{disabled: !hasNextStep()}">
+                <button ng-click="incrementStep()" ng-disabled="!checked.eventName || !checked.description">Next &rarr;</button>
+                </div>
             </fieldset>
           </div>
 
@@ -63,14 +61,12 @@
 
                 <br>
 
-                <ul class="pager pull-left">
-                  <li class="" ng-class="{disabled: !hasPreviousStep()}">
-                    <a href="javascript:void(0);" ng-click="decrementStep()">&larr; Previous</a>
-                  </li>
-                  <li class="" ng-class="{disabled: !hasNextStep()}">
-                    <a href="javascript:void(0);" ng-click="incrementStep()">Next &rarr;</a>
-                  </li>
-                </ul>
+                  <div class="pager pull-left" ng-class="{disabled: !hasPreviousStep()}">
+                    <button ng-click="decrementStep()">&larr; Previous</button>
+                  </div>
+                  <div class="pager pull-left" ng-class="{disabled: !hasNextStep()}">
+                    <button ng-click="incrementStep()" ng-disabled="!notInSystemFriends.length && !todos.length">Next &rarr;</button>
+                  </div>
 
               </fieldset>
           </div>
@@ -95,14 +91,13 @@
                           type="text" required>
               </div>
 
-              <ul class="pager pull-left">
-                <li class="" ng-class="{disabled: !hasPreviousStep()}">
-                  <a href="javascript:void(0);" ng-click="decrementStep()">&larr; Previous</a>
-                </li>
-                <li class="" ng-class="{disabled: !hasNextStep()}">
-                  <a href="javascript:void(0);" ng-click="incrementStep()">Next &rarr;</a>
-                </li>
-              </ul>
+                <div class="pager pull-left" ng-class="{disabled: !hasPreviousStep()}">
+                  <button ng-click="decrementStep()">&larr; Previous</button>
+                </div>
+                <div class="pager pull-left" ng-class="{disabled: !hasNextStep()}">
+                  <button ng-click="incrementStep()" ng-disabled="!checked.date1 || !checked.time1 || !checked.locationName1 || !checked.address1">Next &rarr;</button>
+                </div>
+
            </fieldset>
         </div>
           
@@ -135,18 +130,15 @@
                           type="text" required>
               </div>
 
-              <ul class="pager pull-left">
-                <li class="" ng-class="{disabled: !hasPreviousStep()}">
-                  <a href="javascript:void(0);" ng-click="decrementStep()">&larr; Previous</a>
-                </li>
-                <li class="" ng-class="{disabled: !hasNextStep()}">
-                  <a href="javascript:void(0);" ng-click="incrementStep()">Next &rarr;</a>
-                </li>
-              </ul>
+                <div class="pager pull-left" ng-class="{disabled: !hasPreviousStep()}">
+                  <button ng-click="decrementStep()">&larr; Previous</button>
+                </div>
+                <div class="pager pull-left" ng-class="{disabled: !hasNextStep()}">
+                  <button ng-click="incrementStep()" ng-disabled="!checked.date2 || !checked.time2 || !checked.locationName2 || !checked.address2">Next &rarr;</button>
+                </div>
+
            </fieldset>
         </div>
-
-          <br>
           <div ng-switch-when="Step 5:">
             <fieldset>
               <h1>Option 3 of 3</h1>
@@ -179,14 +171,12 @@
                           type="text" required>
               </div>
 
-              <ul class="pager pull-left">
-                <li class="" ng-class="{disabled: !hasPreviousStep()}">
-                  <a href="javascript:void(0);" ng-click="decrementStep()">&larr; Previous</a>
-                </li>
-                <li class="" ng-class="{disabled: !hasNextStep()}">
-                  <a href="javascript:void(0);" ng-click="incrementStep()">Next &rarr;</a>
-                </li>
-              </ul>
+              <div class="pager pull-left" ng-class="{disabled: !hasPreviousStep()}">
+                  <button ng-click="decrementStep()">&larr; Previous</button>
+                </div>
+                <div class="pager pull-left" ng-class="{disabled: !hasNextStep()}">
+                  <button ng-click="incrementStep()" ng-disabled="!checked.date3 || !checked.time3 || !checked.locationName3 || !checked.address3">Next &rarr;</button>
+                </div>
            </fieldset>
         </div>
 
@@ -204,14 +194,12 @@
                     <input ng-model="checked.deadlineTime" type="time" name="deadlineTime"required>
                 </div>
 
-                <ul class="pager pull-left">
-                  <li class="" ng-class="{disabled: !hasPreviousStep()}">
-                    <a href="javascript:void(0);" ng-click="decrementStep()">&larr; Previous</a>
-                  </li>
-                  <li class="" ng-class="{disabled: !hasNextStep()}">
-                    <a href="javascript:void(0);" ng-click="incrementStep()">Next &rarr;</a>
-                  </li>
-                </ul>
+                <div class="pager pull-left" ng-class="{disabled: !hasPreviousStep()}">
+                  <button ng-click="decrementStep()">&larr; Previous</button>
+                </div>
+                <div class="pager pull-left" ng-class="{disabled: !hasNextStep()}">
+                  <button ng-click="incrementStep()" ng-disabled="!checked.deadlineDate || !checked.deadlineTime">Next &rarr;</button>
+                </div>
             </fieldset>
         </div>
 
@@ -243,14 +231,13 @@
                 
                 <br>
 
-              <ul class="pager pull-left">
-                <li class="" ng-class="{disabled: !hasPreviousStep()}">
+                <div class="pager pull-left" ng-class="{disabled: !hasPreviousStep()}">
                   <a href="javascript:void(0);" ng-click="decrementStep()">&larr; Previous</a>
-                </li>
-                <li>
-                  <button ng-click="createHangout(hangoutform)">Submit</button>
-                </li>
-              </ul>
+                </div>
+                <div class="pager pull-left">
+                  <button ng-click="createHangout(hangoutform)" ng-disabled="!checked.option1 || !checked.option2 || !checked.option3">Submit</button>
+                </div>
+
           </fieldset>
       </div>
     </div>

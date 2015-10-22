@@ -227,7 +227,7 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
                         $scope.alertStatus = 'success';
                         $scope.rootMessages = 'Logged in with ' + resp.email;
                         //My addition to get to the dashboard and load items properly
-
+                        $log.info(resp);
 
 
                         firstSignIn().then(function () {
@@ -1651,6 +1651,12 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
 });
 
 conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routeParams, $cookies){
+$scope.test = function () {
+    $log.info("hello world!");
+};
 
+$scope.click = function () {
+    $log.info("boom boom pow");
+};
 
 });
