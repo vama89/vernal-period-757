@@ -1,6 +1,5 @@
 <!--Testing Form Logic-->
-<input type="date" ng-model="date.one"></input>
-<input type="text" ng-model="date.two"></input>
-<button ng-disabled="!date.one || !date.two"></button>
 
-<button ng-click="test()" ng-disabled="!date.one || !date.two">hkjhkjhj</button>
+<input type="email" name="input" ng-model="checked.boom" ng-required="true">
+<button ng-disabled="input.$invalid">Test</button>
+

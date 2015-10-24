@@ -1,4 +1,5 @@
 <div ng-controller="VoteCtrl">
+
 	<div ng-init="getResultsWaiting()">
 		<table id="conference-table" class="table table-striped table-hover">
 			<tr>
@@ -47,6 +48,11 @@ the appropriate voting information
 	-->
 
 <div>Ok, so what are your preferences? First being the most preferred!</div>
+	<div ng-hide="votes.option1 && votes.option2 && votes.option3">
+	<p><small><b>FILL IT ALL IN! THE DARK SIDE COMPELLS YOU!!!!</b></small></p>
+	<img src="/img/darth.gif" width="250" height="250"></img>
+	</div>
+
 <label>Hangout1
 <select ng-model="votes.option1">
 		<option>1</option>
@@ -75,6 +81,11 @@ the appropriate voting information
 	</select>
 	</label>
 
-	<button ng-click="vote(voteForm)">Vote</button>
+<div ng-show="votes.option1 && votes.option2 && votes.option3">
+<p><small><b>The force is strong with this one. You may go. *greenlight*</b></small></p>
+<img src="/img/yoda.gif" width="250" height="250"></img>
+</div>
+
+	<button ng-click="vote(voteForm)" ng-disabled="!votes.option1 || !votes.option2 || !votes.option3">Vote</button>
 </form>
 </div>

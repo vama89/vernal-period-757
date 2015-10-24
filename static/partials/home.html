@@ -16,7 +16,7 @@
 					<form name="emailLogin" novalidate>
 						<table class="pull-right">
 						<tr>
-							<td><input type="email" name="email" ng-model="login.email" ng-required="true" ng-blur="isRegisteredEmailLogin()" placeholder="email" required>
+							<td><input type="email" name="email" ng-model="login.email" ng-required="true" ng-blur="isRegisteredEmailLogin()" placeholder="email" ng-pattern="/^[_a-zA-Z0-9]+(\.[_a-zA-Z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" required>
 								<p ng-show="emailLogin.email.$invalid && emailLogin.email.$touched">Invalid Email. Ex: johndoe@gmail.com</p>
 								<p ng-show="regTruthValLogin">Please Register first! Sign-up below!</p>
 							</td>

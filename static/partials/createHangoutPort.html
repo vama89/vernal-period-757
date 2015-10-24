@@ -6,6 +6,11 @@
           <div ng-switch-when="Step 1:">
             <fieldset>
               <h1>Step 1: Event</h1>
+              <div ng-hide="checked.eventName && checked.description">
+                <p><small><b>No Choice for you! Soviet Russia says you must fill-in all inputs!</b></small></p>
+                <img src="/img/lenin.gif" width="250" height="250"></img>
+                </div>
+
                 <div>
                   <label>Event Title:</label>
                   <br>
@@ -15,7 +20,12 @@
                   <br>
                   <input ng-model="checked.description" type="textarea" name="description" placeholder="Description" required>
                 </div>
-            
+                
+                <div ng-show="checked.eventName && checked.description">
+                <p><small><b>FREEDOM! Proceed...</b></small></p>
+                <img src="/img/colbert.gif" width="250" height="250"></img>
+                </div>
+
                 <div class="pager pull-left" ng-class="{disabled: !hasNextStep()}">
                 <button ng-click="incrementStep()" ng-disabled="!checked.eventName || !checked.description">Next &rarr;</button>
                 </div>
@@ -26,6 +36,16 @@
           <div ng-switch-when="Step 2:">
               <fieldset>
                 <h1>Step 2: Friends</h1>
+                <div ng-hide="notInSystemFriends.length || todos.length">
+                <p><small><b>King George won't let you pass unless you invite at least 1 person!</b></small></p>
+                <img src="/img/britain.gif" width="250" height="250"></img>
+                </div>
+
+                <br>
+
+                <h3>inViteVote your friends in our system:</h3>
+                <small>Hit the add-button to add them!</small>
+
                 <div ng-init="getSearchList()"></div> 
                 <table>
                 <tr ng-repeat="todo in todos">
@@ -39,7 +59,7 @@
                 <table>
                 <tr ng-repeat="profile in profiles | filter: query.query">
                 <td>{{profile.displayName}}</td>
-                <td>{{profile.mainEmail}}</td>
+                <!--<td>{{profile.mainEmail}}</td>-->
                 <td><button ng-click="addTodo(profile)">Add</button></td>
                 </tr>
                 </table>
@@ -56,10 +76,18 @@
                     <td><button ng-click="deleteNotInSystem(notFriend)">Delete</button><td>
                   </tr>
                 </table>
-                <input ng-model="notEmail.notEmail" placeholder="Email">
-                <button ng-click="notInSystemAdd()">Add</button>
-
+                <form>
+                <input type="email" name="outsideEmail" ng-model="notEmail.notEmail" placeholder="Email" ng-pattern="/^[_a-zA-Z0-9]+(\.[_a-zA-Z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" ng-required="true">
+                
+                <button ng-click="notInSystemAdd()" ng-disabled="hangoutForm.outsideEmail.$invalid" >Add</button>
+                </form>
                 <br>
+
+
+                <div ng-show="notInSystemFriends.length || todos.length">
+                <p><small><b>Mel Gibson would be proud! Move on...</b></small></p>
+                <img src="/img/mel.gif" width="250" height="250"></img>
+                </div>
 
                   <div class="pager pull-left" ng-class="{disabled: !hasPreviousStep()}">
                     <button ng-click="decrementStep()">&larr; Previous</button>
@@ -74,6 +102,11 @@
           <div ng-switch-when="Step 3:">
             <fieldset>
               <h1>Option 1 of 3:</h1>
+                <div ng-hide="checked.date1 && checked.time1 && checked.locationName1 && checked.address1">
+                <p><small><b>Castro wants them all input fields filled-in!</b></small></p>
+                <img src="/img/castro.gif" width="250" height="250"></img>
+                </div>
+
               <div>
                 <label>Date:</label>
                 <br>
@@ -91,6 +124,12 @@
                           type="text" required>
               </div>
 
+
+                <div ng-show="checked.date1 && checked.time1 && checked.locationName1 && checked.address1">
+                <p><small><b>Pitbull says you can go now!</b></small></p>
+                <img src="/img/pitbull.gif" width="250" height="250"></img>
+                </div>
+
                 <div class="pager pull-left" ng-class="{disabled: !hasPreviousStep()}">
                   <button ng-click="decrementStep()">&larr; Previous</button>
                 </div>
@@ -104,6 +143,12 @@
           <div ng-switch-when="Step 4:">
             <fieldset>
               <h1>Option 2 of 3</h1>
+
+                <div ng-hide="checked.date2 && checked.time2 && checked.locationName2 && checked.address2">
+                <p><small><b>I'm Laotian Hank Hill! Fill in all inputs or else!</b></small></p>
+                <img src="/img/kahn.gif" width="250" height="250"></img>
+                </div>
+
               <ul class="pager pull-left">
                 <li class="">
                   <a href="javascript:void(0);" ng-click="option1Copy()">Copy From Option 1</a>
@@ -130,6 +175,12 @@
                           type="text" required>
               </div>
 
+
+                <div ng-show="checked.date2 && checked.time2 && checked.locationName2 && checked.address2">
+                <p><small><b>Laos is a communist country. Just in case that one flew over your head. Move on.</b></small></p>
+                <img src="/img/kingofhill.gif" width="250" height="250"></img>
+                </div>
+
                 <div class="pager pull-left" ng-class="{disabled: !hasPreviousStep()}">
                   <button ng-click="decrementStep()">&larr; Previous</button>
                 </div>
@@ -142,6 +193,11 @@
           <div ng-switch-when="Step 5:">
             <fieldset>
               <h1>Option 3 of 3</h1>
+                <div ng-hide="checked.date3 && checked.time3 && checked.locationName3 && checked.address3">
+                <p><small><b>Mao is not pleased! All inputs or else!!!</b></small></p>
+                <img src="/img/mao.gif" width="250" height="250"></img>
+                </div>
+
               <ul class="pager pull-left">
                 <li class="">
                   <a href="javascript:void(0);" ng-click="option31Copy()">Copy From Option 1</a>
@@ -171,6 +227,12 @@
                           type="text" required>
               </div>
 
+
+                <div ng-show="checked.date3 && checked.time3 && checked.locationName3 && checked.address3">
+                <p><small><b>Move-on with guns'a'blazn!!!!</b></small></p>
+                <img src="/img/rambo.gif" width="250" height="250"></img>
+                </div>
+
               <div class="pager pull-left" ng-class="{disabled: !hasPreviousStep()}">
                   <button ng-click="decrementStep()">&larr; Previous</button>
                 </div>
@@ -184,6 +246,11 @@
         <div ng-switch-when="Step 6:">
             <fieldset>
               <h1>Step 6: Vote Deadline</h1>
+                <div ng-hide="checked.deadlineDate && checked.deadlineTime">
+                <p><small><b>You know should know what to do by now...</b></small></p>
+                <img src="/img/charlie.gif" width="250" height="250"></img>
+                </div>
+
                 <div>
                     <label>Date:</label>
                     <br>
@@ -192,6 +259,12 @@
                     <label>Time:</label>
                     <br>
                     <input ng-model="checked.deadlineTime" type="time" name="deadlineTime"required>
+                </div>
+
+
+                <div ng-show="checked.deadlineDate && checked.deadlineTime">
+                <p><small><b>AMERICA!!!!</b></small></p>
+                <img src="/img/rosie.gif" width="250" height="250"></img>
                 </div>
 
                 <div class="pager pull-left" ng-class="{disabled: !hasPreviousStep()}">
@@ -207,6 +280,11 @@
       <div ng-switch-when="Step 7:">
           <fieldset>
             <h1>Step 7: Creator Votes</h1>
+                <div ng-hide="checked.option1 && checked.option2 && checked.option3">
+                <p><small><b>One last time...</b></small></p>
+                <img src="/img/klitch.gif" width="250" height="250"></img>
+                </div>
+
             <div>
               <label>Option 1</label>
                 <select ng-model="checked.option1">
@@ -230,9 +308,13 @@
                   </select>
                 
                 <br>
+                <div ng-show="checked.option1 && checked.option2 && checked.option3">
+                <p><small><b>Whew! That's it! Tyson is pleased :)</b></small></p>
+                <img src="/img/tyson.gif" width="250" height="250"></img>
+                </div>
 
                 <div class="pager pull-left" ng-class="{disabled: !hasPreviousStep()}">
-                  <a href="javascript:void(0);" ng-click="decrementStep()">&larr; Previous</a>
+                  <button ng-click="decrementStep()">&larr; Previous</button>
                 </div>
                 <div class="pager pull-left">
                   <button ng-click="createHangout(hangoutform)" ng-disabled="!checked.option1 || !checked.option2 || !checked.option3">Submit</button>
