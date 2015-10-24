@@ -144,6 +144,8 @@ conferenceApp.controllers.controller('MyProfileCtrl',
 conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $log, $q, $cookies, oauth2Provider) {
     //Variable to just easily access the username in the frontend of the application
     $scope.user = $scope.user || {};
+
+    $scope.names = $scope.names || {};
     
     /**
      * Returns if the viewLocation is the currently viewed page.
@@ -164,7 +166,7 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
         return oauth2Provider.signedIn;
     };
 
-                            //make the async call here. make profile first then move the the dashboard
+    //make the async call here. make profile first then move the the dashboard
     function firstSignIn() {
         var deferred = $q.defer();
         
@@ -191,9 +193,6 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
                                 $scope.userEmail = resp.result.mainEmail;
                                 $log.info("retrieved variables in SignIn Function");
 
-                                //check to see if already registered.
-                                //if already registered then set to false....indicator that already logged in
-
                                 deferred.resolve();
                             }
                         });
@@ -212,8 +211,40 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
         $scope.makeProfile();
         
         return deferred.promise; 
-    }
+    };
+/*
 
+//THIS WASN'T Working. When I tried putting this in a chain of functions in the SignIn it said it wasn't a function
+//AKA firstSignIn().updateRealNames().then(...)
+//I'd get an error in the console saying update was not a function.
+//Don't know why and just quick fixed it with making another then() ie firstSignIn().then().then()
+//I'll fix this later.
+
+    function updateRealNames() {
+        var deferred = $q.defer();
+
+        $scope.nameUpdate = function () {
+            gapi.client.conference.nameUpdate($scope.names).
+                execute(function(resp){
+                    $scope.$apply(function() {
+                        if (resp.error){
+                            $log.error('There was an Error');
+                        }
+                        else {
+                            $log.info("Success");
+                            deferred.resolve();
+                        }
+                    });
+                });
+
+
+            };
+
+        $scope.nameUpdate();
+
+        return deferred.promise;
+    };
+*/
     /**
      * Calls the OAuth2 authentication method.
      */
@@ -226,11 +257,27 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
                         $log.info(oauth2Provider.signedIn);
                         $scope.alertStatus = 'success';
                         $scope.rootMessages = 'Logged in with ' + resp.email;
-                        //My addition to get to the dashboard and load items properly
-                        $log.info(resp);
 
+                        //Setup Variables in order to send to nameUpdate below
+                        //getting the actual names for a save.
+                        $scope.names.firstName = resp.given_name;
+                        $scope.names.lastName = resp.family_name;
+                        $scope.names.fullName = resp.name;
 
-                        firstSignIn().then(function () {
+                        firstSignIn().then(function(){
+                            gapi.client.conference.nameUpdate($scope.names).
+                                execute(function(resp){
+                                    $scope.$apply(function() {
+                                        if (resp.error){
+                                            $log.error('There was an Error');
+                                        }
+                                        else {
+                                            $log.info("Success Update Name");
+                                            $log.info($scope.names);
+                                        }
+                                    });
+                                });                            
+                        }).then(function () {
                             /*I don't know why it is doing this. The previous executions have oauth2Prov as true
                             but by the time it finishes then executes here....it turns it false....don't know why
                             Quick patch is just switching it back on to true, but need to fix this bug.

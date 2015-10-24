@@ -35,6 +35,11 @@ class Profile(ndb.Model):
     eventsPassedDate = ndb.IntegerProperty(repeated=True)
     eventsRegrets = ndb.IntegerProperty(repeated=True)
 
+class ProfileNameUpdate(messages.Message):
+    firstName = messages.StringField(1)
+    lastName = messages.StringField(2)
+    fullName = messages.StringField(3)
+
 class ProfileMiniForm(messages.Message):
     """ProfileMiniForm -- update Profile form message"""
     displayName = messages.StringField(1)

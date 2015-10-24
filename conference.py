@@ -40,6 +40,7 @@ from models import GroupMessageForm
 from models import UrlForm
 from models import GetResultsWaitingEmailForm
 from models import VoteFormEmail
+from models import ProfileNameUpdate
 
 from settings import WEB_CLIENT_ID
 from settings import ANDROID_CLIENT_ID
@@ -92,7 +93,6 @@ class ConferenceApi(remote.Service):
             raise endpoints.UnauthorizedException('Authorization required')
 
         # get Profile from datastore
-
         user_id = getUserId(user)
         p_key = ndb.Key(Profile, user_id)
         profile = p_key.get()
@@ -176,6 +176,29 @@ class ConferenceApi(remote.Service):
     def getProfile(self, request):
         """Return user profile."""
         return self._doProfile()
+
+    @endpoints.method(ProfileNameUpdate, ProfileNameUpdate,
+            path='nameUpdate', http_method='POST', name='nameUpdate')
+    def nameUpdate(self, request):
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+
+        user_id = getUserId(user)
+        p_key = ndb.Key(Profile, user_id)
+        profile = p_key.get()
+
+        data = {field.name: getattr(request, field.name) for field in request.all_fields()}
+
+        print data
+
+        profile.displayName = data['fullName']
+        profile.firstName = data['firstName']
+        profile.lastName = data['lastName']
+
+        profile.put()
+
+        return request
 
     @endpoints.method(ProfileMiniForm, ProfileForm,
             path='profile', http_method='POST', name='saveProfile')
