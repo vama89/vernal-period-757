@@ -55,6 +55,9 @@ class ProfileForms(messages.Message):
 class UrlForm(messages.Message):
     uploadUrl = messages.StringField(1)
 
+class PictureKeyForm(messages.Message):
+    pictureKey = messages.StringField(1)        
+
 class GetResultsWaitingEmailForm(messages.Message):
     webSafeKey = messages.StringField(1)
     email = messages.StringField(2)

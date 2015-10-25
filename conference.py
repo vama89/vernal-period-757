@@ -41,6 +41,7 @@ from models import UrlForm
 from models import GetResultsWaitingEmailForm
 from models import VoteFormEmail
 from models import ProfileNameUpdate
+from models import PictureKeyForm
 
 from settings import WEB_CLIENT_ID
 from settings import ANDROID_CLIENT_ID
@@ -297,6 +298,34 @@ class ConferenceApi(remote.Service):
         uploadUrl = blobstore.create_upload_url('/upload')
         
         return UrlForm(uploadUrl=uploadUrl)
+
+    @endpoints.method(EmailRegFormCheck, BooleanMessage,
+            path='pictureCheck', http_method='GET', name='pictureCheck')
+    def pictureCheck(self, request):
+        
+        data = {field.name: getattr(request, field.name) for field in request.all_fields()}
+        p_key = ndb.Key(Profile, data['email'])
+        profile = p_key.get()
+
+        if profile.pictureKey:
+            boolVal = True
+        else:
+            boolVal = False
+        
+        return BooleanMessage(boolVal = boolVal)
+
+    @endpoints.method(EmailRegFormCheck, PictureKeyForm,
+            path='getPicture', http_method='GET', name='getPicture')
+    def getPicture(self, request):
+        
+        data = {field.name: getattr(request, field.name) for field in request.all_fields()}
+        p_key = ndb.Key(Profile, data['email'])
+        profile = p_key.get()
+
+        picKey = profile.pictureKey
+        picKey = str(picKey)
+        
+        return PictureKeyForm(pictureKey = picKey)
 
 # - - - Hangout - - - - - - - - - - - - - - - - - - - - - - - 
     def _copyHangoutToForm(self, hangout):

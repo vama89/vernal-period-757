@@ -12,8 +12,15 @@
     <div class="row">
         <div class="col-md-8">
             <h3>My Profile</h3>
-            <!-- The source must be /serve/BLOBSTOREKEY -->
-            <img src="/img/profilePic.png">
+            <div ng-init="pictureCheck()">
+                <div ng-hide="userUploadedPic">
+                    <!-- The source must be /serve/BLOBSTOREKEY -->
+                    <img src="/img/profilePic.png">
+                </div>
+                <div ng-show="userUploadedPic">
+                    <img src="/serve/{{pictureKey}}" height="160" width="160">
+                </div>
+            </div>
             <br>
             <div ng-init="uploadUrl()"></div>
             <form action={{url}} method="POST" enctype="multipart/form-data">

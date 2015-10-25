@@ -28,6 +28,7 @@ conferenceApp.controllers.controller('MyProfileCtrl',
     function ($scope, $log, $location, $cookies, oauth2Provider, HTTP_ERRORS) {
         $scope.submitted = false;
         $scope.loading = false;
+        $scope.userUploadedPic = false;
         var jo = $cookies.get('user_id');
 
         /**
@@ -115,19 +116,57 @@ conferenceApp.controllers.controller('MyProfileCtrl',
         $scope.uploadUrl = function () {
 
             gapi.client.conference.uploadUrl().
-            execute(function(resp){
-                $scope.$apply(function() {
-                    if (resp.error){
-                        $log.error('There was an Error');
-                    }
-                    else {
-                        $log.info("Success!");
-                        $log.info(resp.uploadUrl)
-                        $scope.url = resp.uploadUrl
-                    }
+                execute(function(resp){
+                    $scope.$apply(function() {
+                        if (resp.error){
+                            $log.error('There was an Error');
+                        }
+                        else {
+                            $log.info("Success!");
+                            $log.info(resp.uploadUrl)
+                            $scope.url = resp.uploadUrl
+                        }
+                    });
                 });
-            });
 
+        };
+
+        $scope.pictureCheck = function () {
+            $scope.picture = $scope.picture || {};
+            $scope.picture.email = $scope.userEmail;
+
+            gapi.client.conference.pictureCheck($scope.picture).
+                        execute(function(resp){
+                            $scope.$apply(function() {
+                                if (resp.error){
+                                    $log.error('There was an Error');
+                                }
+                                else {
+                                    $log.info("Success!");
+                                    if (resp.boolVal){
+                                        //get the url
+                                        gapi.client.conference.getPicture($scope.picture).
+                                            execute(function(resp){
+                                                $scope.$apply(function() {
+                                                    if (resp.error){
+                                                        $log.error('There was an Error');
+                                                    }
+                                                    else {
+                                                        $log.info("Success!");
+                                                        $scope.pictureKey = resp.pictureKey;
+                                                        $log.info($scope.pictureKey);                                                        
+                                                    }
+                                                });
+                                            });
+                                        //turn userUploadPic to true
+                                        $scope.userUploadedPic = true;
+
+                                    } else {
+                                        //Do Nothing
+                                    }
+                                }
+                            });
+                        });
         };
 
     });
@@ -212,14 +251,16 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
         
         return deferred.promise; 
     };
+
+    /*
+    THIS WASN'T Working. When I tried putting this in a chain of functions in the SignIn it said it wasn't a function
+    AKA firstSignIn().updateRealNames().then(...)
+    I'd get an error in the console saying update was not a function.
+    Don't know why and just quick fixed it with making another then() ie firstSignIn().then().then()
+    I'll fix this later.
+    */
+
 /*
-
-//THIS WASN'T Working. When I tried putting this in a chain of functions in the SignIn it said it wasn't a function
-//AKA firstSignIn().updateRealNames().then(...)
-//I'd get an error in the console saying update was not a function.
-//Don't know why and just quick fixed it with making another then() ie firstSignIn().then().then()
-//I'll fix this later.
-
     function updateRealNames() {
         var deferred = $q.defer();
 
@@ -245,6 +286,7 @@ conferenceApp.controllers.controller('RootCtrl', function($scope, $location, $lo
         return deferred.promise;
     };
 */
+
     /**
      * Calls the OAuth2 authentication method.
      */
