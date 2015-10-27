@@ -266,7 +266,7 @@ class ConferenceApi(remote.Service):
         p_key = ndb.Key(Profile, data['email'])
         profile = p_key.get()
 
-        if profile:
+        if profile.confirmation:
             boolVal = True
         else:
             boolVal = False
@@ -284,7 +284,7 @@ class ConferenceApi(remote.Service):
 
         print profile
 
-        if profile:
+        if profile.confirmation:
             boolVal = True
         else:
             boolVal = False

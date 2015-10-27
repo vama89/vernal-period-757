@@ -1164,6 +1164,17 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
             var bardata = $scope.bardata;
             var names = ['Hangout1', 'Hangout2', 'Hangout3'];
 
+            /*I tried messing with the barwidth to dynamically adjust it to the window but to no avail
+            I tried the windw.innerWidth and screen.width minus a scale of 94 to account for the bootstrap code for containers
+            It misaligns with the tables that adjust dynamically with bootstrap
+            The next mission is for me to find out a way to get the bootstrap pixel adjusted screen sizes
+
+            The bar graph is drawn customly from the browser, with the sizes of the bars fixed. I'm going to 
+            need to just hit the minimum size needed to just display correctly for the mobile phone. I'll fix this later. Getting a dynamic adjust bar graph.
+            The problem is that the bar graph sizes are preset before you draw them. I need to link the sizes with the Bootstrap adjustments
+            I think this would entail me digging in their libraries and seeing how they adjust their containers. For another day...
+            
+            */
             var height = 200,
                 width = 400,
                 barWidth = 50,
@@ -1740,12 +1751,5 @@ conferenceApp.controllers.controller('ResultsCtrl', function($scope, $log, $rout
 });
 
 conferenceApp.controllers.controller('TestCtrl', function($scope,$log,$routeParams, $cookies){
-$scope.test = function () {
-    $log.info("hello world!");
-};
-
-$scope.click = function () {
-    $log.info("boom boom pow");
-};
 
 });
