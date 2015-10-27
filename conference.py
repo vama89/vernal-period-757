@@ -222,9 +222,11 @@ class ConferenceApi(remote.Service):
             #create the profile with the information
             p_key = ndb.Key(Profile, data['email'])
 
+            displayName = data['firstName'] + ' ' + data['lastName']
+
             profile = Profile(
                 key = p_key,
-                displayName = data['email'],
+                displayName = displayName,
                 mainEmail= data['email'],
                 password = data['password'],
                 firstName= data['firstName'],
